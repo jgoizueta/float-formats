@@ -1,0 +1,1716 @@
+--- 
+C51_BCD_FLOAT: 
+  parameters: 
+  - total_bits: 32
+  - radix: 10
+  - significand_digits: 6
+  - radix_min_exp: -65
+  - radix_max_exp: 62
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 6
+  - decimal_min_exp: -65
+  - decimal_max_exp: 62
+  values: 
+  - Rational(1, 3): 40 33 33 33
+  - Rational(1, 10): 40 00 00 10
+  - Rational(2, 3): 40 67 66 66
+  - Rational(1, 1024): 3C 25 56 76 09
+  - Rational(1, 1000): 3E 00 00 10
+  - Rational(1024, 1): 44 00 24 10
+  - Rational(1024, 1): 44 00 24 10
+  special: 
+  - min_value: 00 00 00 10
+  - min_normalized_value: 00 00 00 10
+  - max_value: 7F 99 99 99
+  - epsilon: 3C 00 00 10
+  - strict_epsilon: 3C 00 00 10
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 80 00 00 00
+  - "+1": 41 00 00 10
+  - "-1": C1 00 00 10
+  - "+0.1": 40 00 00 10
+  - "-0.1": C0 00 00 10
+  - "0.5": 40 00 00 50
+  - "-0.5": C0 00 00 50
+  - "29.2": 42 00 20 29
+  - "-29.2": C2 00 20 29
+  - "0.03125": 3F 00 25 31
+  - "-0.03125": BF 00 25 31
+  - "-0.3125": C0 00 25 31
+  - 1.234E2: 43 00 34 12
+  - "-1.234E-6": BB 00 34 12
+  - "65536.0": 45 60 53 65
+  - "-65536.0": C5 60 53 65
+  - "-7.50": C1 00 00 75
+  - 1E-65: 00 00 00 10
+  - 9.99999E62: 7F 99 99 99
+  - 1E-5: 3C 00 00 10
+  - 1E-5: 3C 00 00 10
+  base: :bytes
+IBM64: 
+  parameters: 
+  - total_bits: 64
+  - radix: 16
+  - significand_digits: 14
+  - radix_min_exp: -65
+  - radix_max_exp: 62
+  - decimal_digits_stored: 15
+  - decimal_digits_necessary: 18
+  - decimal_min_exp: -77
+  - decimal_max_exp: 77
+  values: 
+  - Rational(1, 3): 40 55 55 55 55 55 55 55
+  - Rational(1, 10): 40 19 99 99 99 99 99 9A
+  - Rational(2, 3): 40 AA AA AA AA AA AA AB
+  - Rational(1, 1024): 3E 40 00 00 00 00 00 00
+  - Rational(1, 1000): 3E 41 89 37 4B C6 A7 F0
+  - Rational(1024, 1): 43 40 00 00 00 00 00 00
+  - Rational(1024, 1): 43 40 00 00 00 00 00 00
+  special: 
+  - min_value: 00 10 00 00 00 00 00 00
+  - min_normalized_value: 00 10 00 00 00 00 00 00
+  - max_value: 7F FF FF FF FF FF FF FF
+  - epsilon: 34 10 00 00 00 00 00 00
+  - strict_epsilon: 34 10 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00 00 00
+  - "+1": 41 10 00 00 00 00 00 00
+  - "-1": C1 10 00 00 00 00 00 00
+  - "+0.1": 40 19 99 99 99 99 99 9A
+  - "-0.1": C0 19 99 99 99 99 99 9A
+  - "0.5": 40 80 00 00 00 00 00 00
+  - "-0.5": C0 80 00 00 00 00 00 00
+  - "29.2": 42 1D 33 33 33 33 33 33
+  - "-29.2": C2 1D 33 33 33 33 33 33
+  - "0.03125": 3F 80 00 00 00 00 00 00
+  - "-0.03125": BF 80 00 00 00 00 00 00
+  - "-0.3125": C0 50 00 00 00 00 00 00
+  - 1.234E2: 42 7B 66 66 66 66 66 66
+  - "-1.234E-6": BC 14 B3 FD 59 42 CD 96
+  - "65536.0": 45 10 00 00 00 00 00 00
+  - "-65536.0": C5 10 00 00 00 00 00 00
+  - "-7.50": C1 78 00 00 00 00 00 00
+  - "5.39760534693402789E-79": 00 10 00 00 00 00 00 00
+  - 7.23700557733226211E75: 7F FF FF FF FF FF FF FF
+  - "2.22044604925031308E-16": 34 10 00 00 00 00 00 00
+  - "2.22044604925031308E-16": 34 10 00 00 00 00 00 00
+  base: :bytes
+VAX_D: 
+  parameters: 
+  - total_bits: 64
+  - radix: 2
+  - significand_digits: 56
+  - radix_min_exp: -128
+  - radix_max_exp: 126
+  - decimal_digits_stored: 16
+  - decimal_digits_necessary: 18
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): AA 3F AA AA AA AA AB AA
+  - Rational(1, 10): CC 3E CC CC CC CC CD CC
+  - Rational(2, 3): 2A 40 AA AA AA AA AB AA
+  - Rational(1, 1024): 80 3B 00 00 00 00 00 00
+  - Rational(1, 1000): 83 3B 6E 12 8D 97 DF 4F
+  - Rational(1024, 1): 80 45 00 00 00 00 00 00
+  - Rational(1024, 1): 80 45 00 00 00 00 00 00
+  special: 
+  - min_value: 80 00 00 00 00 00 00 00
+  - min_normalized_value: 80 00 00 00 00 00 00 00
+  - max_value: FF 7F FF FF FF FF FF FF
+  - epsilon: 00 25 00 00 00 00 00 00
+  - strict_epsilon: 00 25 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 00 80 00 00 00 00 00 00
+  - "+1": 80 40 00 00 00 00 00 00
+  - "-1": 80 C0 00 00 00 00 00 00
+  - "+0.1": CC 3E CC CC CC CC CD CC
+  - "-0.1": CC BE CC CC CC CC CD CC
+  - "0.5": 00 40 00 00 00 00 00 00
+  - "-0.5": 00 C0 00 00 00 00 00 00
+  - "29.2": E9 42 99 99 99 99 9A 99
+  - "-29.2": E9 C2 99 99 99 99 9A 99
+  - "0.03125": 00 3E 00 00 00 00 00 00
+  - "-0.03125": 00 BE 00 00 00 00 00 00
+  - "-0.3125": A0 BF 00 00 00 00 00 00
+  - 1.234E2: F6 43 CC CC CC CC CD CC
+  - "-1.234E-6": A5 B6 EA 9F 16 CA B2 6C
+  - "65536.0": 80 48 00 00 00 00 00 00
+  - "-65536.0": 80 C8 00 00 00 00 00 00
+  - "-7.50": F0 C1 00 00 00 00 00 00
+  - "2.93873587705571877E-39": 80 00 00 00 00 00 00 00
+  - 1.70141183460469229E38: FF 7F FF FF FF FF FF FF
+  - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
+  - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
+  base: :bytes
+IEEE_SINGLE: 
+  parameters: 
+  - total_bits: 32
+  - radix: 2
+  - significand_digits: 24
+  - radix_min_exp: -126
+  - radix_max_exp: 127
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 9
+  - decimal_min_exp: -37
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): AB AA AA 3E
+  - Rational(1, 10): CD CC CC 3D
+  - Rational(2, 3): AB AA 2A 3F
+  - Rational(1, 1024): 00 00 80 3A
+  - Rational(1, 1000): 6F 12 83 3A
+  - Rational(1024, 1): 00 00 80 44
+  - Rational(1024, 1): 00 00 80 44
+  special: 
+  - min_value: 01 00 00 00
+  - min_normalized_value: 00 00 80 00
+  - max_value: FF FF 7F 7F
+  - epsilon: 00 00 00 34
+  - strict_epsilon: 01 00 80 33
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 00 00 00 80
+  - "+1": 00 00 80 3F
+  - "-1": 00 00 80 BF
+  - "+0.1": CD CC CC 3D
+  - "-0.1": CD CC CC BD
+  - "0.5": 00 00 00 3F
+  - "-0.5": 00 00 00 BF
+  - "29.2": 9A 99 E9 41
+  - "-29.2": 9A 99 E9 C1
+  - "0.03125": 00 00 00 3D
+  - "-0.03125": 00 00 00 BD
+  - "-0.3125": 00 00 A0 BE
+  - 1.234E2: CD CC F6 42
+  - "-1.234E-6": EB 9F A5 B5
+  - "65536.0": 00 00 80 47
+  - "-65536.0": 00 00 80 C7
+  - "-7.50": 00 00 F0 C0
+  - "1.17549435E-38": 00 00 80 00
+  - 3.40282347E38: FF FF 7F 7F
+  - "1.1920929E-7": 00 00 00 34
+  - "5.96046519E-8": 01 00 80 33
+  base: :bytes
+UNIVAC_DOUBLE: 
+  parameters: 
+  - total_bits: 72
+  - radix: 2
+  - significand_digits: 60
+  - radix_min_exp: -1025
+  - radix_max_exp: 1022
+  - decimal_digits_stored: 17
+  - decimal_digits_necessary: 20
+  - decimal_min_exp: -308
+  - decimal_max_exp: 308
+  values: 
+  - Rational(1, 3): 3FFAAAAAAAAAAAAAAB
+  - Rational(1, 10): 3FDCCCCCCCCCCCCCCD
+  - Rational(2, 3): 400AAAAAAAAAAAAAAB
+  - Rational(1, 1024): 3F7800000000000000
+  - Rational(1, 1000): 3F783126E978D4FDF4
+  - Rational(1024, 1): 40B800000000000000
+  - Rational(1024, 1): 40B800000000000000
+  special: 
+  - min_value: 000800000000000000
+  - min_normalized_value: 000800000000000000
+  - max_value: 7FFFFFFFFFFFFFFFFF
+  - epsilon: 3C6800000000000000
+  - strict_epsilon: 3C6800000000000000
+  numerals: 
+  - "+0": "000000000000000000"
+  - "-0": FFFFFFFFFFFFFFFFFF
+  - "+1": "401800000000000000"
+  - "-1": BFE7FFFFFFFFFFFFFF
+  - "+0.1": 3FDCCCCCCCCCCCCCCD
+  - "-0.1": C02333333333333332
+  - "0.5": "400800000000000000"
+  - "-0.5": BFF7FFFFFFFFFFFFFF
+  - "29.2": 405E9999999999999A
+  - "-29.2": BFA166666666666665
+  - "0.03125": 3FC800000000000000
+  - "-0.03125": C037FFFFFFFFFFFFFF
+  - "-0.3125": C005FFFFFFFFFFFFFF
+  - 1.234E2: 407F6CCCCCCCCCCCCD
+  - "-1.234E-6": C125A601535E9934E6
+  - "65536.0": "411800000000000000"
+  - "-65536.0": BEE7FFFFFFFFFFFFFF
+  - "-7.50": BFC0FFFFFFFFFFFFFF
+  - "2.7813423231340017289E-309": 000800000000000000
+  - 8.9884656743115795309E307: 7FFFFFFFFFFFFFFFFF
+  - "1.7347234759768070944E-18": 3C6800000000000000
+  - "1.7347234759768070944E-18": 3C6800000000000000
+  base: 16
+IBM32: 
+  parameters: 
+  - total_bits: 32
+  - radix: 16
+  - significand_digits: 6
+  - radix_min_exp: -65
+  - radix_max_exp: 62
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 9
+  - decimal_min_exp: -77
+  - decimal_max_exp: 77
+  values: 
+  - Rational(1, 3): 40 55 55 55
+  - Rational(1, 10): 40 19 99 9A
+  - Rational(2, 3): 40 AA AA AB
+  - Rational(1, 1024): 3E 40 00 00
+  - Rational(1, 1000): 3E 41 89 37
+  - Rational(1024, 1): 43 40 00 00
+  - Rational(1024, 1): 43 40 00 00
+  special: 
+  - min_value: 00 10 00 00
+  - min_normalized_value: 00 10 00 00
+  - max_value: 7F FF FF FF
+  - epsilon: 3C 10 00 00
+  - strict_epsilon: 3C 10 00 00
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 80 00 00 00
+  - "+1": 41 10 00 00
+  - "-1": C1 10 00 00
+  - "+0.1": 40 19 99 9A
+  - "-0.1": C0 19 99 9A
+  - "0.5": 40 80 00 00
+  - "-0.5": C0 80 00 00
+  - "29.2": 42 1D 33 33
+  - "-29.2": C2 1D 33 33
+  - "0.03125": 3F 80 00 00
+  - "-0.03125": BF 80 00 00
+  - "-0.3125": C0 50 00 00
+  - 1.234E2: 42 7B 66 66
+  - "-1.234E-6": BC 14 B3 FD
+  - "65536.0": 45 10 00 00
+  - "-65536.0": C5 10 00 00
+  - "-7.50": C1 78 00 00
+  - "5.39760535E-79": 00 10 00 00
+  - 7.23700515E75: 7F FF FF FF
+  - "9.53674316E-7": 3C 10 00 00
+  - "9.53674316E-7": 3C 10 00 00
+  base: :bytes
+PDP11_D: 
+  parameters: 
+  - total_bits: 64
+  - radix: 2
+  - significand_digits: 56
+  - radix_min_exp: -129
+  - radix_max_exp: 126
+  - decimal_digits_stored: 16
+  - decimal_digits_necessary: 18
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): AA 3F AA AA AA AA AB AA
+  - Rational(1, 10): CC 3E CC CC CC CC CD CC
+  - Rational(2, 3): 2A 40 AA AA AA AA AB AA
+  - Rational(1, 1024): 80 3B 00 00 00 00 00 00
+  - Rational(1, 1000): 83 3B 6E 12 8D 97 DF 4F
+  - Rational(1024, 1): 80 45 00 00 00 00 00 00
+  - Rational(1024, 1): 80 45 00 00 00 00 00 00
+  special: 
+  - min_value: 00 00 00 00 00 00 01 00
+  - min_normalized_value: 00 00 00 00 00 00 01 00
+  - max_value: FF 7F FF FF FF FF FF FF
+  - epsilon: 00 25 00 00 00 00 00 00
+  - strict_epsilon: 00 25 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 00 80 00 00 00 00 00 00
+  - "+1": 80 40 00 00 00 00 00 00
+  - "-1": 80 C0 00 00 00 00 00 00
+  - "+0.1": CC 3E CC CC CC CC CD CC
+  - "-0.1": CC BE CC CC CC CC CD CC
+  - "0.5": 00 40 00 00 00 00 00 00
+  - "-0.5": 00 C0 00 00 00 00 00 00
+  - "29.2": E9 42 99 99 99 99 9A 99
+  - "-29.2": E9 C2 99 99 99 99 9A 99
+  - "0.03125": 00 3E 00 00 00 00 00 00
+  - "-0.03125": 00 BE 00 00 00 00 00 00
+  - "-0.3125": A0 BF 00 00 00 00 00 00
+  - 1.234E2: F6 43 CC CC CC CC CD CC
+  - "-1.234E-6": A5 B6 EA 9F 16 CA B2 6C
+  - "65536.0": 80 48 00 00 00 00 00 00
+  - "-65536.0": 80 C8 00 00 00 00 00 00
+  - "-7.50": F0 C1 00 00 00 00 00 00
+  - "1.46936793852785943E-39": 00 00 00 00 00 00 01 00
+  - 1.70141183460469229E38: FF 7F FF FF FF FF FF FF
+  - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
+  - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
+  base: :bytes
+C51_BCD_DOUBLE: 
+  parameters: 
+  - total_bits: 48
+  - radix: 10
+  - significand_digits: 10
+  - radix_min_exp: -65
+  - radix_max_exp: 62
+  - decimal_digits_stored: 10
+  - decimal_digits_necessary: 10
+  - decimal_min_exp: -65
+  - decimal_max_exp: 62
+  values: 
+  - Rational(1, 3): 40 33 33 33 33 33
+  - Rational(1, 10): 40 00 00 00 00 10
+  - Rational(2, 3): 40 67 66 66 66 66
+  - Rational(1, 1024): 3D 00 50 62 65 97
+  - Rational(1, 1000): 3E 00 00 00 00 10
+  - Rational(1024, 1): 44 00 00 00 24 10
+  - Rational(1024, 1): 44 00 00 00 24 10
+  special: 
+  - min_value: 00 00 00 00 00 10
+  - min_normalized_value: 00 00 00 00 00 10
+  - max_value: 7F 99 99 99 99 99
+  - epsilon: 38 00 00 00 00 10
+  - strict_epsilon: 38 00 00 00 00 10
+  numerals: 
+  - "+0": 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00
+  - "+1": 41 00 00 00 00 10
+  - "-1": C1 00 00 00 00 10
+  - "+0.1": 40 00 00 00 00 10
+  - "-0.1": C0 00 00 00 00 10
+  - "0.5": 40 00 00 00 00 50
+  - "-0.5": C0 00 00 00 00 50
+  - "29.2": 42 00 00 00 20 29
+  - "-29.2": C2 00 00 00 20 29
+  - "0.03125": 3F 00 00 00 25 31
+  - "-0.03125": BF 00 00 00 25 31
+  - "-0.3125": C0 00 00 00 25 31
+  - 1.234E2: 43 00 00 00 34 12
+  - "-1.234E-6": BB 00 00 00 34 12
+  - "65536.0": 45 00 00 60 53 65
+  - "-65536.0": C5 00 00 60 53 65
+  - "-7.50": C1 00 00 00 00 75
+  - 1E-65: 00 00 00 00 00 10
+  - 9.999999999E62: 7F 99 99 99 99 99
+  - 1E-9: 38 00 00 00 00 10
+  - 1E-9: 38 00 00 00 00 10
+  base: :bytes
+VAX_F: 
+  parameters: 
+  - total_bits: 32
+  - radix: 2
+  - significand_digits: 24
+  - radix_min_exp: -128
+  - radix_max_exp: 126
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 9
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): AA 3F AB AA
+  - Rational(1, 10): CC 3E CD CC
+  - Rational(2, 3): 2A 40 AB AA
+  - Rational(1, 1024): 80 3B 00 00
+  - Rational(1, 1000): 83 3B 6F 12
+  - Rational(1024, 1): 80 45 00 00
+  - Rational(1024, 1): 80 45 00 00
+  special: 
+  - min_value: 80 00 00 00
+  - min_normalized_value: 80 00 00 00
+  - max_value: FF 7F FF FF
+  - epsilon: 00 35 00 00
+  - strict_epsilon: 00 35 00 00
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 00 80 00 00
+  - "+1": 80 40 00 00
+  - "-1": 80 C0 00 00
+  - "+0.1": CC 3E CD CC
+  - "-0.1": CC BE CD CC
+  - "0.5": 00 40 00 00
+  - "-0.5": 00 C0 00 00
+  - "29.2": E9 42 9A 99
+  - "-29.2": E9 C2 9A 99
+  - "0.03125": 00 3E 00 00
+  - "-0.03125": 00 BE 00 00
+  - "-0.3125": A0 BF 00 00
+  - 1.234E2: F6 43 CD CC
+  - "-1.234E-6": A5 B6 EB 9F
+  - "65536.0": 80 48 00 00
+  - "-65536.0": 80 C8 00 00
+  - "-7.50": F0 C1 00 00
+  - "2.93873588E-39": 80 00 00 00
+  - 1.70141173E38: FF 7F FF FF
+  - "1.1920929E-7": 00 35 00 00
+  - "1.1920929E-7": 00 35 00 00
+  base: :bytes
+XS256_DOUBLE: 
+  parameters: 
+  - total_bits: 64
+  - radix: 2
+  - significand_digits: 55
+  - radix_min_exp: -256
+  - radix_max_exp: 255
+  - decimal_digits_stored: 16
+  - decimal_digits_necessary: 18
+  - decimal_min_exp: -76
+  - decimal_max_exp: 77
+  values: 
+  - Rational(1, 3): 3F 95 55 55 55 55 55 55
+  - Rational(1, 10): 3F 26 66 66 66 66 66 66
+  - Rational(2, 3): 3F D5 55 55 55 55 55 55
+  - Rational(1, 1024): 3D 80 00 00 00 00 00 00
+  - Rational(1, 1000): 3D 81 89 37 4B C6 A7 F0
+  - Rational(1024, 1): 42 80 00 00 00 00 00 00
+  - Rational(1024, 1): 42 80 00 00 00 00 00 00
+  special: 
+  - min_value: 00 00 00 00 00 00 00 01
+  - min_normalized_value: 00 00 00 00 00 00 00 01
+  - max_value: 7F FF FF FF FF FF FF FF
+  - epsilon: 32 80 00 00 00 00 00 00
+  - strict_epsilon: 32 40 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00 00 00
+  - "+1": 40 00 00 00 00 00 00 00
+  - "-1": C0 00 00 00 00 00 00 00
+  - "+0.1": 3F 26 66 66 66 66 66 66
+  - "-0.1": BF 26 66 66 66 66 66 66
+  - "0.5": 3F C0 00 00 00 00 00 00
+  - "-0.5": BF C0 00 00 00 00 00 00
+  - "29.2": 41 34 CC CC CC CC CC CD
+  - "-29.2": C1 34 CC CC CC CC CC CD
+  - "0.03125": 3E C0 00 00 00 00 00 00
+  - "-0.03125": BE C0 00 00 00 00 00 00
+  - "-0.3125": BF 90 00 00 00 00 00 00
+  - 1.234E2: 41 BB 66 66 66 66 66 66
+  - "-1.234E-6": BB 12 CF F5 65 0B 36 59
+  - "65536.0": 44 00 00 00 00 00 00 00
+  - "-65536.0": C4 00 00 00 00 00 00 00
+  - "-7.50": C0 B8 00 00 00 00 00 00
+  - "8.6361685550944451E-78": 00 00 00 00 00 00 00 00
+  - 1.15792089237316192E77: 7F FF FF FF FF FF FF FF
+  - "5.5511151231257827E-17": 32 80 00 00 00 00 00 00
+  - "2.77555756156289135E-17": 32 40 00 00 00 00 00 00
+  base: :bytes
+IEEE_128: 
+  parameters: 
+  - total_bits: 128
+  - radix: 2
+  - significand_digits: 112
+  - radix_min_exp: -16382
+  - radix_max_exp: 16383
+  - decimal_digits_stored: 33
+  - decimal_digits_necessary: 35
+  - decimal_min_exp: -4931
+  - decimal_max_exp: 4932
+  values: 
+  - Rational(1, 3): AB AA AA AA AA AA AA AA AA AA AA AA AA AA FD 3F
+  - Rational(1, 10): CD CC CC CC CC CC CC CC CC CC CC CC CC CC FB 3F
+  - Rational(2, 3): AB AA AA AA AA AA AA AA AA AA AA AA AA AA FE 3F
+  - Rational(1, 1024): 00 00 00 00 00 00 00 00 00 00 00 00 00 80 F5 3F
+  - Rational(1, 1000): 31 08 AC 1C 5A 64 3B DF 4F 8D 97 6E 12 83 F5 3F
+  - Rational(1024, 1): 00 00 00 00 00 00 00 00 00 00 00 00 00 80 09 40
+  - Rational(1024, 1): 00 00 00 00 00 00 00 00 00 00 00 00 00 80 09 40
+  special: 
+  - min_value: 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - min_normalized_value: 00 00 00 00 00 00 00 00 00 00 00 00 00 80 01 00
+  - max_value: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FE 7F
+  - epsilon: 00 00 00 00 00 00 00 00 00 00 00 00 00 80 90 3F
+  - strict_epsilon: 01 00 00 00 00 00 00 00 00 00 00 00 00 80 8F 3F
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80
+  - "+1": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 FF 3F
+  - "-1": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 FF BF
+  - "+0.1": CD CC CC CC CC CC CC CC CC CC CC CC CC CC FB 3F
+  - "-0.1": CD CC CC CC CC CC CC CC CC CC CC CC CC CC FB BF
+  - "0.5": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 FE 3F
+  - "-0.5": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 FE BF
+  - "29.2": 9A 99 99 99 99 99 99 99 99 99 99 99 99 E9 03 40
+  - "-29.2": 9A 99 99 99 99 99 99 99 99 99 99 99 99 E9 03 C0
+  - "0.03125": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 FA 3F
+  - "-0.03125": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 FA BF
+  - "-0.3125": 00 00 00 00 00 00 00 00 00 00 00 00 00 A0 FD BF
+  - 1.234E2: CD CC CC CC CC CC CC CC CC CC CC CC CC F6 05 40
+  - "-1.234E-6": 90 0F B2 E0 09 B3 8C B1 6C 16 CA EA 9F A5 EB BF
+  - "65536.0": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 0F 40
+  - "-65536.0": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 0F C0
+  - "-7.50": 00 00 00 00 00 00 00 00 00 00 00 00 00 F0 01 C0
+  - "3.3621031431120935062626778173217526E-4932": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 01 00
+  - 1.1897314953572317650857593266280069E4932: FF FF FF FF FF FF FF FF FF FF FF FF FF FF FE 7F
+  - "3.8518598887744717061119558851698546E-34": 00 00 00 00 00 00 00 00 00 00 00 00 00 80 90 3F
+  - "1.9259299443872358530559779425849281E-34": 01 00 00 00 00 00 00 00 00 00 00 00 00 80 8F 3F
+  base: :bytes
+IEEE_DOUBLE: 
+  parameters: 
+  - total_bits: 64
+  - radix: 2
+  - significand_digits: 53
+  - radix_min_exp: -1022
+  - radix_max_exp: 1023
+  - decimal_digits_stored: 15
+  - decimal_digits_necessary: 17
+  - decimal_min_exp: -307
+  - decimal_max_exp: 308
+  values: 
+  - Rational(1, 3): 55 55 55 55 55 55 D5 3F
+  - Rational(1, 10): 9A 99 99 99 99 99 B9 3F
+  - Rational(2, 3): 55 55 55 55 55 55 E5 3F
+  - Rational(1, 1024): 00 00 00 00 00 00 50 3F
+  - Rational(1, 1000): FC A9 F1 D2 4D 62 50 3F
+  - Rational(1024, 1): 00 00 00 00 00 00 90 40
+  - Rational(1024, 1): 00 00 00 00 00 00 90 40
+  special: 
+  - min_value: 01 00 00 00 00 00 00 00
+  - min_normalized_value: 00 00 00 00 00 00 10 00
+  - max_value: FF FF FF FF FF FF EF 7F
+  - epsilon: 00 00 00 00 00 00 B0 3C
+  - strict_epsilon: 01 00 00 00 00 00 A0 3C
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 00 00 00 00 00 00 00 80
+  - "+1": 00 00 00 00 00 00 F0 3F
+  - "-1": 00 00 00 00 00 00 F0 BF
+  - "+0.1": 9A 99 99 99 99 99 B9 3F
+  - "-0.1": 9A 99 99 99 99 99 B9 BF
+  - "0.5": 00 00 00 00 00 00 E0 3F
+  - "-0.5": 00 00 00 00 00 00 E0 BF
+  - "29.2": 33 33 33 33 33 33 3D 40
+  - "-29.2": 33 33 33 33 33 33 3D C0
+  - "0.03125": 00 00 00 00 00 00 A0 3F
+  - "-0.03125": 00 00 00 00 00 00 A0 BF
+  - "-0.3125": 00 00 00 00 00 00 D4 BF
+  - 1.234E2: 9A 99 99 99 99 D9 5E 40
+  - "-1.234E-6": 96 CD 42 59 FD B3 B4 BE
+  - "65536.0": 00 00 00 00 00 00 F0 40
+  - "-65536.0": 00 00 00 00 00 00 F0 C0
+  - "-7.50": 00 00 00 00 00 00 1E C0
+  - "2.2250738585072014E-308": 00 00 00 00 00 00 10 00
+  - 1.7976931348623157E308: FF FF FF FF FF FF EF 7F
+  - "2.2204460492503131E-16": 00 00 00 00 00 00 B0 3C
+  - "1.1102230246251568E-16": 01 00 00 00 00 00 A0 3C
+  base: :bytes
+CDC_DOUBLE: 
+  parameters: 
+  - total_bits: 120
+  - radix: 2
+  - significand_digits: 96
+  - radix_min_exp: -928
+  - radix_max_exp: 1070
+  - decimal_digits_stored: 28
+  - decimal_digits_necessary: 30
+  - decimal_min_exp: -279
+  - decimal_max_exp: 322
+  values: 
+  - Rational(1, 3): AB AA AA AA AA AA 9E A3 AA AA AA AA AA EA 3C
+  - Rational(1, 10): CD CC CC CC CC CC 9C C3 CC CC CC CC CC CC 3C
+  - Rational(2, 3): AB AA AA AA AA AA 9F A3 AA AA AA AA AA FA 3C
+  - Rational(1, 1024): 00 00 00 00 00 00 96 03 00 00 00 00 00 68 3C
+  - Rational(1, 1000): AC 1C 5A 64 3B DF 96 F3 D4 78 E9 26 31 68 3C
+  - Rational(1024, 1): 00 00 00 00 00 00 AA 03 00 00 00 00 00 A8 3D
+  - Rational(1024, 1): 00 00 00 00 00 00 AA 03 00 00 00 00 00 A8 3D
+  special: 
+  - min_value: 00 00 00 00 00 00 00 00 00 00 00 00 00 08 03
+  - min_normalized_value: 00 00 00 00 00 00 00 00 00 00 00 00 00 08 03
+  - max_value: FF FF FF FF FF FF FF F7 FF FF FF FF FF FF 7F
+  - epsilon: 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
+  - strict_epsilon: 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0": FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+  - "+1": 00 00 00 00 00 00 A0 03 00 00 00 00 00 08 3D
+  - "-1": FF FF FF FF FF FF 5F FC FF FF FF FF FF F7 C2
+  - "+0.1": CD CC CC CC CC CC 9C C3 CC CC CC CC CC CC 3C
+  - "-0.1": 32 33 33 33 33 33 63 3C 33 33 33 33 33 33 C3
+  - "0.5": 00 00 00 00 00 00 9F 03 00 00 00 00 00 F8 3C
+  - "-0.5": FF FF FF FF FF FF 60 FC FF FF FF FF FF 07 C3
+  - "29.2": 9A 99 99 99 99 99 A4 93 99 99 99 99 99 4E 3D
+  - "-29.2": 65 66 66 66 66 66 5B 6C 66 66 66 66 66 B1 C2
+  - "0.03125": 00 00 00 00 00 00 9B 03 00 00 00 00 00 B8 3C
+  - "-0.03125": FF FF FF FF FF FF 64 FC FF FF FF FF FF 47 C3
+  - "-0.3125": FF FF FF FF FF FF 61 FC FF FF FF FF FF 15 C3
+  - 1.234E2: CD CC CC CC CC CC A6 C3 CC CC CC CC 6C 6F 3D
+  - "-1.234E-6": 4D 1F F6 4C 73 4E 73 3C 99 5E 53 01 A6 35 C4
+  - "65536.0": 00 00 00 00 00 00 B0 03 00 00 00 00 00 08 3E
+  - "-65536.0": FF FF FF FF FF FF 4F FC FF FF FF FF FF F7 C1
+  - "-7.50": FF FF FF FF FF FF 5D FC FF FF FF FF FF D0 C2
+  - "4.40721283170124408220034687787E-280": 00 00 00 00 00 00 00 00 00 00 00 00 00 08 03
+  - 2.53002816634138272940619183395E322: FF FF FF FF FF FF FF F7 FF FF FF FF FF FF 7F
+  - "2.5243548967072377773175314089E-29": 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
+  - "2.5243548967072377773175314089E-29": 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
+  base: :bytes
+PDP11_F: 
+  parameters: 
+  - total_bits: 32
+  - radix: 2
+  - significand_digits: 24
+  - radix_min_exp: -129
+  - radix_max_exp: 126
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 9
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): AA 3F AB AA
+  - Rational(1, 10): CC 3E CD CC
+  - Rational(2, 3): 2A 40 AB AA
+  - Rational(1, 1024): 80 3B 00 00
+  - Rational(1, 1000): 83 3B 6F 12
+  - Rational(1024, 1): 80 45 00 00
+  - Rational(1024, 1): 80 45 00 00
+  special: 
+  - min_value: 00 00 01 00
+  - min_normalized_value: 00 00 01 00
+  - max_value: FF 7F FF FF
+  - epsilon: 00 35 00 00
+  - strict_epsilon: 00 35 00 00
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 00 80 00 00
+  - "+1": 80 40 00 00
+  - "-1": 80 C0 00 00
+  - "+0.1": CC 3E CD CC
+  - "-0.1": CC BE CD CC
+  - "0.5": 00 40 00 00
+  - "-0.5": 00 C0 00 00
+  - "29.2": E9 42 9A 99
+  - "-29.2": E9 C2 9A 99
+  - "0.03125": 00 3E 00 00
+  - "-0.03125": 00 BE 00 00
+  - "-0.3125": A0 BF 00 00
+  - 1.234E2: F6 43 CD CC
+  - "-1.234E-6": A5 B6 EB 9F
+  - "65536.0": 80 48 00 00
+  - "-65536.0": 80 C8 00 00
+  - "-7.50": F0 C1 00 00
+  - "1.46936811E-39": 00 00 00 00
+  - 1.70141173E38: FF 7F FF FF
+  - "1.1920929E-7": 00 35 00 00
+  - "1.1920929E-7": 00 35 00 00
+  base: :bytes
+VAX_G: 
+  parameters: 
+  - total_bits: 64
+  - radix: 2
+  - significand_digits: 53
+  - radix_min_exp: -1024
+  - radix_max_exp: 1022
+  - decimal_digits_stored: 15
+  - decimal_digits_necessary: 17
+  - decimal_min_exp: -307
+  - decimal_max_exp: 308
+  values: 
+  - Rational(1, 3): F5 3F 55 55 55 55 55 55
+  - Rational(1, 10): D9 3F 99 99 99 99 9A 99
+  - Rational(2, 3): 05 40 55 55 55 55 55 55
+  - Rational(1, 1024): 70 3F 00 00 00 00 00 00
+  - Rational(1, 1000): 70 3F 4D 62 F1 D2 FC A9
+  - Rational(1024, 1): B0 40 00 00 00 00 00 00
+  - Rational(1024, 1): B0 40 00 00 00 00 00 00
+  special: 
+  - min_value: 10 00 00 00 00 00 00 00
+  - min_normalized_value: 10 00 00 00 00 00 00 00
+  - max_value: FF 7F FF FF FF FF FF FF
+  - epsilon: D0 3C 00 00 00 00 00 00
+  - strict_epsilon: D0 3C 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 00 80 00 00 00 00 00 00
+  - "+1": 10 40 00 00 00 00 00 00
+  - "-1": 10 C0 00 00 00 00 00 00
+  - "+0.1": D9 3F 99 99 99 99 9A 99
+  - "-0.1": D9 BF 99 99 99 99 9A 99
+  - "0.5": 00 40 00 00 00 00 00 00
+  - "-0.5": 00 C0 00 00 00 00 00 00
+  - "29.2": 5D 40 33 33 33 33 33 33
+  - "-29.2": 5D C0 33 33 33 33 33 33
+  - "0.03125": C0 3F 00 00 00 00 00 00
+  - "-0.03125": C0 BF 00 00 00 00 00 00
+  - "-0.3125": F4 BF 00 00 00 00 00 00
+  - 1.234E2: 7E 40 99 D9 99 99 9A 99
+  - "-1.234E-6": D4 BE FD B3 42 59 96 CD
+  - "65536.0": 10 41 00 00 00 00 00 00
+  - "-65536.0": 10 C1 00 00 00 00 00 00
+  - "-7.50": 3E C0 00 00 00 00 00 00
+  - "5.5626846462680035E-309": 10 00 00 00 00 00 00 00
+  - 8.9884656743115785E307: FF 7F FF FF FF FF FF FF
+  - "2.2204460492503131E-16": D0 3C 00 00 00 00 00 00
+  - "2.2204460492503131E-16": D0 3C 00 00 00 00 00 00
+  base: :bytes
+SATURN_X: 
+  parameters: 
+  - total_bits: 104
+  - radix: 10
+  - significand_digits: 15
+  - radix_min_exp: -49999
+  - radix_max_exp: 49999
+  - decimal_digits_stored: 15
+  - decimal_digits_necessary: 15
+  - decimal_min_exp: -49999
+  - decimal_max_exp: 49999
+  values: 
+  - Rational(1, 3): 03333333333333339999902955
+  - Rational(1, 10): 01000000000000009999902955
+  - Rational(2, 3): 06666666666666679999902955
+  - Rational(1, 1024): 09765625000000009999602955
+  - Rational(1, 1000): 01000000000000009999702955
+  - Rational(1024, 1): 01024000000000000000302955
+  - Rational(1024, 1): 01024000000000000000302955
+  special: 
+  - min_value: 01000000000000005000102955
+  - min_normalized_value: 01000000000000005000102955
+  - max_value: 09999999999999994999902955
+  - epsilon: 01000000000000009998602955
+  - strict_epsilon: 05000000000000019998502955
+  numerals: 
+  - "+0": 00000000000000000000002955
+  - "-0": "90000000000000000000002955"
+  - "+1": 01000000000000000000002955
+  - "-1": "91000000000000000000002955"
+  - "+0.1": 01000000000000009999902955
+  - "-0.1": "91000000000000009999902955"
+  - "0.5": 05000000000000009999902955
+  - "-0.5": "95000000000000009999902955"
+  - "29.2": 02920000000000000000102955
+  - "-29.2": "92920000000000000000102955"
+  - "0.03125": 03125000000000009999802955
+  - "-0.03125": "93125000000000009999802955"
+  - "-0.3125": "93125000000000009999902955"
+  - 1.234E2: 01234000000000000000202955
+  - "-1.234E-6": "91234000000000009999402955"
+  - "65536.0": 06553600000000000000402955
+  - "-65536.0": "96553600000000000000402955"
+  - "-7.50": "97500000000000000000002955"
+  - 1E-49999: 01000000000000005000102955
+  - 9.99999999999999E49999: 09999999999999994999902955
+  - 1E-14: 01000000000000009998602955
+  - "5.00000000000001E-15": 05000000000000019998502955
+  base: 16
+SATURN: 
+  parameters: 
+  - total_bits: 84
+  - radix: 10
+  - significand_digits: 12
+  - radix_min_exp: -499
+  - radix_max_exp: 499
+  - decimal_digits_stored: 12
+  - decimal_digits_necessary: 12
+  - decimal_min_exp: -499
+  - decimal_max_exp: 499
+  values: 
+  - Rational(1, 3): 033333333333399902933
+  - Rational(1, 10): 010000000000099902933
+  - Rational(2, 3): 066666666666799902933
+  - Rational(1, 1024): 097656250000099602933
+  - Rational(1, 1000): 010000000000099702933
+  - Rational(1024, 1): 010240000000000302933
+  - Rational(1024, 1): 010240000000000302933
+  special: 
+  - min_value: 010000000000050102933
+  - min_normalized_value: 010000000000050102933
+  - max_value: 099999999999949902933
+  - epsilon: 010000000000098902933
+  - strict_epsilon: 050000000000198802933
+  numerals: 
+  - "+0": 000000000000000002933
+  - "-0": "900000000000000002933"
+  - "+1": 010000000000000002933
+  - "-1": "910000000000000002933"
+  - "+0.1": 010000000000099902933
+  - "-0.1": "910000000000099902933"
+  - "0.5": 050000000000099902933
+  - "-0.5": "950000000000099902933"
+  - "29.2": 029200000000000102933
+  - "-29.2": "929200000000000102933"
+  - "0.03125": 031250000000099802933
+  - "-0.03125": "931250000000099802933"
+  - "-0.3125": "931250000000099902933"
+  - 1.234E2: 012340000000000202933
+  - "-1.234E-6": "912340000000099402933"
+  - "65536.0": 065536000000000402933
+  - "-65536.0": "965536000000000402933"
+  - "-7.50": "975000000000000002933"
+  - 1E-499: 010000000000050102933
+  - 9.99999999999E499: 099999999999949902933
+  - 1E-11: 010000000000098902933
+  - "5.00000000001E-12": 050000000000198802933
+  base: 16
+VAX_H: 
+  parameters: 
+  - total_bits: 128
+  - radix: 2
+  - significand_digits: 113
+  - radix_min_exp: -16384
+  - radix_max_exp: 16382
+  - decimal_digits_stored: 33
+  - decimal_digits_necessary: 36
+  - decimal_min_exp: -4931
+  - decimal_max_exp: 4932
+  values: 
+  - Rational(1, 3): FF 3F 55 55 55 55 55 55 55 55 55 55 55 55 55 55
+  - Rational(1, 10): FD 3F 99 99 99 99 99 99 99 99 99 99 99 99 9A 99
+  - Rational(2, 3): 00 40 55 55 55 55 55 55 55 55 55 55 55 55 55 55
+  - Rational(1, 1024): F7 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - Rational(1, 1000): F7 3F 24 06 2F DD 9F 1A 76 BE B4 C8 58 39 62 10
+  - Rational(1024, 1): 0B 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - Rational(1024, 1): 0B 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  special: 
+  - min_value: 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - min_normalized_value: 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - max_value: FF 7F FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+  - epsilon: 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - strict_epsilon: 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0": 00 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "+1": 01 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-1": 01 C0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "+0.1": FD 3F 99 99 99 99 99 99 99 99 99 99 99 99 9A 99
+  - "-0.1": FD BF 99 99 99 99 99 99 99 99 99 99 99 99 9A 99
+  - "0.5": 00 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0.5": 00 C0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "29.2": 05 40 33 D3 33 33 33 33 33 33 33 33 33 33 33 33
+  - "-29.2": 05 C0 33 D3 33 33 33 33 33 33 33 33 33 33 33 33
+  - "0.03125": FC 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0.03125": FC BF 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0.3125": FF BF 00 40 00 00 00 00 00 00 00 00 00 00 00 00
+  - 1.234E2: 07 40 99 ED 99 99 99 99 99 99 99 99 99 99 9A 99
+  - "-1.234E-6": ED BF 3F 4B 94 D5 D9 2C 19 63 13 66 64 C1 20 1F
+  - "65536.0": 11 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-65536.0": 11 C0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-7.50": 03 C0 00 E0 00 00 00 00 00 00 00 00 00 00 00 00
+  - "8.40525785778023376565669454330438151E-4933": 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - 5.94865747678615882542879663314003508E4931: FF 7F FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+  - "1.92592994438723585305597794258492732E-34": 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "1.92592994438723585305597794258492732E-34": 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  base: :bytes
+MBF_SINGLE: 
+  parameters: 
+  - total_bits: 32
+  - radix: 2
+  - significand_digits: 24
+  - radix_min_exp: -128
+  - radix_max_exp: 126
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 9
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): AB AA 2A 7F
+  - Rational(1, 10): CD CC 4C 7D
+  - Rational(2, 3): AB AA 2A 80
+  - Rational(1, 1024): 00 00 00 77
+  - Rational(1, 1000): 6F 12 03 77
+  - Rational(1024, 1): 00 00 00 8B
+  - Rational(1024, 1): 00 00 00 8B
+  special: 
+  - min_value: 00 00 00 01
+  - min_normalized_value: 00 00 00 01
+  - max_value: FF FF 7F FF
+  - epsilon: 00 00 00 6A
+  - strict_epsilon: 00 00 00 6A
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 00 00 80 00
+  - "+1": 00 00 00 81
+  - "-1": 00 00 80 81
+  - "+0.1": CD CC 4C 7D
+  - "-0.1": CD CC CC 7D
+  - "0.5": 00 00 00 80
+  - "-0.5": 00 00 80 80
+  - "29.2": 9A 99 69 85
+  - "-29.2": 9A 99 E9 85
+  - "0.03125": 00 00 00 7C
+  - "-0.03125": 00 00 80 7C
+  - "-0.3125": 00 00 A0 7F
+  - 1.234E2: CD CC 76 87
+  - "-1.234E-6": EB 9F A5 6D
+  - "65536.0": 00 00 00 91
+  - "-65536.0": 00 00 80 91
+  - "-7.50": 00 00 F0 83
+  - "2.93873588E-39": 00 00 00 01
+  - 1.70141173E38: FF FF 7F FF
+  - "1.1920929E-7": 00 00 00 6A
+  - "1.1920929E-7": 00 00 00 6A
+  base: :bytes
+HP_CLASSIC: 
+  parameters: 
+  - total_bits: 56
+  - radix: 10
+  - significand_digits: 10
+  - radix_min_exp: -99
+  - radix_max_exp: 99
+  - decimal_digits_stored: 10
+  - decimal_digits_necessary: 10
+  - decimal_min_exp: -99
+  - decimal_max_exp: 99
+  values: 
+  - Rational(1, 3): 03 33 33 33 33 39 99
+  - Rational(1, 10): 01 00 00 00 00 09 99
+  - Rational(2, 3): 06 66 66 66 66 79 99
+  - Rational(1, 1024): 09 76 56 25 00 09 96
+  - Rational(1, 1000): 01 00 00 00 00 09 97
+  - Rational(1024, 1): 01 02 40 00 00 00 03
+  - Rational(1024, 1): 01 02 40 00 00 00 03
+  special: 
+  - min_value: 01 00 00 00 00 09 01
+  - min_normalized_value: 01 00 00 00 00 09 01
+  - max_value: 09 99 99 99 99 90 99
+  - epsilon: 01 00 00 00 00 09 91
+  - strict_epsilon: 05 00 00 00 00 09 90
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00
+  - "-0": 90 00 00 00 00 00 00
+  - "+1": 01 00 00 00 00 00 00
+  - "-1": 91 00 00 00 00 00 00
+  - "+0.1": 01 00 00 00 00 09 99
+  - "-0.1": 91 00 00 00 00 09 99
+  - "0.5": 05 00 00 00 00 09 99
+  - "-0.5": 95 00 00 00 00 09 99
+  - "29.2": 02 92 00 00 00 00 01
+  - "-29.2": 92 92 00 00 00 00 01
+  - "0.03125": 03 12 50 00 00 09 98
+  - "-0.03125": 93 12 50 00 00 09 98
+  - "-0.3125": 93 12 50 00 00 09 99
+  - 1.234E2: 01 23 40 00 00 00 02
+  - "-1.234E-6": 91 23 40 00 00 09 94
+  - "65536.0": 06 55 36 00 00 00 04
+  - "-65536.0": 96 55 36 00 00 00 04
+  - "-7.50": 97 50 00 00 00 00 00
+  - 1E-99: 01 00 00 00 00 09 01
+  - 9.999999999E99: 09 99 99 99 99 90 99
+  - 1E-9: 01 00 00 00 00 09 91
+  - 5E-10: 05 00 00 00 00 09 90
+  base: :bytes
+C51_BCD_LONG_DOUBLE: 
+  parameters: 
+  - total_bits: 56
+  - radix: 10
+  - significand_digits: 12
+  - radix_min_exp: -65
+  - radix_max_exp: 62
+  - decimal_digits_stored: 12
+  - decimal_digits_necessary: 12
+  - decimal_min_exp: -65
+  - decimal_max_exp: 62
+  values: 
+  - Rational(1, 3): 40 33 33 33 33 33 33
+  - Rational(1, 10): 40 00 00 00 00 00 10
+  - Rational(2, 3): 40 67 66 66 66 66 66
+  - Rational(1, 1024): 3D 00 00 50 62 65 97
+  - Rational(1, 1000): 3E 00 00 00 00 00 10
+  - Rational(1024, 1): 44 00 00 00 00 24 10
+  - Rational(1024, 1): 44 00 00 00 00 24 10
+  special: 
+  - min_value: 00 00 00 00 00 00 10
+  - min_normalized_value: 00 00 00 00 00 00 10
+  - max_value: 7F 99 99 99 99 99 99
+  - epsilon: 36 00 00 00 00 00 10
+  - strict_epsilon: 36 00 00 00 00 00 10
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00 00
+  - "+1": 41 00 00 00 00 00 10
+  - "-1": C1 00 00 00 00 00 10
+  - "+0.1": 40 00 00 00 00 00 10
+  - "-0.1": C0 00 00 00 00 00 10
+  - "0.5": 40 00 00 00 00 00 50
+  - "-0.5": C0 00 00 00 00 00 50
+  - "29.2": 42 00 00 00 00 20 29
+  - "-29.2": C2 00 00 00 00 20 29
+  - "0.03125": 3F 00 00 00 00 25 31
+  - "-0.03125": BF 00 00 00 00 25 31
+  - "-0.3125": C0 00 00 00 00 25 31
+  - 1.234E2: 43 00 00 00 00 34 12
+  - "-1.234E-6": BB 00 00 00 00 34 12
+  - "65536.0": 45 00 00 00 60 53 65
+  - "-65536.0": C5 00 00 00 60 53 65
+  - "-7.50": C1 00 00 00 00 00 75
+  - 1E-65: 00 00 00 00 00 00 10
+  - 9.99999999999E62: 7F 99 99 99 99 99 99
+  - 1E-11: 36 00 00 00 00 00 10
+  - 1E-11: 36 00 00 00 00 00 10
+  base: :bytes
+IEEE_DEC128: 
+  parameters: 
+  - total_bits: 128
+  - radix: 10
+  - significand_digits: 34
+  - radix_min_exp: -6143
+  - radix_max_exp: 6144
+  - decimal_digits_stored: 34
+  - decimal_digits_necessary: 34
+  - decimal_min_exp: -6143
+  - decimal_max_exp: 6144
+  values: 
+  - Rational(1, 3): 2D FF 9B 36 CD B3 6C DB 36 CD B3 6C DB 36 CD B3
+  - Rational(1, 10): 22 07 C0 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - Rational(2, 3): 39 FF B6 6D 9B 66 D9 B6 6D 9B 66 D9 B6 6D 9B 67
+  - Rational(1, 1024): 22 05 80 00 00 00 00 00 00 00 00 00 00 9F 97 25
+  - Rational(1, 1000): 22 07 40 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - Rational(1024, 1): 22 08 00 00 00 00 00 00 00 00 00 00 00 00 04 24
+  - Rational(1024, 1): 22 08 00 00 00 00 00 00 00 00 00 00 00 00 04 24
+  special: 
+  - min_value: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - min_normalized_value: 00 08 40 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - max_value: 77 FF CF F3 FC FF 3F CF F3 FC FF 3F CF F3 FC FF
+  - epsilon: 25 F7 80 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - strict_epsilon: 25 F7 80 00 00 00 00 00 00 00 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "+1": 22 08 00 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - "-1": A2 08 00 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - "+0.1": 22 07 C0 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - "-0.1": A2 07 C0 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - "0.5": 22 07 C0 00 00 00 00 00 00 00 00 00 00 00 00 05
+  - "-0.5": A2 07 C0 00 00 00 00 00 00 00 00 00 00 00 00 05
+  - "29.2": 22 07 C0 00 00 00 00 00 00 00 00 00 00 00 01 3A
+  - "-29.2": A2 07 C0 00 00 00 00 00 00 00 00 00 00 00 01 3A
+  - "0.03125": 22 06 C0 00 00 00 00 00 00 00 00 00 00 00 0C A5
+  - "-0.03125": A2 06 C0 00 00 00 00 00 00 00 00 00 00 00 0C A5
+  - "-0.3125": A2 07 00 00 00 00 00 00 00 00 00 00 00 00 0C A5
+  - 1.234E2: 22 07 C0 00 00 00 00 00 00 00 00 00 00 00 05 34
+  - "-1.234E-6": A2 05 C0 00 00 00 00 00 00 00 00 00 00 00 05 34
+  - "65536.0": 22 08 00 00 00 00 00 00 00 00 00 00 00 01 96 B6
+  - "-65536.0": A2 08 00 00 00 00 00 00 00 00 00 00 00 01 96 B6
+  - "-7.50": A2 07 C0 00 00 00 00 00 00 00 00 00 00 00 00 75
+  - 1E-6143: 00 08 40 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - 9.999999999999999999999999999999999E6144: 77 FF CF F3 FC FF 3F CF F3 FC FF 3F CF F3 FC FF
+  - 1E-33: 21 FF C0 00 00 00 00 00 00 00 00 00 00 00 00 01
+  - 1E-33: 21 FF C0 00 00 00 00 00 00 00 00 00 00 00 00 01
+  base: :bytes
+XS256: 
+  parameters: 
+  - total_bits: 32
+  - radix: 2
+  - significand_digits: 23
+  - radix_min_exp: -256
+  - radix_max_exp: 255
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 8
+  - decimal_min_exp: -76
+  - decimal_max_exp: 77
+  values: 
+  - Rational(1, 3): 3F 95 55 55
+  - Rational(1, 10): 3F 26 66 66
+  - Rational(2, 3): 3F D5 55 55
+  - Rational(1, 1024): 3D 80 00 00
+  - Rational(1, 1000): 3D 81 89 37
+  - Rational(1024, 1): 42 80 00 00
+  - Rational(1024, 1): 42 80 00 00
+  special: 
+  - min_value: 00 00 00 01
+  - min_normalized_value: 00 00 00 01
+  - max_value: 7F FF FF FF
+  - epsilon: 3A 80 00 00
+  - strict_epsilon: 3A 40 00 00
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 80 00 00 00
+  - "+1": 40 00 00 00
+  - "-1": C0 00 00 00
+  - "+0.1": 3F 26 66 66
+  - "-0.1": BF 26 66 66
+  - "0.5": 3F C0 00 00
+  - "-0.5": BF C0 00 00
+  - "29.2": 41 34 CC CD
+  - "-29.2": C1 34 CC CD
+  - "0.03125": 3E C0 00 00
+  - "-0.03125": BE C0 00 00
+  - "-0.3125": BF 90 00 00
+  - 1.234E2: 41 BB 66 66
+  - "-1.234E-6": BB 12 CF F5
+  - "65536.0": 44 00 00 00
+  - "-65536.0": C4 00 00 00
+  - "-7.50": C0 B8 00 00
+  - "8.6361706E-78": 00 00 00 00
+  - 1.1579208E77: 7F FF FF FF
+  - "2.3841858E-7": 3A 80 00 00
+  - "1.1920929E-7": 3A 40 00 00
+  base: :bytes
+IEEE_EXTENDED: 
+  parameters: 
+  - total_bits: 80
+  - radix: 2
+  - significand_digits: 64
+  - radix_min_exp: -16382
+  - radix_max_exp: 16383
+  - decimal_digits_stored: 18
+  - decimal_digits_necessary: 21
+  - decimal_min_exp: -4931
+  - decimal_max_exp: 4932
+  values: 
+  - Rational(1, 3): AB AA AA AA AA AA AA AA FD 3F
+  - Rational(1, 10): CD CC CC CC CC CC CC CC FB 3F
+  - Rational(2, 3): AB AA AA AA AA AA AA AA FE 3F
+  - Rational(1, 1024): 00 00 00 00 00 00 00 80 F5 3F
+  - Rational(1, 1000): 3B DF 4F 8D 97 6E 12 83 F5 3F
+  - Rational(1024, 1): 00 00 00 00 00 00 00 80 09 40
+  - Rational(1024, 1): 00 00 00 00 00 00 00 80 09 40
+  special: 
+  - min_value: 01 00 00 00 00 00 00 00 00 00
+  - min_normalized_value: 00 00 00 00 00 00 00 80 01 00
+  - max_value: FF FF FF FF FF FF FF FF FE 7F
+  - epsilon: 00 00 00 00 00 00 00 80 C0 3F
+  - strict_epsilon: 01 00 00 00 00 00 00 80 BF 3F
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00 00 00
+  - "-0": 00 00 00 00 00 00 00 00 00 80
+  - "+1": 00 00 00 00 00 00 00 80 FF 3F
+  - "-1": 00 00 00 00 00 00 00 80 FF BF
+  - "+0.1": CD CC CC CC CC CC CC CC FB 3F
+  - "-0.1": CD CC CC CC CC CC CC CC FB BF
+  - "0.5": 00 00 00 00 00 00 00 80 FE 3F
+  - "-0.5": 00 00 00 00 00 00 00 80 FE BF
+  - "29.2": 9A 99 99 99 99 99 99 E9 03 40
+  - "-29.2": 9A 99 99 99 99 99 99 E9 03 C0
+  - "0.03125": 00 00 00 00 00 00 00 80 FA 3F
+  - "-0.03125": 00 00 00 00 00 00 00 80 FA BF
+  - "-0.3125": 00 00 00 00 00 00 00 A0 FD BF
+  - 1.234E2: CD CC CC CC CC CC CC F6 05 40
+  - "-1.234E-6": 8D B1 6C 16 CA EA 9F A5 EB BF
+  - "65536.0": 00 00 00 00 00 00 00 80 0F 40
+  - "-65536.0": 00 00 00 00 00 00 00 80 0F C0
+  - "-7.50": 00 00 00 00 00 00 00 F0 01 C0
+  - "3.36210314311209350626E-4932": 00 00 00 00 00 00 00 80 01 00
+  - 1.18973149535723176502E4932: FF FF FF FF FF FF FF FF FE 7F
+  - "1.08420217248550443401E-19": 00 00 00 00 00 00 00 80 C0 3F
+  - "5.42101086242752217063E-20": 01 00 00 00 00 00 00 80 BF 3F
+  base: :bytes
+WANG2200: 
+  parameters: 
+  - total_bits: 64
+  - radix: 10
+  - significand_digits: 13
+  - radix_min_exp: -99
+  - radix_max_exp: 99
+  - decimal_digits_stored: 13
+  - decimal_digits_necessary: 13
+  - decimal_min_exp: -99
+  - decimal_max_exp: 99
+  values: 
+  - Rational(1, 3): 33 33 33 33 33 33 03 81
+  - Rational(1, 10): 00 00 00 00 00 00 01 81
+  - Rational(2, 3): 67 66 66 66 66 66 06 81
+  - Rational(1, 1024): 00 00 00 25 56 76 09 84
+  - Rational(1, 1000): 00 00 00 00 00 00 01 83
+  - Rational(1024, 1): 00 00 00 00 40 02 01 03
+  - Rational(1024, 1): 00 00 00 00 40 02 01 03
+  special: 
+  - min_value: 00 00 00 00 00 00 91 89
+  - min_normalized_value: 00 00 00 00 00 00 91 89
+  - max_value: 99 99 99 99 99 99 99 09
+  - epsilon: 00 00 00 00 00 00 11 82
+  - strict_epsilon: 00 00 00 00 00 00 11 82
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 00 00 00 00 00 00 00 10
+  - "+1": 00 00 00 00 00 00 01 00
+  - "-1": 00 00 00 00 00 00 01 10
+  - "+0.1": 00 00 00 00 00 00 01 81
+  - "-0.1": 00 00 00 00 00 00 01 91
+  - "0.5": 00 00 00 00 00 00 05 81
+  - "-0.5": 00 00 00 00 00 00 05 91
+  - "29.2": 00 00 00 00 00 92 02 01
+  - "-29.2": 00 00 00 00 00 92 02 11
+  - "0.03125": 00 00 00 00 50 12 03 82
+  - "-0.03125": 00 00 00 00 50 12 03 92
+  - "-0.3125": 00 00 00 00 50 12 03 91
+  - 1.234E2: 00 00 00 00 40 23 01 02
+  - "-1.234E-6": 00 00 00 00 40 23 01 96
+  - "65536.0": 00 00 00 00 36 55 06 04
+  - "-65536.0": 00 00 00 00 36 55 06 14
+  - "-7.50": 00 00 00 00 00 50 07 10
+  - 1E-99: 00 00 00 00 00 00 91 89
+  - 9.999999999999E99: 99 99 99 99 99 99 99 09
+  - 1E-12: 00 00 00 00 00 00 11 82
+  - 1E-12: 00 00 00 00 00 00 11 82
+  base: :bytes
+CRAY: 
+  parameters: 
+  - total_bits: 64
+  - radix: 2
+  - significand_digits: 48
+  - radix_min_exp: -8193
+  - radix_max_exp: 8190
+  - decimal_digits_stored: 14
+  - decimal_digits_necessary: 16
+  - decimal_min_exp: -2466
+  - decimal_max_exp: 2466
+  values: 
+  - Rational(1, 3): 3F FF AA AA AA AA AA AB
+  - Rational(1, 10): 3F FD CC CC CC CC CC CD
+  - Rational(2, 3): 40 00 AA AA AA AA AA AB
+  - Rational(1, 1024): 3F F7 80 00 00 00 00 00
+  - Rational(1, 1000): 3F F7 83 12 6E 97 8D 50
+  - Rational(1024, 1): 40 0B 80 00 00 00 00 00
+  - Rational(1024, 1): 40 0B 80 00 00 00 00 00
+  special: 
+  - min_value: 20 00 80 00 00 00 00 00
+  - min_normalized_value: 20 00 80 00 00 00 00 00
+  - max_value: 5F FF FF FF FF FF FF FF
+  - epsilon: 3F D2 80 00 00 00 00 00
+  - strict_epsilon: 3F D2 80 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00 00 00
+  - "+1": 40 01 80 00 00 00 00 00
+  - "-1": C0 01 80 00 00 00 00 00
+  - "+0.1": 3F FD CC CC CC CC CC CD
+  - "-0.1": BF FD CC CC CC CC CC CD
+  - "0.5": 40 00 80 00 00 00 00 00
+  - "-0.5": C0 00 80 00 00 00 00 00
+  - "29.2": 40 05 E9 99 99 99 99 9A
+  - "-29.2": C0 05 E9 99 99 99 99 9A
+  - "0.03125": 3F FC 80 00 00 00 00 00
+  - "-0.03125": BF FC 80 00 00 00 00 00
+  - "-0.3125": BF FF A0 00 00 00 00 00
+  - 1.234E2: 40 07 F6 CC CC CC CC CD
+  - "-1.234E-6": BF ED A5 9F EA CA 16 6D
+  - "65536.0": 40 11 80 00 00 00 00 00
+  - "-65536.0": C0 11 80 00 00 00 00 00
+  - "-7.50": C0 03 F0 00 00 00 00 00
+  - "4.584009668887118E-2467": 20 00 80 00 00 00 00 00
+  - 5.45374067809706E2465: 5F FF FF FF FF FF FF FF
+  - "7.105427357601002E-15": 3F D2 80 00 00 00 00 00
+  - "7.105427357601002E-15": 3F D2 80 00 00 00 00 00
+  base: :bytes
+IBM128: 
+  parameters: 
+  - total_bits: 128
+  - radix: 16
+  - significand_digits: 28
+  - radix_min_exp: -51
+  - radix_max_exp: 62
+  - decimal_digits_stored: 32
+  - decimal_digits_necessary: 35
+  - decimal_min_exp: -60
+  - decimal_max_exp: 77
+  values: 
+  - Rational(1, 3): 40 55 55 55 55 55 55 55 32 55 55 55 55 55 55 55
+  - Rational(1, 10): 40 19 99 99 99 99 99 99 32 99 99 99 99 99 99 9A
+  - Rational(2, 3): 40 AA AA AA AA AA AA AA 32 AA AA AA AA AA AA AB
+  - Rational(1, 1024): 3E 40 00 00 00 00 00 00 30 00 00 00 00 00 00 00
+  - Rational(1, 1000): 3E 41 89 37 4B C6 A7 EF 30 9D B2 2D 0E 56 04 19
+  - Rational(1024, 1): 43 40 00 00 00 00 00 00 35 00 00 00 00 00 00 00
+  - Rational(1024, 1): 43 40 00 00 00 00 00 00 35 00 00 00 00 00 00 00
+  special: 
+  - min_value: 0E 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - min_normalized_value: 0E 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - max_value: 7F FF FF FF FF FF FF FF 7F FF FF FF FF FF FF FF
+  - epsilon: 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
+  - strict_epsilon: 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00
+  - "+1": 41 10 00 00 00 00 00 00 33 00 00 00 00 00 00 00
+  - "-1": C1 10 00 00 00 00 00 00 B3 00 00 00 00 00 00 00
+  - "+0.1": 40 19 99 99 99 99 99 99 32 99 99 99 99 99 99 9A
+  - "-0.1": C0 19 99 99 99 99 99 99 B2 99 99 99 99 99 99 9A
+  - "0.5": 40 80 00 00 00 00 00 00 32 00 00 00 00 00 00 00
+  - "-0.5": C0 80 00 00 00 00 00 00 B2 00 00 00 00 00 00 00
+  - "29.2": 42 1D 33 33 33 33 33 33 34 33 33 33 33 33 33 33
+  - "-29.2": C2 1D 33 33 33 33 33 33 B4 33 33 33 33 33 33 33
+  - "0.03125": 3F 80 00 00 00 00 00 00 31 00 00 00 00 00 00 00
+  - "-0.03125": BF 80 00 00 00 00 00 00 B1 00 00 00 00 00 00 00
+  - "-0.3125": C0 50 00 00 00 00 00 00 B2 00 00 00 00 00 00 00
+  - 1.234E2: 42 7B 66 66 66 66 66 66 34 66 66 66 66 66 66 66
+  - "-1.234E-6": BC 14 B3 FD 59 42 CD 96 AE 31 96 61 3C 16 41 F2
+  - "65536.0": 45 10 00 00 00 00 00 00 37 00 00 00 00 00 00 00
+  - "-65536.0": C5 10 00 00 00 00 00 00 B7 00 00 00 00 00 00 00
+  - "-7.50": C1 78 00 00 00 00 00 00 B3 00 00 00 00 00 00 00
+  - "3.8893845486632135669650400336125777E-62": 0E 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - 7.2370055773322622139731865630429928E75: 7F FF FF FF FF FF FF FF 7F FF FF FF FF FF FF FF
+  - "3.0814879110195773648895647081358837E-33": 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
+  - "3.0814879110195773648895647081358837E-33": 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
+  base: :bytes
+IEEE_DEC64: 
+  parameters: 
+  - total_bits: 64
+  - radix: 10
+  - significand_digits: 16
+  - radix_min_exp: -383
+  - radix_max_exp: 384
+  - decimal_digits_stored: 16
+  - decimal_digits_necessary: 16
+  - decimal_min_exp: -383
+  - decimal_max_exp: 384
+  values: 
+  - Rational(1, 3): 2D F9 B3 6C DB 36 CD B3
+  - Rational(1, 10): 22 34 00 00 00 00 00 01
+  - Rational(2, 3): 39 FB 66 D9 B6 6D 9B 67
+  - Rational(1, 1024): 22 10 00 00 00 9F 97 25
+  - Rational(1, 1000): 22 2C 00 00 00 00 00 01
+  - Rational(1024, 1): 22 38 00 00 00 00 04 24
+  - Rational(1024, 1): 22 38 00 00 00 00 04 24
+  special: 
+  - min_value: 00 00 00 00 00 00 00 01
+  - min_normalized_value: 00 3C 00 00 00 00 00 01
+  - max_value: 77 FC FF 3F CF F3 FC FF
+  - epsilon: 25 C0 00 00 00 00 00 00
+  - strict_epsilon: 25 C0 00 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 80 00 00 00 00 00 00 00
+  - "+1": 22 38 00 00 00 00 00 01
+  - "-1": A2 38 00 00 00 00 00 01
+  - "+0.1": 22 34 00 00 00 00 00 01
+  - "-0.1": A2 34 00 00 00 00 00 01
+  - "0.5": 22 34 00 00 00 00 00 05
+  - "-0.5": A2 34 00 00 00 00 00 05
+  - "29.2": 22 34 00 00 00 00 01 3A
+  - "-29.2": A2 34 00 00 00 00 01 3A
+  - "0.03125": 22 24 00 00 00 00 0C A5
+  - "-0.03125": A2 24 00 00 00 00 0C A5
+  - "-0.3125": A2 28 00 00 00 00 0C A5
+  - 1.234E2: 22 34 00 00 00 00 05 34
+  - "-1.234E-6": A2 14 00 00 00 00 05 34
+  - "65536.0": 22 38 00 00 00 01 96 B6
+  - "-65536.0": A2 38 00 00 00 01 96 B6
+  - "-7.50": A2 34 00 00 00 00 00 75
+  - 1E-383: 00 3C 00 00 00 00 00 01
+  - 9.999999999999999E384: 77 FC FF 3F CF F3 FC FF
+  - 1E-15: 21 FC 00 00 00 00 00 01
+  - 1E-15: 21 FC 00 00 00 00 00 01
+  base: :bytes
+APPLE: 
+  parameters: 
+  - total_bits: 32
+  - radix: 2
+  - significand_digits: 23
+  - radix_min_exp: -128
+  - radix_max_exp: 127
+  - decimal_digits_stored: 6
+  - decimal_digits_necessary: 8
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): 7E 55 55 55
+  - Rational(1, 10): 7C 66 66 66
+  - Rational(2, 3): 7F 55 55 55
+  - Rational(1, 1024): 76 40 00 00
+  - Rational(1, 1000): 76 41 89 37
+  - Rational(1024, 1): 8A 40 00 00
+  - Rational(1024, 1): 8A 40 00 00
+  special: 
+  - min_value: 00 00 00 01
+  - min_normalized_value: 00 40 00 00
+  - max_value: FF 7F FF FF
+  - epsilon: 6A 40 00 00
+  - strict_epsilon: 6A 40 00 00
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 00 80 00 00
+  - "+1": 80 40 00 00
+  - "-1": 7F 80 00 00
+  - "+0.1": 7C 66 66 66
+  - "-0.1": 7C 99 99 9A
+  - "0.5": 7F 40 00 00
+  - "-0.5": 7E 80 00 00
+  - "29.2": 84 74 CC CD
+  - "-29.2": 84 8B 33 33
+  - "0.03125": 7B 40 00 00
+  - "-0.03125": 7A 80 00 00
+  - "-0.3125": 7E B0 00 00
+  - 1.234E2: 86 7B 66 66
+  - "-1.234E-6": 6C AD 30 0B
+  - "65536.0": 90 40 00 00
+  - "-65536.0": 8F 80 00 00
+  - "-7.50": 82 88 00 00
+  - "5.8774718E-39": 01 40 00 00
+  - 3.4028233E38: FF 7F FF FF
+  - "2.3841858E-7": 6A 40 00 00
+  - "2.3841858E-7": 6A 40 00 00
+  base: :bytes
+IEEE_DEC32: 
+  parameters: 
+  - total_bits: 32
+  - radix: 10
+  - significand_digits: 7
+  - radix_min_exp: -95
+  - radix_max_exp: 96
+  - decimal_digits_stored: 7
+  - decimal_digits_necessary: 7
+  - decimal_min_exp: -95
+  - decimal_max_exp: 96
+  values: 
+  - Rational(1, 3): 2D E6 CD B3
+  - Rational(1, 10): 22 40 00 01
+  - Rational(2, 3): 39 ED 9B 67
+  - Rational(1, 1024): 6D BF 97 25
+  - Rational(1, 1000): 22 20 00 01
+  - Rational(1024, 1): 22 50 04 24
+  - Rational(1024, 1): 22 50 04 24
+  special: 
+  - min_value: 00 00 00 01
+  - min_normalized_value: 00 60 00 01
+  - max_value: 77 F3 FC FF
+  - epsilon: 25 90 00 00
+  - strict_epsilon: 25 90 00 00
+  numerals: 
+  - "+0": 00 00 00 00
+  - "-0": 80 00 00 00
+  - "+1": 22 50 00 01
+  - "-1": A2 50 00 01
+  - "+0.1": 22 40 00 01
+  - "-0.1": A2 40 00 01
+  - "0.5": 22 40 00 05
+  - "-0.5": A2 40 00 05
+  - "29.2": 22 40 01 3A
+  - "-29.2": A2 40 01 3A
+  - "0.03125": 22 00 0C A5
+  - "-0.03125": A2 00 0C A5
+  - "-0.3125": A2 10 0C A5
+  - 1.234E2: 22 40 05 34
+  - "-1.234E-6": A1 C0 05 34
+  - "65536.0": 22 51 96 B6
+  - "-65536.0": A2 51 96 B6
+  - "-7.50": A2 40 00 75
+  - 1E-95: 00 60 00 01
+  - 9.999999E96: 77 F3 FC FF
+  - 1E-6: 21 F0 00 01
+  - 1E-6: 21 F0 00 01
+  base: :bytes
+CDC_SINGLE: 
+  parameters: 
+  - total_bits: 60
+  - radix: 2
+  - significand_digits: 48
+  - radix_min_exp: -976
+  - radix_max_exp: 1070
+  - decimal_digits_stored: 14
+  - decimal_digits_necessary: 16
+  - decimal_min_exp: -293
+  - decimal_max_exp: 322
+  values: 
+  - Rational(1, 3): 3CEAAAAAAAAAAAB
+  - Rational(1, 10): 3CCCCCCCCCCCCCD
+  - Rational(2, 3): 3CFAAAAAAAAAAAB
+  - Rational(1, 1024): 3C6800000000000
+  - Rational(1, 1000): 3C683126E978D50
+  - Rational(1024, 1): 3DA800000000000
+  - Rational(1024, 1): 3DA800000000000
+  special: 
+  - min_value: 000800000000000
+  - min_normalized_value: 000800000000000
+  - max_value: 7FFFFFFFFFFFFFF
+  - epsilon: 3A1800000000000
+  - strict_epsilon: 3A1800000000000
+  numerals: 
+  - "+0": "000000000000000"
+  - "-0": FFFFFFFFFFFFFFF
+  - "+1": 3D0800000000000
+  - "-1": C2F7FFFFFFFFFFF
+  - "+0.1": 3CCCCCCCCCCCCCD
+  - "-0.1": C33333333333332
+  - "0.5": 3CF800000000000
+  - "-0.5": C307FFFFFFFFFFF
+  - "29.2": 3D4E9999999999A
+  - "-29.2": C2B166666666665
+  - "0.03125": 3CB800000000000
+  - "-0.03125": C347FFFFFFFFFFF
+  - "-0.3125": C315FFFFFFFFFFF
+  - 1.234E2: 3D6F6CCCCCCCCCD
+  - "-1.234E-6": C435A601535E992
+  - "65536.0": 3E0800000000000
+  - "-65536.0": C1F7FFFFFFFFFFF
+  - "-7.50": C2D0FFFFFFFFFFF
+  - "1.56575653125701E-294": 000800000000000
+  - 2.530028166341374E322: 7FFFFFFFFFFFFFF
+  - "7.105427357601002E-15": 3A1800000000000
+  - "7.105427357601002E-15": 3A1800000000000
+  base: 16
+UNIVAC_SINGLE: 
+  parameters: 
+  - total_bits: 36
+  - radix: 2
+  - significand_digits: 27
+  - radix_min_exp: -129
+  - radix_max_exp: 126
+  - decimal_digits_stored: 7
+  - decimal_digits_necessary: 10
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): 3FD555555
+  - Rational(1, 10): 3EE666666
+  - Rational(2, 3): "405555555"
+  - Rational(1, 1024): 3BC000000
+  - Rational(1, 1000): 3BC189375
+  - Rational(1024, 1): 45C000000
+  - Rational(1024, 1): 45C000000
+  special: 
+  - min_value: "004000000"
+  - min_normalized_value: "004000000"
+  - max_value: 7FFFFFFFF
+  - epsilon: 33C000000
+  - strict_epsilon: 33C000000
+  numerals: 
+  - "+0": "000000000"
+  - "-0": FFFFFFFFF
+  - "+1": 40C000000
+  - "-1": BF3FFFFFF
+  - "+0.1": 3EE666666
+  - "-0.1": C11999999
+  - "0.5": "404000000"
+  - "-0.5": BFBFFFFFF
+  - "29.2": 42F4CCCCD
+  - "-29.2": BD0B33332
+  - "0.03125": 3E4000000
+  - "-0.03125": C1BFFFFFF
+  - "-0.3125": C02FFFFFF
+  - 1.234E2: 43FB66666
+  - "-1.234E-6": C92D300A9
+  - "65536.0": 48C000000
+  - "-65536.0": B73FFFFFF
+  - "-7.50": BE07FFFFF
+  - "1.469367939E-39": "004000000"
+  - 1.701411822E38: 7FFFFFFFF
+  - "1.490116119E-8": 33C000000
+  - "1.490116119E-8": 33C000000
+  base: 16
+MBF_DOUBLE: 
+  parameters: 
+  - total_bits: 64
+  - radix: 2
+  - significand_digits: 56
+  - radix_min_exp: -128
+  - radix_max_exp: 126
+  - decimal_digits_stored: 16
+  - decimal_digits_necessary: 18
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): AB AA AA AA AA AA 2A 7F
+  - Rational(1, 10): CD CC CC CC CC CC 4C 7D
+  - Rational(2, 3): AB AA AA AA AA AA 2A 80
+  - Rational(1, 1024): 00 00 00 00 00 00 00 77
+  - Rational(1, 1000): DF 4F 8D 97 6E 12 03 77
+  - Rational(1024, 1): 00 00 00 00 00 00 00 8B
+  - Rational(1024, 1): 00 00 00 00 00 00 00 8B
+  special: 
+  - min_value: 00 00 00 00 00 00 00 01
+  - min_normalized_value: 00 00 00 00 00 00 00 01
+  - max_value: FF FF FF FF FF FF 7F FF
+  - epsilon: 00 00 00 00 00 00 00 4A
+  - strict_epsilon: 00 00 00 00 00 00 00 4A
+  numerals: 
+  - "+0": 00 00 00 00 00 00 00 00
+  - "-0": 00 00 00 00 00 00 80 00
+  - "+1": 00 00 00 00 00 00 00 81
+  - "-1": 00 00 00 00 00 00 80 81
+  - "+0.1": CD CC CC CC CC CC 4C 7D
+  - "-0.1": CD CC CC CC CC CC CC 7D
+  - "0.5": 00 00 00 00 00 00 00 80
+  - "-0.5": 00 00 00 00 00 00 80 80
+  - "29.2": 9A 99 99 99 99 99 69 85
+  - "-29.2": 9A 99 99 99 99 99 E9 85
+  - "0.03125": 00 00 00 00 00 00 00 7C
+  - "-0.03125": 00 00 00 00 00 00 80 7C
+  - "-0.3125": 00 00 00 00 00 00 A0 7F
+  - 1.234E2: CD CC CC CC CC CC 76 87
+  - "-1.234E-6": B2 6C 16 CA EA 9F A5 6D
+  - "65536.0": 00 00 00 00 00 00 00 91
+  - "-65536.0": 00 00 00 00 00 00 80 91
+  - "-7.50": 00 00 00 00 00 00 F0 83
+  - "2.93873587705571877E-39": 00 00 00 00 00 00 00 01
+  - 1.70141183460469229E38: FF FF FF FF FF FF 7F FF
+  - "2.77555756156289135E-17": 00 00 00 00 00 00 00 4A
+  - "2.77555756156289135E-17": 00 00 00 00 00 00 00 4A
+  base: :bytes
+BORLAND48: 
+  parameters: 
+  - total_bits: 48
+  - radix: 2
+  - significand_digits: 40
+  - radix_min_exp: -128
+  - radix_max_exp: 126
+  - decimal_digits_stored: 11
+  - decimal_digits_necessary: 14
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): 7F AB AA AA AA 2A
+  - Rational(1, 10): 7D CD CC CC CC 4C
+  - Rational(2, 3): 80 AB AA AA AA 2A
+  - Rational(1, 1024): 77 00 00 00 00 00
+  - Rational(1, 1000): 77 8D 97 6E 12 03
+  - Rational(1024, 1): 8B 00 00 00 00 00
+  - Rational(1024, 1): 8B 00 00 00 00 00
+  special: 
+  - min_value: 01 00 00 00 00 00
+  - min_normalized_value: 01 00 00 00 00 00
+  - max_value: FF FF FF FF FF 7F
+  - epsilon: 5A 00 00 00 00 00
+  - strict_epsilon: 5A 00 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00 00
+  - "-0": 00 00 00 00 00 80
+  - "+1": 81 00 00 00 00 00
+  - "-1": 81 00 00 00 00 80
+  - "+0.1": 7D CD CC CC CC 4C
+  - "-0.1": 7D CD CC CC CC CC
+  - "0.5": 80 00 00 00 00 00
+  - "-0.5": 80 00 00 00 00 80
+  - "29.2": 85 9A 99 99 99 69
+  - "-29.2": 85 9A 99 99 99 E9
+  - "0.03125": 7C 00 00 00 00 00
+  - "-0.03125": 7C 00 00 00 00 80
+  - "-0.3125": 7F 00 00 00 00 A0
+  - 1.234E2: 87 CD CC CC CC 76
+  - "-1.234E-6": 6D 16 CA EA 9F A5
+  - "65536.0": 91 00 00 00 00 00
+  - "-65536.0": 91 00 00 00 00 80
+  - "-7.50": 83 00 00 00 00 F0
+  - "2.9387358770557E-39": 02 00 00 00 00 00
+  - 1.7014118346031E38: FF FF FF FF FF 7F
+  - "1.8189894035459E-12": 5A 00 00 00 00 00
+  - "1.8189894035459E-12": 5A 00 00 00 00 00
+  base: :bytes
+XS128: 
+  parameters: 
+  - total_bits: 40
+  - radix: 2
+  - significand_digits: 32
+  - radix_min_exp: -128
+  - radix_max_exp: 126
+  - decimal_digits_stored: 9
+  - decimal_digits_necessary: 11
+  - decimal_min_exp: -38
+  - decimal_max_exp: 38
+  values: 
+  - Rational(1, 3): 7F 2A AA AA AB
+  - Rational(1, 10): 7D 4C CC CC CD
+  - Rational(2, 3): 80 2A AA AA AB
+  - Rational(1, 1024): 77 00 00 00 00
+  - Rational(1, 1000): 77 03 12 6E 98
+  - Rational(1024, 1): 8B 00 00 00 00
+  - Rational(1024, 1): 8B 00 00 00 00
+  special: 
+  - min_value: 01 00 00 00 00
+  - min_normalized_value: 01 00 00 00 00
+  - max_value: FF 7F FF FF FF
+  - epsilon: 62 00 00 00 00
+  - strict_epsilon: 61 00 00 00 00
+  numerals: 
+  - "+0": 00 00 00 00 00
+  - "-0": 00 80 00 00 00
+  - "+1": 81 00 00 00 00
+  - "-1": 81 80 00 00 00
+  - "+0.1": 7D 4C CC CC CD
+  - "-0.1": 7D CC CC CC CD
+  - "0.5": 80 00 00 00 00
+  - "-0.5": 80 80 00 00 00
+  - "29.2": 85 69 99 99 9A
+  - "-29.2": 85 E9 99 99 9A
+  - "0.03125": 7C 00 00 00 00
+  - "-0.03125": 7C 80 00 00 00
+  - "-0.3125": 7F A0 00 00 00
+  - 1.234E2: 87 76 CC CC CD
+  - "-1.234E-6": 6D A5 9F EA CA
+  - "65536.0": 91 00 00 00 00
+  - "-65536.0": 91 80 00 00 00
+  - "-7.50": 83 F0 00 00 00
+  - "2.9387358771E-39": 01 00 00 00 00
+  - 1.7014118342E38: FF 7F FF FF FF
+  - "4.6566128731E-10": 62 00 00 00 00
+  - "2.3283064365E-10": 61 00 00 00 00
+  base: :bytes
