@@ -29,8 +29,6 @@ end
   
 # ===== Byte string manipulation ==========================================================
 
-# ===== Byte string manipulation ==========================================================
-
 def reverse_byte_bits(b)
   b.chr.unpack('b*').pack("B*")[0]
 end

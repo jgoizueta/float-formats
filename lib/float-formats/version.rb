@@ -1,4 +1,4 @@
-module FltPnt #:nodoc:
+module FltPnt
   module VERSION #:nodoc:
     MAJOR = 0
     MINOR = 1

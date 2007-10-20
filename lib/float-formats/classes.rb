@@ -1,23 +1,12 @@
 # Float-Formats
 # Floating-point classes -- tools to handle floating point formats
 
-
-
-
-# Tools to explore binary floating-point representations
-
-# TO DO:
-#   * there's too many similar to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
-#     methods; some refactoring is in order
-#   * separate the native float utilities to a different file; create a gem float-formats
-#     add documentation
-
-# nomenclature:
+# Nomenclature:
 # * radix: the numerical base of the floating point notation
 # * significand: the digits part of the number; also called coefficient or, arguably, mantissa.
 # * exponent: the radix exponent, also called characteristic;
 # * encoded exponent: the value stored in the f.p. format to denote the exponent, sometimes called characteristic
-
+#
 # significand modes (determine the interpretation of exponent values, i.e. the bias value)
 # * integral significand: the significand is interpreted as an integer, i.e. the radix
 #   point is at the right (after the last digit); 
@@ -37,33 +26,34 @@
 #   - IEEE 754 definitions
 #   - RPL's MANT/XPON
 #   - HP calculators SCI mode
-
-
+#
 # zero representation in hidden bit formats:
 # * with gradual underflow: the minimium encoded exponent (0) is used for zero and denormal numbers;
 #   i.e. the minimum encoded exponent implies the hidden bit is 0
 # * minimum encoded exponent reserved for zero (nonzero significands are not used with it)
 # * special all zeros representation: minimun encoded exponent is a regular exponent except for 0
 
-# Examples:
-# * Find out properties of floating point encodings; reports, tables...
-# * Encode and decode f.p. numbers (to/from text, to/from numeric types)
-# * Convert between f.p. formats
-
-
 require 'nio'
 require 'nio/sugar'
-
 require 'enumerator'
-
 require 'float-formats/bytes.rb'
-
 
 module FltPnt
 
 # General Floating Point Format Base class
 class FormatBase
   
+  # Common parameters for all floating-point formats:
+  # [<tt>:bias_mode</tt>] This defines how the significand is interpreted:
+  # * <tt>:fractional_significand</tt> The radix point is before the most significant
+  #   digit of the significand (including a hidden bit if there's one).
+  # * <tt>:normalized_significand</tt> The radix point is after the most significant
+  #   digit of the significand (including a hidden bit if there's one).
+  # * <tt>:integral_significand</tt> The significand is assumed to be an integer, i.e. 
+  #   the radix point is after the least significant digit.
+  # [<tt>:bias</tt>] Defines the exponent encoding method to be excess notation
+  #                  and defines the bias.
+  #
   def initialize(params={})
     
     @fields_handler = params[:fields_handler]
@@ -190,7 +180,7 @@ class FormatBase
     (significand_digits*radix_log10).ceil+1
   end
 
-  # maximum integer such that 10 raised to that power
+  # Maximum integer such that 10 raised to that power
   # is in the range of the normalised floating point numbers
   def decimal_max_exp
     (radix_max_exp(:fractional_significand)*radix_log10+(1-radix_power(-significand_digits))*radix_log10).floor
@@ -219,13 +209,17 @@ class FormatBase
   end
 
   
-  # these should return a f.p. value (byte-string)
+  # Greatest finite normalized floating point number in the representation.
+  # It can be made negative by passing the sign (a so this would be the smallest
+  # finite number).
   def max_value(sign=0)
     s = sign
     m = radix_power(significand_digits)-1
     e = radix_max_exp(:integral_significand)
     from_integral_sign_significand_exponent(s,m,e)
   end
+  # Smallest normalized floating point number greater than zero in the representation.
+  # It can be made negative by passing the sign.
   def min_normalized_value(sign=0)
     s = sign
     m = 1
@@ -239,6 +233,9 @@ class FormatBase
     end    
     from_integral_sign_significand_exponent(s,m,e)
   end
+  # Smallest floating point number greater than zero in the representation, including
+  # denormalized values if the representation supports it.
+  # It can be made negative by passing the sign.
   def min_value(sign=0)
     if @denormal_encoded_exp
       s = sign
@@ -249,6 +246,11 @@ class FormatBase
       min_normalized_value(sign)
     end
   end
+  # This is a small value that added to 1.0 produces something different
+  # (a number represented as a different floating point value).
+  # This assumes no particular rounding/truncation on the added numbers; there
+  # may be smaller values that added to 1.0 also give a result different from 1.0
+  # due to the rounding performed. See strict_epsilon.
   def epsilon(sign=0, round=nil)
     round ||= (@round || :no_rounding)
     s = sign
@@ -256,7 +258,11 @@ class FormatBase
     e = 2*(1-significand_digits)
     from_integral_sign_significand_exponent(s,m,e)
   end  
-
+  # The strict epsilon is the smallest value that produces something different from 1.0
+  # wehen added to 1.0. It may be smaller than the general epsilon, because
+  # of the particular rounding rules used with the floating point format.
+  # This is only meaningful when well-defined rules are used for rounding the result
+  # of floating-point addition.
   def strict_epsilon(sign=0, round=nil)
     round ||= (@round || :no_rounding)
     s = sign
@@ -277,6 +283,17 @@ class FormatBase
     end
     from_integral_sign_significand_exponent(s,m,e)
   end  
+  
+  def zero(sign=0)
+    from_integral_sign_significand_exponent sign, 0, :zero
+  end
+  def infinity(sign=0)
+    from_integral_sign_significand_exponent sign, 0, :infinity
+  end
+  def nan
+    from_integral_sign_significand_exponent 0, 0, :nan
+  end
+  
   def radix_max_exp(significand_mode=:normalized_significand)
     case significand_mode
       when :integral_significand
@@ -548,6 +565,10 @@ class FormatBase
     s = switch_sign_value(s)
     from_integral_sign_significand_exponent(s,f,e)
   end  
+  
+  def convert_to(v,fpclass)
+    fpclass.from_fmt(to_fmt(v))
+  end
         
   protected
   def define_fields(field_definitions)
@@ -1299,7 +1320,15 @@ class HexadecimalFormat < FieldsInBitsFormatBase
 end
 
 
-                             
+# A class to handle a floating-point representation (bytes) and its format class in a single object.
+# This eases the definition and manipulation of floating-point values:
+#
+#   v = FltPnt::Value.from_fmt(IEEE_DOUBLE, '1.1')
+#   puts v.to_fields_hash.inspect       # -> ...
+#   puts v.next.to_hex(true)            # -> ...
+#   w = v.convert_to(IEEE_SINGLE)
+#   puts v.next.to_hex(true)            # -> ...
+#  
 class Value
   def initialize(fptype,value)
     @fptype = fptype
@@ -1313,6 +1342,9 @@ class Value
   end
   def self.from_fields(fptype, *fields)
     self.new fptype, fptype.from_fields(*fields)
+  end
+  def self.from_fields_hash(fptype, fields)
+    self.new fptype, fptype.from_fields_hash(fields)
   end
   def self.from_integral_sign_significand_exponent(fptype,s,m,e)
     self.new fptype, fptype.from_integral_sign_significand_exponent(s,m,e)
@@ -1339,6 +1371,9 @@ class Value
   def to_fields
     @fptype.to_fields(@value)
   end
+  def to_fields_hash
+    @fptype.to_fields_hash(@value)
+  end
   def to_integral_sign_significand_exponent
     @fptype.to_integral_sign_significand_exponent(@value)
   end
@@ -1356,13 +1391,22 @@ class Value
   end
   
   def convert_to(fptype2)
-    txt = to_fmt
-    self.class.new fptype2, fptype2.from_fmt(txt)
+    self.class.new fptype2, fptype2.from_fmt(to_fmt)
   end
   
   def next
     self.class.new(@fptype, @fptype.next_float(@value))
   end  
+  def prev
+    self.class.new(@fptype, @fptype.prev_float(@value))
+  end  
+  
+  def format
+    @fptype
+  end
+  def bytes
+    @value
+  end
   
 end  
 

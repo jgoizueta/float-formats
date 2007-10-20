@@ -1,0 +1,9 @@
+* Write RDoc Documentation
+* Publish Gem
+* initialize instance variables such as @hidden_bit (see warnings) to nil when not using them.
+* classes.rb :
+  - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
+    methods; some refactoring is in order
+* A solution is needed for the documentation of the format constants of FltPnt in RDoc.
+  Apart from researching how to control RDoc, it could be convenient to add a comments
+  (and name) parameters to the floating point formats and use them for documentation.
