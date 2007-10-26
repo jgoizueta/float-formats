@@ -208,7 +208,6 @@ class FormatBase
     @significand_digits
   end
 
-  
   # Greatest finite normalized floating point number in the representation.
   # It can be made negative by passing the sign (a so this would be the smallest
   # finite number).
@@ -246,14 +245,13 @@ class FormatBase
       min_normalized_value(sign)
     end
   end
-  # This is a small value that added to 1.0 produces something different
-  # (a number represented as a different floating point value).
-  # This assumes no particular rounding/truncation on the added numbers; there
-  # may be smaller values that added to 1.0 also give a result different from 1.0
-  # due to the rounding performed. See strict_epsilon.
+  # This is the difference between 1.0 and the smallest floating-point
+  # value greater than 1.0, radix_power(1-significand_precision)
   def epsilon(sign=0, round=nil)
     round ||= (@round || :no_rounding)
     s = sign
+    #m = 1
+    #e = 1-significand_digits
     m = radix_power(significand_digits-1)
     e = 2*(1-significand_digits)
     from_integral_sign_significand_exponent(s,m,e)
@@ -263,6 +261,8 @@ class FormatBase
   # of the particular rounding rules used with the floating point format.
   # This is only meaningful when well-defined rules are used for rounding the result
   # of floating-point addition.
+  # Note that (in pseudo-code): 
+  #  ((1.0+strict_epsilon)-1.0)==epsilon
   def strict_epsilon(sign=0, round=nil)
     round ||= (@round || :no_rounding)
     s = sign
@@ -277,12 +277,28 @@ class FormatBase
         m *= radix
         m += 1        
       when :inf
+        # note that here :inf means "round to nearest with ties tower infinity"
         e -= 1
         m /= 2
         m *= radix
+      when :ceiling
+        # this is the IEEE "toward infinity" rounding
+        return min_value
     end
     from_integral_sign_significand_exponent(s,m,e)
   end  
+  # This is the maximum relative error corresponding to 1/2 ulp:
+  #  (radix/2)*radix_power(-significand_precision) == epsilon/2
+  # This is called "machine epsilon" in 
+  def half_epsilon(sign=0)
+    s = sign
+    m = radix/2
+    e = -significand_digits
+    # normalize:
+      m *= radix_power(significand_digits-1)
+      e -= significand_digits-1
+    from_integral_sign_significand_exponent(s,m,e)
+  end    
   
   def zero(sign=0)
     from_integral_sign_significand_exponent sign, 0, :zero
@@ -1409,6 +1425,8 @@ class Value
   end
   
 end  
+
+
 
 
 end

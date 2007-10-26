@@ -7,3 +7,4 @@
 * A solution is needed for the documentation of the format constants of FltPnt in RDoc.
   Apart from researching how to control RDoc, it could be convenient to add a comments
   (and name) parameters to the floating point formats and use them for documentation.
+* Bug to fix: does not work without include FltPnt

@@ -17,6 +17,10 @@ Float-Formats is a Ruby package with methods to handle diverse floating-point fo
 
 Access properties of a floating-format; generating reports, tables, ...
 
+  puts IEEE_EXTENDED.min_decimal_exp
+  ....
+  puts 
+
 See FltPnt
 
 Encode and decode numbers

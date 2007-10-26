@@ -8,6 +8,8 @@ require 'enumerator'
 
 module FltPnt
 
+module_function
+
 # return an hex representation of a byte string
 def bytes_to_hex(sgl,sep_bytes=false)
   hx = sgl.unpack('H*')[0].upcase

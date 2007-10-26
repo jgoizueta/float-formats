@@ -97,6 +97,8 @@ end
 
 module FltPnt
 
+module_function
+
 # shortest decimal unanbiguous reprentation
 def float_shortest_dec(x)
   x.nio_write(Fmt.prec(:exact))
