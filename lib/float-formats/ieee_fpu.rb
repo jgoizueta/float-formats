@@ -39,19 +39,44 @@ require 'Win32API'
 #   puts IEEE_FPU.rounding                # -> even
 #   puts "%.20f"%(1.0+Float::EPSILON/2)   # -> 1.00000000000000000000
 #
-#expr = '(3.2-2.0)-1.2'
-#IEEE_FPU.scope {
-#  IEEE_FPU.precision = :single           # -> 0.0
-#  puts eval(expr)
-#}
-#IEEE_FPU.scope {
-#  IEEE_FPU.precision = :double
-#  puts eval(expr)                        # -> 2.22044604925031e-16
-#}
+#   expr = '(3.2-2.0)-1.2'
+#   IEEE_FPU.scope {
+#     IEEE_FPU.precision = :single           # -> 0.0
+#     puts eval(expr)
+#   }
+#   IEEE_FPU.scope {
+#     IEEE_FPU.precision = :double
+#     puts eval(expr)                        # -> 2.22044604925031e-16
+#   }
 #
 # Note: IEEE_FPU.precision=:extended has a very limited influence in Ruby
 # because all results are casted to Float (double) values. 
 # Its effect is more noticeable in C/C++ extensions.
+
+# FPU parameters can be assigneed passign a hash to the scope method:
+#   IEEE_FPU.scope(:precision=>:single) {
+#     puts eval(expr)
+#   }
+# An array can be passed for one (only one) of the parameters;
+# the block will be repeated with every value of the parameter
+# and the results will be collected in an array. 
+# For example this checks the result of an expression in all
+# the rounding modes:
+#  puts IEEE_FPU.scope(:rounding=>[:even,:up,:down,:zero]) {
+#    1.0 + Float::EPSILON/2
+#  }.inspect
+#
+# Different parameters can be passed to each call of the block
+# by assigning an array to :parameters
+# For example, interval arithmetic could be implementes like this:
+#  def sum_intervals(i1,i2)
+#    IEEE_FPU.scope(:rounding=>[:down,:up],:parameters=>[0,1]) do |fpu,i|
+#      i1[i]+i2[i]
+#    end
+#  end
+#  i = sum_intervals([1.0]*2, [Float::EPSILON/2]*2)
+
+
 module IEEE_FPU
 
   class Error < StandardError
@@ -63,10 +88,35 @@ module IEEE_FPU
   def self.set_status(s)
     Controlfp.call(s,MCW_DN|MCW_EM|MCW_IC|MCW_RC|MCW_PC)
   end
-  
-  def self.scope
+  def self.scope(assignments={})
+    v = nil
     s = get_status
-    yield self
+    prc = assignments[:precision]
+    rnd = assignments[:rounding]
+    self.precision = prc if prc && !(Array===prc)
+    self.rounding =rnd if rnd && !(Array===rnd)
+    if Array===prc      
+      param = assignments[:parameters] || [nil]*prc.size
+      v = []
+      i = 0
+      prc.each do |p|
+        self.precision = p
+        v << yield(self, param[i])
+        i += 1
+      end
+    elsif Array===rnd
+      param = assignments[:parameters] || [nil]*rnd.size
+      v = []
+      i = 0
+      rnd.each do |r|
+        self.rounding = r
+        v << yield(self, param[i])
+        i += 1
+      end
+    else
+      v = yield(self)
+    end
+    v
     ensure
       set_status s
   end
@@ -333,3 +383,6 @@ end
 end
 
 
+  
+  
+  
