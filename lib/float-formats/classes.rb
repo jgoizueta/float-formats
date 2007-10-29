@@ -247,8 +247,7 @@ class FormatBase
   end
   # This is the difference between 1.0 and the smallest floating-point
   # value greater than 1.0, radix_power(1-significand_precision)
-  def epsilon(sign=0, round=nil)
-    round ||= (@round || :no_rounding)
+  def epsilon(sign=0)
     s = sign
     #m = 1
     #e = 1-significand_digits
@@ -264,13 +263,12 @@ class FormatBase
   # Note that (in pseudo-code): 
   #  ((1.0+strict_epsilon)-1.0)==epsilon
   def strict_epsilon(sign=0, round=nil)
-    round ||= (@round || :no_rounding)
+    round ||= @round
     s = sign
     m = radix_power(significand_digits-1)
     e = 2*(1-significand_digits)
     # assume radix is even
-    case @round
-      when :no_rounding
+    case @round      
       when :even, :zero, :any_rounding
         e -= 1
         m /= 2
@@ -281,7 +279,7 @@ class FormatBase
         e -= 1
         m /= 2
         m *= radix
-      when :ceiling
+      when :ceiling, :up
         # this is the IEEE "toward infinity" rounding
         return min_value
     end
@@ -289,7 +287,7 @@ class FormatBase
   end  
   # This is the maximum relative error corresponding to 1/2 ulp:
   #  (radix/2)*radix_power(-significand_precision) == epsilon/2
-  # This is called "machine epsilon" in 
+  # This is called "machine epsilon" in [Goldberg]
   def half_epsilon(sign=0)
     s = sign
     m = radix/2
