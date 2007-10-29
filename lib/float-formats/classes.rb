@@ -208,6 +208,25 @@ class FormatBase
     @significand_digits
   end
 
+  # helpers to handle fp values using auxiliar class Value
+  def return_bytes(v)
+    if v.kind_of?(Value)
+      v
+    else
+      Value.new self, v
+    end
+  end
+  def input_bytes(v)
+    if v.kind_of?(Value)
+      raise "Invalid f.p. format" if v.fp_format!=self
+      v = v.bytes 
+    elsif !v.kind_of?(String)
+      raise "Invalid f.p. object"
+      v = nil
+    end
+    v 
+  end  
+
   # Greatest finite normalized floating point number in the representation.
   # It can be made negative by passing the sign (a so this would be the smallest
   # finite number).
@@ -418,10 +437,10 @@ class FormatBase
   
   
   def to_hex(v,sep_bytes=false)
-    bytes_to_hex(v,sep_bytes)
+    bytes_to_hex(input_bytes(v),sep_bytes)
   end
   def from_hex(hex)
-    hex_to_bytes(hex)
+    return_bytes hex_to_bytes(hex)
   end
     
   def to_fields_hash(v)
@@ -544,7 +563,7 @@ class FormatBase
   
   
   def to_bits_integer(v)
-    bytes_to_int(v, @endianness)    
+    bytes_to_int(input_bytes(v), @endianness)    
   end
   def from_bits_integer(i)
     v = int_to_bytes(i)
@@ -558,7 +577,7 @@ class FormatBase
     elsif v.size>total_bytes  
       raise "Invalid floating point value"             
     end
-    v
+    return_bytes v
   end
   def to_bits_text(v,base)
     i = to_bits_integer(v)
@@ -834,7 +853,7 @@ class BCDFormat < DecimalFormatBase
 
   def to_fields(v)
     # bytes have always nibbles in big-endian order
-    v = reverse_byte_nibbles(convert_endianness(v,@endianness,:little_endian))
+    v = reverse_byte_nibbles(convert_endianness(input_bytes(v),@endianness,:little_endian))
     nibbles = bytes_to_hex(v)    
     # now we have a little endian nibble string        
     nibble_fields = []
@@ -859,7 +878,7 @@ class BCDFormat < DecimalFormatBase
     end
     v = hex_to_bytes(nibbles)
     v = convert_endianness(reverse_byte_nibbles(v),:little_endian,@endianness)
-    v
+    return_bytes v
   end
   # this has beed added to allow some fields to contain binary integers rather than bcd
   def bcd_field?(i)
@@ -977,7 +996,7 @@ class DPDFormat < DecimalFormatBase
   
   def to_fields(v)
     # convert internal binary fields to bcd decoded fields
-    a = get_bitfields(v,@internal_field_lengths,@endianness)
+    a = get_bitfields(input_bytes(v),@internal_field_lengths,@endianness)
     h = {}
     (0...a.size).each do |i|
       h[@internal_field_meaning[i]] = a[i]
@@ -1049,7 +1068,7 @@ class DPDFormat < DecimalFormatBase
       end    
     h = {:sign=>i_sign, :combination=>i_combination, :exponent_continuation=>i_exponent_continuation, :significand_continuation=>i_significand_continuation}
     fields =  @internal_field_meaning.collect{|f| h[f]}
-    set_bitfields(@internal_field_lengths,fields,@endianness)        
+    return_bytes set_bitfields(@internal_field_lengths,fields,@endianness)        
   end
   
 
@@ -1126,12 +1145,12 @@ class FieldsInBitsFormatBase < FormatBase
     2
   end
   def to_fields(v)
-    get_bitfields(v,@field_lengths,@endianness)
+    get_bitfields(input_bytes(v),@field_lengths,@endianness)
   end
   def from_fields(*fields)
     fields = fields[0] if fields.size==1 and fields[0].kind_of?(Array)
     handle_fields fields
-    set_bitfields(@field_lengths,fields,@endianness)
+    return_bytes set_bitfields(@field_lengths,fields,@endianness)
   end  
 end
 
@@ -1338,10 +1357,13 @@ end
 # This eases the definition and manipulation of floating-point values:
 #
 #   v = FltPnt::Value.from_fmt(IEEE_DOUBLE, '1.1')
+#   # or:
+#   v = FltPnt::IEEE_DOUBLE.from_fmt('1.1')
 #   puts v.to_fields_hash.inspect       # -> ...
 #   puts v.next.to_hex(true)            # -> ...
 #   w = v.convert_to(IEEE_SINGLE)
 #   puts v.next.to_hex(true)            # -> ...
+#   
 #  
 class Value
   def initialize(fptype,value)
@@ -1415,12 +1437,22 @@ class Value
     self.class.new(@fptype, @fptype.prev_float(@value))
   end  
   
-  def format
+  def fp_format
     @fptype
   end
   def bytes
     @value
   end
+  
+  def ==(obj); test_equal(obj); end
+  def eql?(obj); test_equal(obj); end
+  def ===(obj); test_equal(obj); end
+  
+  private
+  def test_equal(v)
+    @fptype==v.fp_format && @value==v.bytes
+  end
+
   
 end  
 
