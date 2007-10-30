@@ -5,12 +5,14 @@
 # * radix: the numerical base of the floating point notation
 # * significand: the digits part of the number; also called coefficient or, arguably, mantissa.
 # * exponent: the radix exponent, also called characteristic;
-# * encoded exponent: the value stored in the f.p. format to denote the exponent, sometimes called characteristic
+# * encoded exponent: the value stored in the f.p. format to denote the exponent
 #
-# significand modes (determine the interpretation of exponent values, i.e. the bias value)
+# Significand modes determine the interpretation of the significand value and also
+# of the exponent values. For excess-notation encoded exponents this means that
+# the value of the bias depends upon the interpretation of the significand.
 # * integral significand: the significand is interpreted as an integer, i.e. the radix
 #   point is at the right (after the last digit); 
-#   Examples:
+#   Some examples of this pont of view:
 #   - HP-50G LONGFLOAT library
 #   - HP-16C Floating Point-Integer conversion
 # * fractional significand: the radix point is at the left, before the first significand digit
@@ -53,7 +55,12 @@ class FormatBase
   #   the radix point is after the least significant digit.
   # [<tt>:bias</tt>] Defines the exponent encoding method to be excess notation
   #                  and defines the bias.
-  #
+  # [<tt>:endianness</tt>] Defines the byte endianness. One of:
+  #   [<tt>:little_endian</tt>] Least significant bytes come first. (Intel etc.)
+  #   [<tt>:big_endian</tt>] (Network order): most significant bytes come first. (Motorola, SPARC,...)
+  #   [<tt>:little_big_endian</tt>] (Middle endian) Each pair of bytes (16-bit word) has the bytes in
+  #                                 little endian order, but the words are stored in big endian order
+  #                                 (we assume the number of bytes is even). (PDP-11).  
   def initialize(params={})
     
     @fields_handler = params[:fields_handler]
@@ -163,19 +170,24 @@ class FormatBase
     
   end
   
+  # compute a power of the radix (base)
   def radix_power(n)
     radix**n
   end
   
+  # base-10 logarithm of the radix
   def radix_log10
     Math.log(radix)/Math.log(10)
   end
+  # radix-base logarithm
   def radix_log(x)
     Math.log(x)/Math.log(radix)
   end  
+  # number of decimal digits that can be stored in a floating point value and restored unaltered
   def decimal_digits_stored
     ((significand_digits-1)*radix_log10).floor
   end
+  # number of decimal digits necessary to unambiguosly define any floating point value
   def decimal_digits_necessary
     (significand_digits*radix_log10).ceil+1
   end
@@ -186,29 +198,36 @@ class FormatBase
     (radix_max_exp(:fractional_significand)*radix_log10+(1-radix_power(-significand_digits))*radix_log10).floor
     #(Math.log((1-radix**(significand_digits))*radix**radix_max_exp(:fractional_significand))/Math.log(10)).floor
   end
-  # minimum negative integer such that 10 raised to that power
+  # Minimum negative integer such that 10 raised to that power
   # is in the range of the normalised floating point numbers
   def decimal_min_exp
     (radix_min_exp(:fractional_significand)*radix_log10).ceil
   end
-  
+  # Stored (integral) value for the minus sign
   def minus_sign_value
     (-1) % radix
   end
+  # switch between the encodings of minus and plus
   def switch_sign_value(v)
     (v==0) ? minus_sign_value : 0
   end
 
-
+  # Rounding mode use for this floating-point format; can be one of:
+  # [<tt>:even</tt>] round to nearest with ties toward an even digits
+  # [<tt>:inf</tt>] round to nearest with ties toward infinity (away from zero)
+  # [<tt>:zero</tt>] round to nearest with ties toward zero
+  # [<tt>nil</tt>] rounding mode not specified  
   def rounding_mode
     @round
   end
   
+  # Number of digits in the significand (precision)
   def significand_digits
     @significand_digits
   end
 
-  # helpers to handle fp values using auxiliar class Value
+  # This is a helper to handle floating point values with the auxiliar class Value:
+  # it is used to return an encoded floating point value as a Value.
   def return_bytes(v)
     if v.kind_of?(Value)
       v
@@ -216,6 +235,8 @@ class FormatBase
       Value.new self, v
     end
   end
+  # This is a helper to handle floating point values with the auxiliar class Value:
+  # it is used to get a bytes string from either a Value or a String
   def input_bytes(v)
     if v.kind_of?(Value)
       raise "Invalid f.p. format" if v.fp_format!=self
@@ -317,16 +338,28 @@ class FormatBase
     from_integral_sign_significand_exponent(s,m,e)
   end    
   
+  # Floating point representation of zero.
   def zero(sign=0)
     from_integral_sign_significand_exponent sign, 0, :zero
   end
+  # Floating point representation of infinity.
   def infinity(sign=0)
-    from_integral_sign_significand_exponent sign, 0, :infinity
+    if @infinite_encoded_exp
+      from_integral_sign_significand_exponent sign, 0, :infinity
+    else
+      nil
+    end
   end
+  # Floating point representation of Not-a-Number.
   def nan
-    from_integral_sign_significand_exponent 0, 0, :nan
+    if @nan_encoded_exp
+      from_integral_sign_significand_exponent 0, 0, :nan
+    else
+      nil
+    end      
   end
   
+  # Maximum exponent
   def radix_max_exp(significand_mode=:normalized_significand)
     case significand_mode
       when :integral_significand
@@ -337,6 +370,7 @@ class FormatBase
         @normalized_max_exp
     end
   end
+  # Mminimum exponent
   def radix_min_exp(significand_mode=:normalized_significand)
     case significand_mode
       when :integral_significand
@@ -347,33 +381,20 @@ class FormatBase
         @normalized_min_exp
     end
   end
-  
-  def nan
-    if @nan_encoded_exp
-      from_integral_sign_significand_exponent(0,0,:nan)
-    else
-      nil
-    end      
-  end
-  def infinity(sign=0)
-    if @infinite_encoded_exp
-      from_integral_sign_significand_exponent(sign,0,:infinity)
-    else
-      nil
-    end
-  end
-  def zero(sign=0)
-    from_integral_sign_significand_exponent(sign,0,:zero)
-  end
-  
+
+  # Endianness of the format (:little_endian, :big_endian or :little_big_endian)
   def endianness
     @endianness
   end
   
+  # Does the format support gradual underflow? (denormalized numbers)
   def gradual_underflow?
     @gradual_underflow
   end
   
+  # Exponent bias for excess notation exponent encoding
+  # The argument defines the interpretation of the significand and so
+  # determines the actual bias value.
   def bias(significand_mode=:normalized_significand)
     case significand_mode
       when :integral_significand
@@ -384,10 +405,9 @@ class FormatBase
         @normalized_bias
     end
   end
-
   
-  
-  # v is a byte string
+  # Produce an encoded floating point value using a number defined by a
+  # formatted text string (using Nio formats). Returns a Value.
   def from_fmt(txt,fmt=Nio::Fmt.default)    
        neutral = fmt.nio_read_formatted(txt)       
        if neutral.rep_pos<neutral.digits.length
@@ -408,6 +428,8 @@ class FormatBase
        end 
        x
   end
+  # Formats an encoded floating point value as a text string (using Nio formats)
+  # Accepts either a Value or a byte String.
   def to_fmt(v,fmt=Nio::Fmt.default)
     # this always treats the floating-point values as exact quantities
     s,m,e = to_integral_sign_significand_exponent(v)
@@ -424,25 +446,36 @@ class FormatBase
     v.nio_write(fmt)  
   end
   
+  # Produce an encoded floating point value using a numeric value.
+  # Returns a Value.
   def from_number(v, mode=:approx)
     fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
     from_fmt(v.nio_write(fmt),fmt)
   end
+  # Computes the value in a specified numeric class (Float, Integer, Rational, BigDecimal)
+  # of an encoded floating point number.
+  # Accepts either a Value or a byte String.
   def to_number(v, number_class, mode=:approx)
     fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
     v = to_fmt(v,fmt)
     number_class.nio_read(v,fmt)
   end
-  
-  
-  
+    
+  # Converts an ancoded floating point number to an hexadecimal representation;
+  # bytes are separated if the second argument is true.
+  # Accepts either a Value or a byte String.
   def to_hex(v,sep_bytes=false)
     bytes_to_hex(input_bytes(v),sep_bytes)
   end
+  # Produce an encoded floating point value using an hexadecimal representation.
+  # Returns a Value.
   def from_hex(hex)
     return_bytes hex_to_bytes(hex)
   end
-    
+
+  # Converts an ancoded floating point number to hash containing
+  # the internal fields that define the number.
+  # Accepts either a Value or a byte String.
   def to_fields_hash(v)
     a = to_fields(v)
     h = {}
@@ -469,6 +502,8 @@ class FormatBase
     end
     h
   end
+  # Produce an encoded floating point value using hash of the internal field values.
+  # Returns a Value.  
   def from_fields_hash(h)
     if @splitted_fields.nil?
       from_fields @field_meaning.collect{|f| h[f]}
@@ -491,6 +526,9 @@ class FormatBase
     end
   end
     
+  # Computes the next adjacent floating point value.
+  # Accepts either a Value or a byte String.
+  # Returns a Value.  
   def next_float(v)    
     s,f,e = to_integral_sign_significand_exponent(v)
     return neg(prev_float(neg(v))) if s!=0 && e!=:zero
@@ -520,6 +558,9 @@ class FormatBase
     end
   end
       
+  # Computes the previous adjacent floating point value.
+  # Accepts either a Value or a byte String.
+  # Returns a Value.  
   def prev_float(v)    
     s,f,e = to_integral_sign_significand_exponent(v)
     return neg(next_float(neg(v))) if s!=0
@@ -542,6 +583,9 @@ class FormatBase
     end
   end      
       
+  # Produce an encoded floating point value from the integral value
+  # of the sign, significand and exponent.
+  # Returns a Value.  
   def from_fractional_sign_significand_exponent(sign,fraction,exponent)
     msb = radix_power(@significand_digits-1)
     while fraction<msb
@@ -550,6 +594,8 @@ class FormatBase
     end
     from_integral_sign_significand_exponent(sign,fraction.to_i,exponent)    
   end
+  # Computes an encoded floating-point value from the integral value
+  # Accepts either a Value or a byte String.
   def to_fractional_sign_significand_exponent(v,significand_mode=:normalized_significand)
     s,m,e = to_integral_sign_significand_exponent(v)
     case significand_mode
@@ -561,10 +607,13 @@ class FormatBase
     end
   end  
   
-  
+  # Returns the encoded value of a floating-point number as an integer
+  # Accepts either a Value or a byte String.
   def to_bits_integer(v)
     bytes_to_int(input_bytes(v), @endianness)    
   end
+  # Defines a floating-point number from the encoded integral value.
+  # Returns a Value.  
   def from_bits_integer(i)
     v = int_to_bytes(i)
     if v.size<total_bytes
@@ -579,6 +628,9 @@ class FormatBase
     end
     return_bytes v
   end
+  # Returns the encoded integral value of a floating point number
+  # as a text representation in a given base.
+  # Accepts either a Value or a byte String.
   def to_bits_text(v,base)
     i = to_bits_integer(v)
     fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
@@ -589,20 +641,29 @@ class FormatBase
     end
     i.nio_write(fmt)
   end
+  # Defines a floating-point number from a text representation of the
+  # encoded integral value in a given base.
+  # Returns a Value.  
   def from_bits_text(txt,base)
     i = Integer.nio_read(txt,Nio::Fmt.base(base))
     from_bits_integer i
   end
+
+  # Computes the negation of a floating point value
+  # Accepts either a Value or a byte String.
+  # Returns a Value.  
   def neg(v)
     s,f,e = to_integral_sign_significand_exponent(v)
     s = switch_sign_value(s)
     from_integral_sign_significand_exponent(s,f,e)
   end  
   
+  # Converts a floating point value to another format
   def convert_to(v,fpclass)
     fpclass.from_fmt(to_fmt(v))
   end
         
+  # :stopdoc: 
   protected
   def define_fields(field_definitions)
     
@@ -780,11 +841,12 @@ class FormatBase
     end
 
   end  
-  
-    
+  # :startdoc:     
 end
 
+# Base class for decimal floating point formats
 class DecimalFormatBase < FormatBase
+  # :stopdoc:       
   def radix
     10
   end
@@ -828,10 +890,12 @@ class DecimalFormatBase < FormatBase
     end        
     v.nio_write(fmt)  
   end
-
+  # :startdoc:     
 end
 
+# BCD (Binary-Coded-Decimal) floating point formats
 class BCDFormat < DecimalFormatBase
+  # The fields lengths are defined in decimal digits
   def initialize(params)    
 
     @splitted_fields_supported = false
@@ -841,7 +905,8 @@ class BCDFormat < DecimalFormatBase
     super  params
 
   end
-    def total_nibbles
+  # :stopdoc:         
+  def total_nibbles
     @field_lengths.inject{|x,y| x+y}
   end
   def total_bytes
@@ -945,12 +1010,16 @@ class BCDFormat < DecimalFormatBase
     m,e = neg_significand_exponent(0,m,e) if s%2==1
     from_fields_hash :sign=>s, :significand=>m, :exponent=>e
   end
-      
-  
+  # :startdoc:             
 end
 
-
+# DPD (Densely-Packed-Decimal) formats
 class DPDFormat < DecimalFormatBase
+  # The field that need to be defined (with lenghts given in decimal digits) are
+  # * :sign
+  # * :combination
+  # * :exponent_continuation
+  # * :significand_continuation
   def initialize(params)    
     
     @splitted_fields_supported = false
@@ -986,6 +1055,7 @@ class DPDFormat < DecimalFormatBase
 
   end
   
+  # :stopdoc:               
   def total_bits
     @internal_field_lengths.inject{|x,y| x+y}
   end
@@ -1136,11 +1206,14 @@ class DPDFormat < DecimalFormatBase
     from_fields_hash :sign=>s, :significand=>m, :exponent=>e, :type=>t
   end
       
+  # :startdoc:             
       
   
 end
 
+# This is a base class for formats that specify the field lengths in bits
 class FieldsInBitsFormatBase < FormatBase
+  # :stopdoc:               
   def fields_radix
     2
   end
@@ -1152,9 +1225,12 @@ class FieldsInBitsFormatBase < FormatBase
     handle_fields fields
     return_bytes set_bitfields(@field_lengths,fields,@endianness)
   end  
+  # :startdoc:               
 end
 
+# Binary floating point formats
 class BinaryFormat < FieldsInBitsFormatBase
+  # a hidden bit can be define with :hidden_bit
   def initialize(params)    
     @hidden_bit = params[:hidden_bit]
     @hidden_bit = true if @hidden_bit.nil?
@@ -1167,6 +1243,7 @@ class BinaryFormat < FieldsInBitsFormatBase
 
   end
   
+  # :stopdoc:               
   
   def radix
     2
@@ -1252,10 +1329,11 @@ class BinaryFormat < FieldsInBitsFormatBase
     m,e = neg_significand_exponent(0,m,e) if s%2==1    
     from_fields_hash :sign=>s, :significand=>m, :exponent=>e      
   end
+  # :startdoc:               
     
 end
 
-
+# Hexadecimal floating point format
 class HexadecimalFormat < FieldsInBitsFormatBase
   def initialize(params)    
     @splitted_fields_supported = true
@@ -1265,6 +1343,7 @@ class HexadecimalFormat < FieldsInBitsFormatBase
     super  params
   end
   
+  # :stopdoc:               
   
   def radix
     16
@@ -1349,6 +1428,8 @@ class HexadecimalFormat < FieldsInBitsFormatBase
   def exponent_digits    
     @fields[exponent]/4
   end
+  
+  # :startdoc:               
   
 end
 
