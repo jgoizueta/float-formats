@@ -1,56 +1,57 @@
-# Float-Formats
-# Native Ruby Float support tools
+#Float-Formats -- Native Ruby Float support tools
+#
+# Float::RADIX : b = Radix of exponent representation,2
+#
+# Float::MANT_DIG : p = bits (base-RADIX digits) in the significand
+#
+#
+# Float::DIG : q = Number of decimal digits such that any floating-point number with q
+#              decimal digits can be rounded into a floating-point number with p radix b
+#              digits and back again without change to the q decimal digits,
+#                 q = p * log10(b)			if b is a power of 10
+#               	q = floor((p - 1) * log10(b))	otherwise
+#
+# Float::MIN_EXP : emin = Minimum int x such that Float::RADIX**(x-1) is a normalized float
+#
+# Float::MIN_10_EXP : Minimum negative integer such that 10 raised to that power is in the
+#                    range of normalized floating-point numbers,
+#                      ceil(log10(b) * (emin - 1))
+#
+# Float::MAX_EXP : emax = Maximum int x such that Float::RADIX**(x-1) is a representable float
+#
+# Float::MAX_10_EXP : Maximum integer such that 10 raised to that power is in the range of
+#                     representable finite floating-point numbers,
+#                       floor(log10((1 - b**-p) * b**emax))
+#
+# Float::MAX : Maximum representable finite floating-point number
+#                (1 - b**-p) * b**emax
+#
+# Float::EPSILON : The difference between 1 and the least value greater than 1 that is
+#                  representable in the given floating point type
+#                    b**(1-p) 
+#
+# Float::MIN  : Minimum normalized positive floating-point number
+#                  b**(emin - 1).
+#
+# Float::ROUNDS : Addition rounds to 0: zero, 1: nearest, 2: +inf, 3: -inf, -1: unknown. 
+#
+# defined by Nio:
+# Float::DECIMAL_DIG :  Number of decimal digits, n, such that any floating-point number can be rounded
+#                   to a floating-point number with n decimal digits and back again without
+#                   change to the value,
+#                     pmax * log10(b)			if b is a power of 10
+#                     ceil(1 + pmax * log10(b))	otherwise
+#
+# Note that this uses the "fractional significand" interpretation
 
 require 'nio'
 require 'nio/sugar'
 
 require 'float-formats/bytes.rb'
 
-# ========== Native type ==================================================================
-# Float::RADIX : b = Radix of exponent representation,2
-
-# Float::MANT_DIG : p = bits (base-RADIX digits) in the significand
-
-# Float::DIG : q = Number of decimal digits such that any floating-point number with q
-#              decimal digits can be rounded into a floating-point number with p radix b
-#              digits and back again without change to the q decimal digits,
-#	               q = p * log10(b)			if b is a power of 10
-#               	q = floor((p - 1) * log10(b))	otherwise
-
-# Float::MIN_EXP : emin = Minimum int x such that Float::RADIX**(x-1) is a normalized float
-
-# Float::MIN_10_EXP : Minimum negative integer such that 10 raised to that power is in the
-#                    range of normalized floating-point numbers,
-#                      ceil(log10(b) * (emin - 1))
-
-# Float::MAX_EXP : emax = Maximum int x such that Float::RADIX**(x-1) is a representable float
-
-# Float::MAX_10_EXP : Maximum integer such that 10 raised to that power is in the range of
-#                     representable finite floating-point numbers,
-#                       floor(log10((1 - b**-p) * b**emax))
-
-# Float::MAX : Maximum representable finite floating-point number
-#                (1 - b**-p) * b**emax
-
-# Float::EPSILON : The difference between 1 and the least value greater than 1 that is
-#                  representable in the given floating point type
-#                    b**(1-p) 
-
-# Float::MIN  : Minimum normalized positive floating-point number
-#                  b**(emin - 1).
-
-# Float::ROUNDS : Addition rounds to 0: zero, 1: nearest, 2: +inf, 3: -inf, -1: unknown. 
-
-# defined by NFmt: (in some systems this is called DECIMAL_DIG)
-# Float::DIGITS2 :  Number of decimal digits, n, such that any floating-point number can be rounded
-#                   to a floating-point number with n decimal digits and back again without
-#                   change to the value,
-#                     pmax * log10(b)			if b is a power of 10
-#                     ceil(1 + pmax * log10(b))	otherwise
-
-# Note that this uses the "fractional significand" interpretation
-
 class Float
+  # Compute the adjacent floating point values: largest value not larger that 
+  # this and smallest not smaller.
   def neighbours
     f,e = Math.frexp(self)  
     e = Float::MIN_EXP if f==0
@@ -77,20 +78,27 @@ class Float
     [low, high]  
   end
 
+  # Previous floating point value 
   def prev
      neighbours[0]
   end
+   
+  # Next floating point value; e.g. 1.0.next == 1.0+Float::EPSILON
   def next
      neighbours[1]
   end
   
-  # mínimo numero normalizado: = nxt(MAX_D)
+  # Minimum normalized number == MAX_D.next
   MIN_N = Math.ldexp(0.5,Float::MIN_EXP) # == nxt(MAX_D) == Float::MIN
-  # máximo número denormalizado: = prv(MIN_N)
+  
+  # Maximum denormal number == MIN_N.prev
   MAX_D = Math.ldexp(Math.ldexp(1,Float::MANT_DIG-1)-1,Float::MIN_EXP-Float::MANT_DIG)
-  # mínimo número denormalizado no nulo: = nxt(0)
+  
+  # Minimum non zero positive denormal number == 0.0.next  
   MIN_D = Math.ldexp(1,Float::MIN_EXP-Float::MANT_DIG);
-  # maximum significand: = MAX_F = Math.frexp(Float::MAX)[0]   # == Math.ldexp(Math.ldexp(1,Float::MANT_DIG)-1,-Float::MANT_DIG) == Float::RADIZ
+  
+  # Maximum significand  == Math.ldexp(Math.ldexp(1,Float::MANT_DIG)-1,-Float::MANT_DIG)
+  MAX_F = Math.frexp(Float::MAX)[0]   == Math.ldexp(Math.ldexp(1,Float::MANT_DIG)-1,-Float::MANT_DIG)
      
 end
 
@@ -99,24 +107,24 @@ module FltPnt
 
 module_function
 
-# shortest decimal unanbiguous reprentation
+# shortest decimal unambiguous reprentation
 def float_shortest_dec(x)
-  x.nio_write(Fmt.prec(:exact))
+  x.nio_write(Nio::Fmt.prec(:exact))
 end
 
 # decimal representation showing all significant digits
 def float_significant_dec(x)
-  x.nio_write(Fmt.prec(:exact).show_all_digits(true))
+  x.nio_write(Nio::Fmt.prec(:exact).show_all_digits(true))
 end
 
 # complete exact decimal representation
 def float_dec(x)
-  x.nio_write(Fmt.prec(:exact).approx_mode(:exact))
+  x.nio_write(Nio::Fmt.prec(:exact).approx_mode(:exact))
 end
 
 # binary representation
 def float_bin(x)
-  x.nio_write(Fmt.mode(:sci,:exact).base(2))
+  x.nio_write(Nio::Fmt.mode(:sci,:exact).base(2))
 end
 
 # ===== IEEE types =====================================================================================

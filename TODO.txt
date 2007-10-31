@@ -10,3 +10,4 @@
 * Bug to fix: does not work without include FltPnt
 * A multi-platform gem could be set up for IEEE_FPU; for win32-msvcrt no extension is needed;
   for other platforms the ieee_fpu_control extension should be compiled.
+* the gem installation says is not found (rdoc problem?)

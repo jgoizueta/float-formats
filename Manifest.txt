@@ -25,5 +25,5 @@ tasks/website.rake
 test/test_float-formats.rb
 test/test_helper.rb
 test/test_data.yaml
-test/gen_test_data.yaml
+test/gen_test_data.rb
 test/test_native-float.rb
