@@ -67,7 +67,13 @@ IEEE_X_BE = BinaryFormat.new(
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-
+IEEE_128_BE = BinaryFormat.new(
+  :fields=>[:significand,112,:exponent,15,:sign,1], 
+  :bias=>16383, :bias_mode=>:normalized_significand,
+  :hidden_bit=>false, :min_encoded_exp=>1, :round=>:even,
+  :endianness=>:big_endian,
+  :gradual_underflow=>true, :infinity=>true, :nan=>true
+)
 # Decimal IEEE 754r formats
 
 IEEE_DEC32 = DPDFormat.new(
