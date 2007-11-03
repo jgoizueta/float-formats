@@ -8,6 +8,7 @@ require 'enumerator'
 
 module FltPnt
 
+
 module_function
 
 # return an hex representation of a byte string

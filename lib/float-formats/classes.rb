@@ -44,6 +44,7 @@ module FltPnt
 
 # General Floating Point Format Base class
 class FormatBase
+  include FltPnt  
   
   # Common parameters for all floating-point formats:
   # [<tt>:bias_mode</tt>] This defines how the significand is interpreted:
@@ -1213,7 +1214,7 @@ end
 
 # This is a base class for formats that specify the field lengths in bits
 class FieldsInBitsFormatBase < FormatBase
-  # :stopdoc:               
+  # :stopdoc:    
   def fields_radix
     2
   end
