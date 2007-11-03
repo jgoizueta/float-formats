@@ -9,6 +9,26 @@ These are some of the things that can be done with it:
 * Exploring and learning about floating point representations.
 * Definition and testing of new floating-point formats.
 
+=Installation
+
+The easiest way to install Nio is using gems:
+
+<tt>  gem install --remote float-formats -y</tt>
+
+==Requirements
+
+Nio[http://nio.rubyforge.org/] 0.2.0 or later is needed. This 
+can be installed as a gem and should be automatically
+installed by the command shown above to install float-formats.
+
+
+==Downloads
+
+The latest version of Float-Formats and its source code can be downloaded from
+* http://rubyforge.org/project/showfiles.php?group_id=4684
+
+
+
 =Predefined formats
 
 A number of common formats are defined as constants in the FltPnt module:
@@ -178,3 +198,14 @@ formats, query it's range, etc:
   
 You can look at float-formats/formats.rb to see how the built-in formats
 are defined.
+
+=License
+
+This code is free to use under the terms of the GNU GENERAL PUBLIC LICENSE.
+
+=Contact
+
+Nio has been developed by Javier Goizueta (mailto:javier@goizueta.info).
+
+You can contact me through Rubyforge:http://rubyforge.org/sendmessage.php?touser=25432
+

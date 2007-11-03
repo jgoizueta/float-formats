@@ -46,7 +46,7 @@ module FltPnt
 class FormatBase
   include FltPnt  
   
-  # Common parameters for all floating-point formats:
+  # Common parameters for all floating-point formats:  
   # [<tt>:bias_mode</tt>] This defines how the significand is interpreted:
   # * <tt>:fractional_significand</tt> The radix point is before the most significant
   #   digit of the significand (including a hidden bit if there's one).
@@ -57,11 +57,11 @@ class FormatBase
   # [<tt>:bias</tt>] Defines the exponent encoding method to be excess notation
   #                  and defines the bias.
   # [<tt>:endianness</tt>] Defines the byte endianness. One of:
-  #   [<tt>:little_endian</tt>] Least significant bytes come first. (Intel etc.)
-  #   [<tt>:big_endian</tt>] (Network order): most significant bytes come first. (Motorola, SPARC,...)
-  #   [<tt>:little_big_endian</tt>] (Middle endian) Each pair of bytes (16-bit word) has the bytes in
-  #                                 little endian order, but the words are stored in big endian order
-  #                                 (we assume the number of bytes is even). (PDP-11).  
+  # * <tt>:little_endian</tt> Least significant bytes come first. (Intel etc.)
+  # * <tt>:big_endian</tt> (Network order): most significant bytes come first. (Motorola, SPARC,...)
+  # * <tt>:little_big_endian</tt> (Middle endian) Each pair of bytes (16-bit word) has the bytes in
+  #   little endian order, but the words are stored in big endian order
+  #   (we assume the number of bytes is even). (PDP-11).  
   def initialize(params={})
     
     @fields_handler = params[:fields_handler]
@@ -1444,14 +1444,13 @@ end
 # A class to handle a floating-point representation (bytes) and its format class in a single object.
 # This eases the definition and manipulation of floating-point values:
 #
-#   v = FltPnt::Value.from_fmt(IEEE_DOUBLE, '1.1')
+#   v = FltPnt::Value.from_fmt(FltPnt::IEEE_DOUBLE, '1.1')
 #   # or:
 #   v = FltPnt::IEEE_DOUBLE.from_fmt('1.1')
-#   puts v.to_fields_hash.inspect       # -> ...
-#   puts v.next.to_hex(true)            # -> ...
-#   w = v.convert_to(IEEE_SINGLE)
-#   puts v.next.to_hex(true)            # -> ...
-#   
+#   puts v.to_fields_hash.inspect       # -> {:sign=>0, :significand=>450359962737050, :exponent=>1023}
+#   puts v.next.to_hex(true)            # -> 9B 99 99 99 99 99 F1 3F
+#   w = v.convert_to(FltPnt::IEEE_SINGLE)
+#   puts w.next.to_hex(true)            # -> CE CC 8C 3F
 #  
 class Value
   def initialize(fptype,value)

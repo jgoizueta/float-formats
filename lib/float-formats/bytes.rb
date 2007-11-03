@@ -32,9 +32,12 @@ end
   
 # ===== Byte string manipulation ==========================================================
 
+# Reverse the order of the bits in each byte.
 def reverse_byte_bits(b)
   b.chr.unpack('b*').pack("B*")[0]
 end
+
+# Reverse the order of the nibbles in each byte.
 def reverse_byte_nibbles(v)
   if v.kind_of?(String)
     # ... reverse each byte
@@ -50,7 +53,7 @@ def reverse_byte_nibbles(v)
   end
   v
 end
-# reverse bytes in 16-bit words
+# reverse the order of bytes in 16-bit words
 def reverse_byte_pairs(b)
     w = ""
     (0...b.size).step(2) do |i|
@@ -59,14 +62,14 @@ def reverse_byte_pairs(b)
     end
     w  
 end
-    
-# supported endianness modes for byte strings are:
-# :little_endian (Intel order): least significant bytes come first.
-# :big_endian (Network order): most significant bytes come first.
-# :little_big_endian or :middle_endian (PDP-11 order): each pair of bytes
-# (16-bit word) has the bytes in little endian order, but the words
-# are stored in big endian order (we assume the number of bytes is even).
-# :big_little_endian order which would logically complete the set is
+   
+# Supported endianness modes for byte strings are:
+# [<tt>:little_endian</tt>] (Intel order): least significant bytes come first.
+# [<tt>:big_endian</tt>] (Network order): most significant bytes come first.
+# [<tt>:little_big_endian</tt> or <tt>:middle_endian</tt>] (PDP-11 order): each pair of bytes
+#                                                          (16-bit word) has the bytes in little endian order, but the words
+#                                                          are stored in big endian order (we assume the number of bytes is even).
+# Note that the <tt>:big_little_endian</tt> order which would logically complete the set is
 # not currently supported as it has no known uses.
 def convert_endianness(byte_str, from_endianness, to_endianness)
   if from_endianness!=to_endianness
@@ -95,6 +98,7 @@ end
 #  as a byte sequence (String) (with specific endianness)
 #  an an hex-string (nibble values) (with specific endianness)
 
+# Convert a byte string to an integer
 def bytes_to_int(bytes, byte_endianness=:little_endian, bits_little_endian=false)
   i = 0
   bytes = convert_endianness(bytes, byte_endianness, :big_endian)
@@ -109,6 +113,7 @@ def bytes_to_int(bytes, byte_endianness=:little_endian, bits_little_endian=false
   i
 end
 
+# Convert an integer to a byte string
 def int_to_bytes(i, len=0, byte_endianness=:little_endian, bits_little_endian=false)
   return nil if i<0
   bytes = ""
@@ -126,8 +131,8 @@ def int_to_bytes(i, len=0, byte_endianness=:little_endian, bits_little_endian=fa
   bytes
 end
 
-# conversion between byte string and separate fixed-widht fields as integers
 
+# convert a byte string to separate fixed-width bit-fields as integers
 def get_bitfields(bytes,lens,byte_endianness=:little_endian, bits_little_endian=false)
   fields = []
   i = bytes_to_int(bytes,byte_endianness,bits_little_endian)
@@ -139,6 +144,7 @@ def get_bitfields(bytes,lens,byte_endianness=:little_endian, bits_little_endian=
   fields
 end
 
+# pack fixed-width bit-fields as integers into a byte string
 def set_bitfields(lens,fields,byte_endianness=:little_endian, bits_little_endian=false)
   i = 0
   lens = lens.reverse
@@ -160,11 +166,15 @@ end
 # (mfc 2000.10.03; Rexx version with new equations 2007.02.01)
 # available at http://www2.hursley.ibm.com/decimal/DPDecimal.html
 
+# Negate a bit. Auxiliar method for DPD conversions
 def bitnot(b)
   (~b)&1
 end
 
-# bcd2dpd -- Compress BCD to Densely Packed Decimal
+# Compress BCD to Densely Packed Decimal
+# 
+# adapted from Mike Cowlishaw's Rexx program:
+#   http://www2.hursley.ibm.com/decimal/DPDecimal.html
 def bcd2dpd(arg)
   # assign each bit to a variable, named as in the description
   a,b,c,d,e,f,g,h,i,j,k,m = ("%012B"%arg).split('').collect{|bit| bit.to_i}
@@ -182,7 +192,6 @@ def bcd2dpd(arg)
   x=e | (a & i) | (bitnot(a) & k)
   y=m
   
-  
   # concatenate the bits and return
     # result = [p,q,r,s,t,u,v,w,x,y].collect{|bit| bit.to_s}.inject{|aa,bb|aa+bb}.to_i(2)
     result = 0
@@ -193,7 +202,10 @@ def bcd2dpd(arg)
   result
 end
 
-# dpd2bcd -- Expand Densely Packed Decimal to BCD
+# Expand Densely Packed Decimal to BCD
+# 
+# adapted from Mike Cowlishaw's Rexx program:
+#   http://www2.hursley.ibm.com/decimal/DPDecimal.html
 def dpd2bcd(arg)
 
   # assign each bit to a variable, named as in the description
@@ -222,7 +234,7 @@ def dpd2bcd(arg)
   result
 end
 
-
+# Pack a bcd digits string into DPD
 def hexbcd_to_dpd(bcd, endianness=:big_endian)
     
   n = bcd.size
@@ -254,6 +266,7 @@ def hexbcd_to_dpd(bcd, endianness=:big_endian)
   [dpd, dpd_bits]
 end
 
+# Unpack DPD digits
 def dpd_to_hexbcd(dpd, dpd_bits, endianness=:big_endian)
   
   bcd = ""

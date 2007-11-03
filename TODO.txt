@@ -1,5 +1,3 @@
-* Finish RDoc Documentation
-* Publish Gem
 * classes.rb :
   - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
     methods; some refactoring is in order

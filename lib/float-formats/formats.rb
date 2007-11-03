@@ -278,12 +278,12 @@ CRAY = BinaryFormat.new(
 # The exponent encoded value 1023 is used for NaN
 # The exponent encoded value    0 is used for underflow
 # The exponent encoded value 2047 is used for overflow
-
+#
 # The exponent needs special treatment, because instead of excess encoding, which is equivalent to two's complement followed
 # by sign bit reversal, one's complement followed by sign bit reversal is used, which is equivalent
 # to use a bias diminished by one for negative exponents. Note that the exponent encoded value that equals the bias is 
 # not used (is used as a NaN indicator)
-class CDCFLoatingPoint < BinaryFormat
+class CDCFLoatingPoint < BinaryFormat # :nodoc:
   def encode_exponent(e,mode)
     ee = super
     ee -= 1 if e<0
@@ -477,7 +477,7 @@ WANG2200 = BCDFormat.new(
       
       
 # C51 (C compiler for the Intel 8051) BCD Floating point formats
-class C51BCDFloatingPoint < BCDFormat
+class C51BCDFloatingPoint < BCDFormat # :nodoc:
   def exponent_radix
     2
   end
