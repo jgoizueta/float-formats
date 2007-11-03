@@ -91,13 +91,14 @@ class FormatBase
     @min_encoded_exp += 1 if @min_encoded_exp==@zero_encoded_exp && (@hidden_bit && params[:min_encoded_exp].nil?)
     
     @infinite_encoded_exp = params[:infinite_encoded_exp]
+    @nan_encoded_exp = params[:nan_encoded_exp]
+    
     @infinity = params[:infinity] || (@infinite_encoded_exp ? true : false)
     @max_encoded_exp = params[:max_encoded_exp] || @exponent_radix**@fields[:exponent]-1 # maximum regular exponent, encoded
     if @infinity      
       @infinite_encoded_exp = @nan_encoded_exp || @max_encoded_exp if !@infinite_encoded_exp
       @max_encoded_exp = @infinite_encoded_exp - 1 if @infinite_encoded_exp<=@max_encoded_exp
     end
-    @nan_encoded_exp = params[:nan_encoded_exp_exp]
     @nan = params[:nan] || (@nan_encoded_exp ? true : false)
     if @nan
       @nan_encoded_exp = @infinite_encoded_exp || @max_encoded_exp if !@nan_encoded_exp
@@ -848,6 +849,10 @@ end
 # Base class for decimal floating point formats
 class DecimalFormatBase < FormatBase
   # :stopdoc:       
+  def initialize(params)
+    @hidden_bit = false
+    super params
+  end
   def radix
     10
   end
@@ -1337,6 +1342,7 @@ end
 # Hexadecimal floating point format
 class HexadecimalFormat < FieldsInBitsFormatBase
   def initialize(params)    
+    @hidden_bit = false    
     @splitted_fields_supported = true
     define_fields params[:fields]    
     @significand_digits = @fields[:significand]/4

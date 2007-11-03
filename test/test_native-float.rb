@@ -13,13 +13,13 @@ class TestNativeFloat < Test::Unit::TestCase
       assert Float::MIN_D.prev==0.0
       assert Float::MIN_D==0.0.next
 
-      assert (-Float::MIN_N).next==-Float::MAX_D
-      assert -(Float::MIN_N.prev)==-Float::MAX_D
-      assert (-Float::MIN_D).next==0.0
-      assert (-Float::MIN_D)==0.0.prev
+      assert((-Float::MIN_N).next==-Float::MAX_D)
+      assert(-(Float::MIN_N.prev)==-Float::MAX_D)
+      assert((-Float::MIN_D).next==0.0)
+      assert((-Float::MIN_D)==0.0.prev)
 
 
-      assert -(1.0.next) == (-1.0).prev
-      assert (-1.0).next == -(1.0.prev)
+      assert(-(1.0.next) == (-1.0).prev)
+      assert((-1.0).next == -(1.0.prev))
     end
 end
