@@ -202,6 +202,7 @@ PDP11_D = BinaryFormat.new(
 
 
 # Format used in HP Saturn-based RPL calculators (HP48,HP49,HP50, also HP32s, HP42s --which use RPL internally)
+# (these formats are not used in the HP-71B which is a Saturn, non-RPL machine)
           
 SATURN = BCDFormat.new(
   :fields=>[:prolog,5,:exponent,3,:significand,12,:sign,1],
@@ -218,8 +219,10 @@ SATURN_X = BCDFormat.new(
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 )
           
-# Format used in classic HP calculators (HP-35, ... HP-15C) (endianess is unknown)
-
+# Format used in classic HP calculators (HP-35, ... HP-15C)
+# Endianness is indeterminate, since these machines have named registers that
+# hold a floating-point value in a single 56-bit word.
+# (But intra-word field/nibble addressing is little-endian)
 HP_CLASSIC = BCDFormat.new(
   :fields=>[:exponent,3,:significand,10,:sign,1],
   :exponent_mode=>:radix_complement,

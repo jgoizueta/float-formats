@@ -75,6 +75,7 @@ Classic HP 10 digit calculators: (HP_CLASSIC).
 
 =Using the pre-defined formats
 
+  require 'rubygems'
   require 'float-formats'
   include FltPnt
 

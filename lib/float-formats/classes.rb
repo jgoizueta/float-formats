@@ -97,12 +97,12 @@ class FormatBase
     @max_encoded_exp = params[:max_encoded_exp] || @exponent_radix**@fields[:exponent]-1 # maximum regular exponent, encoded
     if @infinity      
       @infinite_encoded_exp = @nan_encoded_exp || @max_encoded_exp if !@infinite_encoded_exp
-      @max_encoded_exp = @infinite_encoded_exp - 1 if @infinite_encoded_exp<=@max_encoded_exp
+      @max_encoded_exp = @infinite_encoded_exp - 1 if @infinite_encoded_exp.kind_of?(Integer) && @infinite_encoded_exp<=@max_encoded_exp
     end
     @nan = params[:nan] || (@nan_encoded_exp ? true : false)
     if @nan
       @nan_encoded_exp = @infinite_encoded_exp || @max_encoded_exp if !@nan_encoded_exp
-      @max_encoded_exp = @nan_encoded_exp - 1 if @nan_encoded_exp<=@max_encoded_exp
+      @max_encoded_exp = @nan_encoded_exp - 1 if @nan_encoded_exp.kind_of?(Integer) && @nan_encoded_exp<=@max_encoded_exp
     end
         
     @exponent_mode = params[:exponent_mode]
@@ -935,7 +935,18 @@ class BCDFormat < DecimalFormatBase
     end
     # now we conver the nibble strings to numbers
     i = -1
-    nibble_fields.collect{|ns| i+=1;bcd_field?(i) ? ns.reverse.to_i : ns.reverse.to_i(16)}
+    nibble_fields.collect do |ns| 
+      i+=1
+      if bcd_field?(i)
+        if /\A\d+\Z/.match(ns)
+          ns.reverse.to_i
+        else
+          ns.reverse
+        end
+      else
+        ns.reverse.to_i(16)
+      end
+    end
   end
   def from_fields(*fields)    
     fields = fields[0] if fields.size==1 and fields[0].kind_of?(Array)
@@ -943,8 +954,12 @@ class BCDFormat < DecimalFormatBase
     i = 0
     nibbles = ""
     for l in @field_lengths
-      fmt = bcd_field?(i) ? 'd' : 'X'
-      nibbles << ("%0#{l}#{fmt}" % fields[i]).reverse
+      f = fields[i] 
+      unless f.kind_of?(String)      
+        fmt = bcd_field?(i) ? 'd' : 'X'
+        f = "%0#{l}#{fmt}" % fields[i]
+      end
+      nibbles << f.reverse
       i += 1
     end
     v = hex_to_bytes(nibbles)
@@ -964,15 +979,15 @@ class BCDFormat < DecimalFormatBase
     e = f[:exponent]
     s = f[:sign]
     m,e = neg_significand_exponent(s,m,e) if s%2==1
-    if m==0
-      # +-zero
-      e = :zero
-    elsif @infinite_encoded_exp && e==@infinite_encoded_exp && m==0
-      # +-inifinity
+    if @infinite_encoded_exp && e==@infinite_encoded_exp
+      # +-infinity
       e = :infinity
-    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0 
+    elsif @nan_encoded_exp && e==@nan_encoded_exp
       # NaN
       e = :nan
+    elsif m==0
+      # +-zero
+      e = :zero
     else
       # normalized number
         e = decode_exponent(e, :integral_significand)
@@ -989,11 +1004,11 @@ class BCDFormat < DecimalFormatBase
       e = @infinite_encoded_exp || radix_power(@fields[:exponent])-1
       m = 0
     elsif e==:nan
-      e = @infinite_encoded_exp || radix_power(@fields[:exponent])-1
-      s = minus_sign_value # ?
-      m = radix_power(@significand_digits-2) if m==0
+      e = @nan_encoded_exp || radix_power(@fields[:exponent])-1
+      #s = minus_sign_value # ?
+      #m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
-      e = @denormal_encoded_exp      
+      e = @denormal_encoded_exp    
     else
       # to do: try to adjust m to keep e in range if out of valid range
       # to do: reduce m and adjust e if m too big
@@ -1173,7 +1188,6 @@ class DPDFormat < DecimalFormatBase
 
   def from_integral_sign_significand_exponent(s,m,e)
     msb = radix_power(@significand_digits-1)
-    #puts "DEC FROM #{s} #{m} #{e}"
     t = nil
     if e==:zero
       e = @zero_encoded_exp
@@ -1307,7 +1321,7 @@ class BinaryFormat < FieldsInBitsFormatBase
       e = @infinite_encoded_exp || radix_power(@fields[:exponent])-1
       m = 0
     elsif e==:nan
-      e = @infinite_encoded_exp || radix_power(@fields[:exponent])-1
+      e = @nan_encoded_exp || radix_power(@fields[:exponent])-1
       s = minus_sign_value # ?
       m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
@@ -1399,7 +1413,7 @@ class HexadecimalFormat < FieldsInBitsFormatBase
       e = @infinite_encoded_exp || radix_power(@fields[:exponent])-1
       m = 0
     elsif e==:nan
-      e = @infinite_encoded_exp || radix_power(@fields[:exponent])-1
+      e = @nan_encoded_exp || radix_power(@fields[:exponent])-1
       s = minus_sign_value # ?
       m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal

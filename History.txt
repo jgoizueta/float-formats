@@ -1,3 +1,13 @@
-== 0.1.0 2007-11-03
+== 0.1.1 2007-11-09
+
+*  Allow non-bcd values in fields of BCD formats by passing
+   hex values as Strings; allow such values to be used for 
+   nan/infinity exponents.
+   
+*  Bug fixes
+    - Fix the encoding-decoding of nan and infinity in Decimal format.
+    - Fix the decoding of NaN in Binary & Hexadecimal
+
+== 0.1.0 2007-11-04
 
 * Initial release
