@@ -109,4 +109,27 @@ class TestFloatFormats < Test::Unit::TestCase
     end  
       
   end 
+
+  def test_hp71b
+    assert_equal(-499, HP71B.radix_min_exp)
+    assert_equal(499, HP71B.radix_max_exp)
+
+    fmt = Nio::Fmt.prec(12)
+    assert_equal  '9.99999999999E499', HP71B.max_value.to_fmt(fmt)
+    assert_equal '0000000000001501', HP71B.min_value.to_bits_text(16)
+    assert_equal '1E-510', HP71B.min_value.to_fmt(fmt)
+    assert_equal '1E-499', HP71B.min_normalized_value.to_fmt(fmt)
+
+    assert_equal '9210000000000999',HP71B.from_fmt('-0.21').to_bits_text(16)
+    assert_equal '0100000000000001',HP71B.from_fmt('10').to_bits_text(16)
+    assert_equal '9000000000000000',HP71B.from_fmt('-0').to_bits_text(16)
+    assert_equal '0000510000000501', HP71B.from_fmt('0.0051E-499').to_bits_text(16)
+
+    assert_equal '0000000000000F01',HP71B.nan.to_bits_text(16)
+    assert_equal 'NAN', HP71B.nan.to_fmt.upcase
+    assert_equal '0000000000000F00', HP71B.infinity.to_bits_text(16)
+    assert_equal '+INFINITY', HP71B.infinity.to_fmt.upcase
+    assert_equal '9000000000000F00', HP71B.infinity.neg.to_bits_text(16)
+  end
+
 end

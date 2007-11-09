@@ -218,7 +218,32 @@ SATURN_X = BCDFormat.new(
   :endianness=>:little_endian, :round=>:even,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 )
-          
+         
+# SATURN HP-71B (IEEE, NON-RPL) formats
+
+# HP-71B REAL format (12-form) which is stored in a single register
+HP71B = BCDFormat.new(
+  :fields=>[:exponent,3,:significand,12,:sign,1],
+  :exponent_mode=>:radix_complement,
+  :endianness=>:little_endian, :round=>:even,
+  :gradual_underflow=>true, :infinity=>true, :nan=>true,
+  :denormal_encoded_exp=>501,
+  :nan_encoded_exp=>"F01", # signaling NaN is F02
+  :infinite_encoded_exp=>"F00"
+)   
+
+# HP-71B internal 15-digit format (15-form), stored in a pair of registers
+# we use here a little-endian order for the registers, otherwise the
+# definition would be [:significand,15,:unused1,1,:exponent,5,:unused2,10,:sign,1]
+HP71B_X = BCDFormat.new(
+  :fields=>[:exponent,5,:unused2,10,:sign,1, :significand,15,:unused1,1],
+  :exponent_mode=>:radix_complement,
+  :endianness=>:little_endian, :round=>:even,
+  :gradual_underflow=>false, :infinity=>true, :nan=>true,
+  :nan_encoded_exp=>"00F01",
+  :infinite_encoded_exp=>"00F00"
+)   
+
 # Format used in classic HP calculators (HP-35, ... HP-15C)
 # Endianness is indeterminate, since these machines have named registers that
 # hold a floating-point value in a single 56-bit word.
