@@ -1538,6 +1538,10 @@ class Value
     self.class.new(@fptype, @fptype.prev_float(@value))
   end  
   
+  def neg
+    @fptype.neg(@value)
+  end
+  
   def fp_format
     @fptype
   end
