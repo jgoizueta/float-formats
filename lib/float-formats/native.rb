@@ -127,6 +127,63 @@ def float_bin(x)
   x.nio_write(Nio::Fmt.mode(:sci,:exact).base(2))
 end
 
+# decompose a float into a signed integer significand and exponent (base Float::RADIX)
+def float_to_integral_significand_exponent(x)
+  s,e = Math.frexp(x)
+  [Math.ldexp(s,Float::MANT_DIG).to_i,e-Float::MANT_DIG]
+end
+
+# compose float from significand and exponent
+def float_from_integral_significand_exponent(s,e)
+  Math.ldexp(s,e)
+end
+
+# convert a float to C99's hexadecimal notation
+def hex_from_float(v)
+  if Float::RADIX==2
+    s,e = float_to_integral_significand_exponent(v)
+  else
+    txt = v.nio_write(Fmt.base(2).sep('.')).upcase
+    p = txt.index('E')
+    exp = 0
+    if p
+      exp = rep[p+1..-1].to_i
+      txt = rep[0...p]
+    end
+    p = txt.index('.')
+    if p
+      exp -= (txt.size-p-1)
+      txt.tr!('.','')    
+    end
+    s = txt.to_i(2)
+    e = exp  
+  end
+  "0x#{s.to_s(16)}p#{e}"  
+end
+
+# convert a string formatted in C99's hexadecimal notation to a float
+def hex_to_float(txt)
+  txt = txt.strip.upcase
+  txt = txt[2..-1] if txt[0,2]=='0X'
+  p = txt.index('P')
+  if p
+    exp = txt[p+1..-1].to_i
+    txt = txt[0...p]
+  else
+    exp = 0
+  end
+  p = txt.index('.')
+  if p
+    exp -= (txt.size-p-1)*4
+    txt.tr!('.','')    
+  end
+  if Float::RADIX==2
+    float_from_integral_significand_exponent(txt.to_i(16),exp)
+  else
+    (txt.to_i(16)*(2**exp)).to_f
+  end
+end
+
 # ===== IEEE types =====================================================================================
  
 # generate a SGL value stored in a byte string given a decimal value formatted as text

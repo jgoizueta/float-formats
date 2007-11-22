@@ -125,11 +125,11 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal '9000000000000000',HP71B.from_fmt('-0').to_bits_text(16)
     assert_equal '0000510000000501', HP71B.from_fmt('0.0051E-499').to_bits_text(16)
 
-    assert_equal '0000000000000F01',HP71B.nan.to_bits_text(16)
+    assert_equal '0000000000000F01',HP71B.nan.to_bits_text(16).upcase
     assert_equal 'NAN', HP71B.nan.to_fmt.upcase
-    assert_equal '0000000000000F00', HP71B.infinity.to_bits_text(16)
+    assert_equal '0000000000000F00', HP71B.infinity.to_bits_text(16).upcase
     assert_equal '+INFINITY', HP71B.infinity.to_fmt.upcase
-    assert_equal '9000000000000F00', HP71B.infinity.neg.to_bits_text(16)
+    assert_equal '9000000000000F00', HP71B.infinity.neg.to_bits_text(16).upcase
   end
 
 end
