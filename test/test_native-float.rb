@@ -32,6 +32,12 @@ class TestNativeFloat < Test::Unit::TestCase
       assert_equal(-1.0, hex_to_float(hex_from_float(-1.0)))
       assert_equal 1.0e-5, hex_to_float(hex_from_float(1.0e-5))
       assert_equal(-1.0e-5, hex_to_float(hex_from_float(-1.0e-5)))
+      
+      assert_equal(+1,float_to_integral_sign_significand_exponent(+0.0).first)
+      assert_equal(-1,float_to_integral_sign_significand_exponent(-0.0).first)
+      assert_not_equal hex_from_float(-0.0), hex_from_float(+0.0)
+      assert_equal hex_to_float(hex_from_float(-0.0)), hex_to_float(hex_from_float(+0.0))
+      
     end
     
 end

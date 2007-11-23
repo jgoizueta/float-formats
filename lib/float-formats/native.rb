@@ -138,10 +138,27 @@ def float_from_integral_significand_exponent(s,e)
   Math.ldexp(s,e)
 end
 
+def float_to_integral_sign_significand_exponent(x)
+  if x==0.0
+    sign = (1/x<0) ? -1 : +1
+  else
+    sign = x<0 ? -1 : +1
+  end
+  x = -x if sign<0  
+  s,e = Math.frexp(x)
+  [sign,Math.ldexp(s,Float::MANT_DIG).to_i,e-Float::MANT_DIG]
+end
+
+def float_from_integral_sign_significand_exponent(sgn,s,e)
+  f = Math.ldexp(s,e)
+  f = -f if sgn<0
+  f
+end
+
 # convert a float to C99's hexadecimal notation
 def hex_from_float(v)
   if Float::RADIX==2
-    s,e = float_to_integral_significand_exponent(v)
+    sgn,s,e = float_to_integral_sign_significand_exponent(v)
   else
     txt = v.nio_write(Fmt.base(2).sep('.')).upcase
     p = txt.index('E')
@@ -158,7 +175,7 @@ def hex_from_float(v)
     s = txt.to_i(2)
     e = exp  
   end
-  "0x#{s.to_s(16)}p#{e}"  
+  "0x#{sgn<0 ? '-' : ''}#{s.to_s(16)}p#{e}"  
 end
 
 # convert a string formatted in C99's hexadecimal notation to a float
@@ -178,7 +195,16 @@ def hex_to_float(txt)
     txt.tr!('.','')    
   end
   if Float::RADIX==2
-    float_from_integral_significand_exponent(txt.to_i(16),exp)
+    v = txt.to_i(16)
+    if v==0 && txt.include?('-')
+      sign = -1
+    elsif v<0
+      sign = -1
+      v = -v
+    else
+      sign = +1
+    end      
+    float_from_integral_sign_significand_exponent(sign,v,exp)
   else
     (txt.to_i(16)*(2**exp)).to_f
   end

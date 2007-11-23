@@ -7,6 +7,10 @@
 *  Allow non-bcd values in fields of BCD formats by passing
    hex values as Strings; allow such values to be used for 
    nan/infinity exponents.
+
+*  to/from_integral_sign_significand_exponent methods now
+   have the sign as an integer +1,-1 rather than as the
+   internal representation 0,1,etc.
    
 *  Bug fixes
     - Fix the encoding-decoding of nan and infinity in Decimal format.

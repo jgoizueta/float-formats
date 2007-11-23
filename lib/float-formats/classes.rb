@@ -213,6 +213,14 @@ class FormatBase
   def switch_sign_value(v)
     (v==0) ? minus_sign_value : 0
   end
+  
+  def sign_to_unit(s)
+    s==0 ? +1 : -1 # ((-1)**s)
+  end
+  
+  def sign_from_unit(u)
+    u<0 ? minus_sign_value : 0
+  end
 
   # Rounding mode use for this floating-point format; can be one of:
   # [<tt>:even</tt>] round to nearest with ties toward an even digits
@@ -253,7 +261,7 @@ class FormatBase
   # Greatest finite normalized floating point number in the representation.
   # It can be made negative by passing the sign (a so this would be the smallest
   # finite number).
-  def max_value(sign=0)
+  def max_value(sign=+1)
     s = sign
     m = radix_power(significand_digits)-1
     e = radix_max_exp(:integral_significand)
@@ -261,7 +269,7 @@ class FormatBase
   end
   # Smallest normalized floating point number greater than zero in the representation.
   # It can be made negative by passing the sign.
-  def min_normalized_value(sign=0)
+  def min_normalized_value(sign=+1)
     s = sign
     m = 1
     e = radix_min_exp(:normalized_significand)
@@ -277,7 +285,7 @@ class FormatBase
   # Smallest floating point number greater than zero in the representation, including
   # denormalized values if the representation supports it.
   # It can be made negative by passing the sign.
-  def min_value(sign=0)
+  def min_value(sign=+1)
     if @denormal_encoded_exp
       s = sign
       m = 1
@@ -289,7 +297,7 @@ class FormatBase
   end
   # This is the difference between 1.0 and the smallest floating-point
   # value greater than 1.0, radix_power(1-significand_precision)
-  def epsilon(sign=0)
+  def epsilon(sign=+1)
     s = sign
     #m = 1
     #e = 1-significand_digits
@@ -304,7 +312,7 @@ class FormatBase
   # of floating-point addition.
   # Note that (in pseudo-code): 
   #  ((1.0+strict_epsilon)-1.0)==epsilon
-  def strict_epsilon(sign=0, round=nil)
+  def strict_epsilon(sign=+1, round=nil)
     round ||= @round
     s = sign
     m = radix_power(significand_digits-1)
@@ -330,7 +338,7 @@ class FormatBase
   # This is the maximum relative error corresponding to 1/2 ulp:
   #  (radix/2)*radix_power(-significand_precision) == epsilon/2
   # This is called "machine epsilon" in [Goldberg]
-  def half_epsilon(sign=0)
+  def half_epsilon(sign=+1)
     s = sign
     m = radix/2
     e = -significand_digits
@@ -341,11 +349,11 @@ class FormatBase
   end    
   
   # Floating point representation of zero.
-  def zero(sign=0)
+  def zero(sign=+1)
     from_integral_sign_significand_exponent sign, 0, :zero
   end
   # Floating point representation of infinity.
-  def infinity(sign=0)
+  def infinity(sign=+1)
     if @infinite_encoded_exp
       from_integral_sign_significand_exponent sign, 0, :infinity
     else
@@ -355,7 +363,7 @@ class FormatBase
   # Floating point representation of Not-a-Number.
   def nan
     if @nan_encoded_exp
-      from_integral_sign_significand_exponent 0, 0, :nan
+      from_integral_sign_significand_exponent(+1, 0, :nan)
     else
       nil
     end      
@@ -421,7 +429,7 @@ class FormatBase
        e = neutral.dec_pos-neutral.digits.length
        rounding = neutral.rounding    
        if neutral.base==radix
-         x = from_integral_sign_significand_exponent(0,f,e)
+         x = from_integral_sign_significand_exponent(+1,f,e)
        else         
          x = algM(f,e,rounding,neutral.base)
        end
@@ -437,13 +445,13 @@ class FormatBase
     s,m,e = to_integral_sign_significand_exponent(v)
     case e
       when :zero
-        v = 0.0/(s==0 ? +1 : -1)
+        v = 0.0/s
       when :infinity
-        v = (s==0 ? +1.0 : -1.0)/0.0
+        v = s/0.0
       when :nan
         v = 0.0/0.0
       else
-        v = m*radix_power(e)*((-1)**s)
+        v = m*radix_power(e)*s
     end        
     v.nio_write(fmt)  
   end
@@ -533,8 +541,8 @@ class FormatBase
   # Returns a Value.  
   def next_float(v)    
     s,f,e = to_integral_sign_significand_exponent(v)
-    return neg(prev_float(neg(v))) if s!=0 && e!=:zero
-    s = switch_sign_value(s) if e==:zero && s!=0
+    return neg(prev_float(neg(v))) if s<0 && e!=:zero
+    s = -s if e==:zero && s<0
     
     if e!=:nan && e!=:infinity      
       if f==0
@@ -565,7 +573,7 @@ class FormatBase
   # Returns a Value.  
   def prev_float(v)    
     s,f,e = to_integral_sign_significand_exponent(v)
-    return neg(next_float(neg(v))) if s!=0
+    return neg(next_float(neg(v))) if s<0
     return neg(next_float(v)) if e==:zero
     if e!=:nan && e!=:infinity      
       f -= 1
@@ -607,6 +615,7 @@ class FormatBase
       when :normalized_significand
         m = Rational(m,radix_power(@significand_digits-1))
     end
+    [s,m,e]
   end  
   
   # Returns the encoded value of a floating-point number as an integer
@@ -656,7 +665,7 @@ class FormatBase
   # Returns a Value.  
   def neg(v)
     s,f,e = to_integral_sign_significand_exponent(v)
-    s = switch_sign_value(s)
+    s = -s
     from_integral_sign_significand_exponent(s,f,e)
   end  
   
@@ -800,7 +809,7 @@ class FormatBase
     q = u.div v
     r = u-q*v
     v_r = v-r
-    z = from_integral_sign_significand_exponent(0,q,k)
+    z = from_integral_sign_significand_exponent(+1,q,k)
     if r<v_r
       z
     elsif r>v_r
@@ -885,13 +894,13 @@ class DecimalFormatBase < FormatBase
     s,m,e = to_integral_sign_significand_exponent(v)
     case e
       when :zero
-        v = 0.0/(s==0 ? +1 : -1)
+        v = 0.0/s
       when :infinity
-        v = (s==0 ? +1.0 : -1.0)/0.0
+        v = s/0.0
       when :nan
         v = 0.0/0.0
       else
-        sign = s==0 ? '' : '-'
+        sign = s<0 ? '-' : ''
         v = BigDecimal("#{sign}#{m}E#{e}")
     end        
     v.nio_write(fmt)  
@@ -979,6 +988,7 @@ class BCDFormat < DecimalFormatBase
     e = f[:exponent]
     s = f[:sign]
     m,e = neg_significand_exponent(s,m,e) if s%2==1
+    s = sign_to_unit(s)
     if @infinite_encoded_exp && e==@infinite_encoded_exp
       # +-infinity
       e = :infinity
@@ -1005,7 +1015,7 @@ class BCDFormat < DecimalFormatBase
       m = 0
     elsif e==:nan
       e = @nan_encoded_exp || radix_power(@fields[:exponent])-1
-      #s = minus_sign_value # ?
+      #s = -1 # ?
       #m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
       e = @denormal_encoded_exp    
@@ -1028,6 +1038,7 @@ class BCDFormat < DecimalFormatBase
         e = encode_exponent(e, :integral_significand)
       end
     end
+    s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1
     from_fields_hash :sign=>s, :significand=>m, :exponent=>e
   end
@@ -1183,6 +1194,7 @@ class DPDFormat < DecimalFormatBase
       # normalized number
        e = decode_exponent(e, :integral_significand)
     end
+    s = sign_to_unit(s)
     [s,m,e]    
   end
 
@@ -1222,6 +1234,7 @@ class DPDFormat < DecimalFormatBase
         e = encode_exponent(e, :integral_significand)
       end
     end
+    s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1    
     from_fields_hash :sign=>s, :significand=>m, :exponent=>e, :type=>t
   end
@@ -1308,6 +1321,7 @@ class BinaryFormat < FieldsInBitsFormatBase
       e = decode_exponent(e, :integral_significand)
       m |= radix_power(@significand_digits-1) if @hidden_bit
     end
+    s = sign_to_unit(s)
     [s,m,e]    
   end
 
@@ -1346,6 +1360,7 @@ class BinaryFormat < FieldsInBitsFormatBase
         e = encode_exponent(e, :integral_significand)
       end
     end
+    s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1    
     from_fields_hash :sign=>s, :significand=>m, :exponent=>e      
   end
@@ -1400,6 +1415,7 @@ class HexadecimalFormat < FieldsInBitsFormatBase
       # normalized number
       e = decode_exponent(e, :integral_significand)
     end
+    s = sign_to_unit(s)
     [s,m,e]    
   end
 
@@ -1437,6 +1453,7 @@ class HexadecimalFormat < FieldsInBitsFormatBase
         e = encode_exponent(e, :integral_significand)
       end
     end
+    s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1    
     from_fields_hash :sign=>s, :significand=>m, :exponent=>e      
   end

@@ -16,10 +16,10 @@ class TestFloatFormats < Test::Unit::TestCase
           assert t.next_float(z)==t.min_value,"#{tn}: nxt 0 == min"
 
           mz = t.from_fmt('-0')
-          assert t.next_float(t.min_value(1))==mz,"#{tn}: nxt -min == -0"
-          assert t.prev_float(mz)==t.min_value(1),"#{tn}: prv -0 == -min"
+          assert t.next_float(t.min_value(-1))==mz,"#{tn}: nxt -min == -0"
+          assert t.prev_float(mz)==t.min_value(-1),"#{tn}: prv -0 == -min"
 
-          assert t.prev_float(z)==t.min_value(1),"#{tn}: prv 0 == -min"
+          assert t.prev_float(z)==t.min_value(-1),"#{tn}: prv 0 == -min"
           assert t.next_float(mz)==t.min_value,"#{tn}: nxt -0 == min"
       end
         
