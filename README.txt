@@ -210,3 +210,101 @@ Nio has been developed by Javier Goizueta (mailto:javier@goizueta.info).
 
 You can contact me through Rubyforge:http://rubyforge.org/sendmessage.php?touser=25432
 
+=References
+
+
+[<i>Floating Point Representations.</i> C.B. Silio.]
+  http://www.ece.umd.edu/class/enpm607.S2000/fltngpt.pdf  
+  Description of formats used in UNIVAC 1100, CDC 6600/7600, PDP-11, IEEE754, IBM360/370
+  
+[<i>Floating-Point Formats.</i> John Savard.]  
+  http://www.quadibloc.com/comp/cp0201.htm
+  Description of formats used in VAX and PDF-11
+
+
+===IEEE754 binary formats
+[<i>IEEE-754 References.</i> Christopher Vickery.]
+  http://babbage.cs.qc.edu/courses/cs341/IEEE-754references.html
+
+[<i>What Every Computer Scientist Should Know About Floating-Point Arithmetic.</i> David Goldberg.]
+  http://docs.sun.com/source/806-3568/ncg_goldberg.html
+
+
+===DPD/IEEE754r decimal formats
+[<i>Decimal Arithmetic Encoding. Strawman 4d.</i> Mike Cowlishaw.]
+  http://www2.hursley.ibm.com/decimal/decbits.pdf
+
+[<i>A Summary of Densely Packed Decimal encoding.</i> Mike Cowlishaw.]
+  http://www2.hursley.ibm.com/decimal/DPDecimal.html
+  
+[<i>Packed Decimal Encoding IEEE-754-r.</i> J.H.M. Bonten.]
+  http://home.hetnet.nl/mr_1/81/jhm.bonten/computers/bitsandbytes/wordsizes/ibmpde.htm
+
+
+===HP 10 digits calculators
+
+[<i>HP CPU and Programming</i>. David G.Hicks.]
+  http://www.hpmuseum.org/techcpu.htm  Description of calculator CPUs from the Museum of HP Calculators.
+[<i>HP 35 ROM step by step.</i> Jacques Laporte]
+  http://www.jacques-laporte.org/HP35%20ROM.htm
+  Description of HP35 registers.
+[<i>Scientific Pocket Calculator Extends Range of Built-In Functions.</i> Eric A. Evett, Paul J. McClellan, Joseph P. Tanzini.]
+  Hewlett Packard Journal 1983-05 pgs 27-28. Describes format used in HP-15C.
+
+
+===HP 12 digits calculators
+[<i>Software Internal Design Specification Volume I For the HP-71</i>. Hewlett Packard.]
+  Available from http://www.hpmuseum.org/cd/cddesc.htm
+[<i>RPL PROGRAMMING GUIDE</i>]
+  Excerpted from <i>RPL: A Mathematical Control Language</i>. by W. C. Wickes.
+  Available at http://www.hpcalc.org/details.php?id=1743
+
+===HP-3000
+[<i>A Pocket Calculator for Computer Science Professionals.</i> Eric A. Evett.]
+  Hewlett Packard Journal 1983-05 pg 37. Describes format used in HP-3000
+
+===IBM
+[<i>IBM Floating Point Architecture.</i> Wikipedia.]
+  http://en.wikipedia.org/wiki/IBM_Floating_Point_Architecture
+[<i>The IBM eServer z990 floating-point unit</i>. G. Gerwig, H. Wetter, E. M. Schwarz, J. Haess, C. A. Krygowski, B. M. Fleischer and M. Kroener.]
+  http://www.research.ibm.com/journal/rd/483/gerwig.html
+  
+===MBF  
+[<i>Microsoft Knowledbase Article 35826</i>]
+  http://support.microsoft.com/?scid=kb%3Ben-us%3B35826&x=17&y=12
+[<i>Microsoft MBF2IEEE library</i>]
+  http://download.microsoft.com/download/vb30/install/1/win98/en-us/mbf2ieee.exe
+
+===Borland
+[<i>An Overview of Floating Point Numbers.</i> Borland Developer Support Staff]
+
+[<i>Pascal Floating-Point Page.<i> J R Stockton.]
+  http://www.merlyn.demon.co.uk/pas-real.htm
+
+===8-bit micros
+This is the MS Basic format (BASIC09 for TRS-80 Color Computer, Dragon),
+also used in the Sinclair Spectrum.
+
+[<i>Numbers are followed by information not in listings</i>]
+  Sinclair User October 1983 http://www.sincuser.f9.co.uk/019/helplne.htm
+
+[<i>Sinclair ZX Spectrum / Basic Programming.</i>. Steven Vickers.]
+  Chapter 24. http://www.worldofspectrum.org/ZXBasicManual/zxmanchap24.html
+
+
+
+===Apple II
+[<i>Floating Point Routines for the 6502</i> Roy Rankin and Steve Wozniak.]
+  Dr. Dobb's Journal, August 1976, pages 17-19.
+
+===C51
+[<i>Advanced Development System</i> Franklin Software, Inc.]
+  http://www.fsinc.com/reference/html/com9anm.htm
+
+===Cray
+[<i>CRAY-1 COMPUTER SYSTEM Hardware Reference Manual</i>]
+  See pg 3-20 from 2240004 or pg 4-30 from HR-0808 or pg 4-21 from HP-0032.
+  Manuals available at http://bitsavers.org/
+
+===Wang 2200
+[<i>Internal Floating Point Representation</i>] http://www.wang2200.org/fp_format.html
