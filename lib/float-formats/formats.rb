@@ -16,82 +16,118 @@ module FltPnt
 
 # IEEE 754 binary types, as stored in little endian architectures such as Intel, Alpha
 
-IEEE_SINGLE = BinaryFormat.new(
+IEEE_binary16 = BinaryFormat.new(
+  :fields=>[:significand,10,:exponent,5,:sign,1], 
+  :bias=>15, :bias_mode=>:normalized_significand,
+  :hidden_bit=>true,
+  :endianness=>:little_endian, :round=>:even,
+  :gradual_underflow=>true, :infinity=>true, :nan=>true
+)
+IEEE_binary32 = BinaryFormat.new(
   :fields=>[:significand,23,:exponent,8,:sign,1], 
   :bias=>127, :bias_mode=>:normalized_significand,
   :hidden_bit=>true,
   :endianness=>:little_endian, :round=>:even,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-IEEE_DOUBLE = BinaryFormat.new(
+IEEE_binary64 = BinaryFormat.new(
   :fields=>[:significand,52,:exponent,11,:sign,1], 
   :bias=>1023, :bias_mode=>:normalized_significand,
   :hidden_bit=>true,
   :endianness=>:little_endian, :round=>:even,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-IEEE_EXTENDED = BinaryFormat.new(
+IEEE_binary80 = BinaryFormat.new(
   :fields=>[:significand,64,:exponent,15,:sign,1], 
   :bias=>16383, :bias_mode=>:normalized_significand,
   :hidden_bit=>false, :min_encoded_exp=>1, :round=>:even,
   :endianness=>:little_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-IEEE_128 = BinaryFormat.new(
+IEEE_binary128 = BinaryFormat.new(
   :fields=>[:significand,112,:exponent,15,:sign,1], 
   :bias=>16383, :bias_mode=>:normalized_significand,
-  :hidden_bit=>false, :min_encoded_exp=>1, :round=>:even,
+  :hidden_bit=>true, :min_encoded_exp=>1, :round=>:even,
   :endianness=>:little_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
 
+# old names
+IEEE_binaryx = IEEE_binary80
+IEEE_HALF = IEEE_binary16
+IEEE_SINGLE = IEEE_binary32
+IEEE_DOUBLE = IEEE_binary64
+IEEE_EXTENDED = IEEE_binary80
+IEEE_QUAD = IEEE_binary128
+IEEE_128 = IEEE_binary128
+
 # IEEE 754 in big endian order (SPARC, Motorola 68k, PowerPC)
 
-IEEE_S_BE = BinaryFormat.new(
+IEEE_binary16_BE = BinaryFormat.new(
+  :fields=>[:significand,10,:exponent,5,:sign,1], 
+  :bias=>15, :bias_mode=>:normalized_significand,
+  :hidden_bit=>true,
+  :endianness=>:big_endian, :round=>:even,
+  :gradual_underflow=>true, :infinity=>true, :nan=>true
+)
+IEEE_binary32_BE = BinaryFormat.new(
   :fields=>[:significand,23,:exponent,8,:sign,1], 
   :bias=>127, :bias_mode=>:normalized_significand,
   :hidden_bit=>true,
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true)
-IEEE_D_BE = BinaryFormat.new(
+IEEE_binary64_BE = BinaryFormat.new(
   :fields=>[:significand,52,:exponent,11,:sign,1], 
   :bias=>1023, :bias_mode=>:normalized_significand,
   :hidden_bit=>true, :round=>:even,
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-IEEE_X_BE = BinaryFormat.new(
+IEEE_binary80_BE = BinaryFormat.new(
   :fields=>[:significand,64,:exponent,15,:sign,1], 
   :bias=>16383, :bias_mode=>:normalized_significand,
   :hidden_bit=>false, :round=>:even,
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-IEEE_128_BE = BinaryFormat.new(
+IEEE_binary128_BE = BinaryFormat.new(
   :fields=>[:significand,112,:exponent,15,:sign,1], 
   :bias=>16383, :bias_mode=>:normalized_significand,
-  :hidden_bit=>false, :min_encoded_exp=>1, :round=>:even,
+  :hidden_bit=>true, :min_encoded_exp=>1, :round=>:even,
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
+
+# old names
+IEEE_H_BE = IEEE_binary16_BE
+IEEE_S_BE = IEEE_binary32_BE
+IEEE_D_BE = IEEE_binary64_BE
+IEEE_X_BE = IEEE_binary80_BE
+IEEE_128_BE = IEEE_binary128_BE
+IEEE_Q_BE = IEEE_binary128_BE
+
 # Decimal IEEE 754r formats
 
-IEEE_DEC32 = DPDFormat.new(
+IEEE_decimal32 = DPDFormat.new(
   :fields=>[:significand_continuation,20,:exponent_continuation,6,:combination,5,:sign,1],
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-IEEE_DEC64 = DPDFormat.new(
+IEEE_decimal64 = DPDFormat.new(
   :fields=>[:significand_continuation,50,:exponent_continuation,8,:combination,5,:sign,1],
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
-IEEE_DEC128 = DPDFormat.new(
+IEEE_decimal128 = DPDFormat.new(
   :fields=>[:significand_continuation,110,:exponent_continuation,12,:combination,5,:sign,1],
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
    
+# old names
+IEEE_DEC32 = IEEE_decimal32
+IEEE_DEC64 = IEEE_decimal64
+IEEE_DEC128 = IEEE_decimal128
 
 # Excess 128 used by Microsoft Basic in 8-bit micros, Spectrum, ...
 
@@ -334,15 +370,18 @@ CDC_SINGLE = CDCFLoatingPoint.new(
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 )
 
-# the CDC_DOUBLE can be splitted in two CDC_SINGLE values:
+# The CDC_DOUBLE can be splitted in two CDC_SINGLE values:
 #   get_bitfields(v,[CDC_SINGLE.total_bits]*2,CDC_DOUBLE.endianness).collect{|x| int_to_bytes(x,0,CDC_SINGLE.endianness)}
 # and the value of the double is the sum of the values of the singles.
+# This is a single-single type (similar to the double-double used in PowerPC)
 # unlike the single, we must use :fractional_significand mode because with :integral_significand
 # the exponent would refer to the whole significand, but it must refer only to the most significant half.
 # we substract the number of bits in the single to the bias and exponent because of this change,
 # and add 48 to the min_exponent to avoid the exponent of the low order single to be out of range
 # because the exponent of the low order single is adjusted to 
 # the position of its digits by substracting 48 from the high order exponent
+# We could also use the normal range for the exponent of the high order half and force the low order half to be zero
+# when its exponent would be out of range (TO DO: find out how did the CDC really work)
 # Note that when computing the low order exponent with the fields handler we must take into account the sign 
 # because for negative numbers all the fields are one-complemented.
 CDC_DOUBLE= CDCFLoatingPoint.new(

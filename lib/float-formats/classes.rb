@@ -419,7 +419,15 @@ class FormatBase
   # Produce an encoded floating point value using a number defined by a
   # formatted text string (using Nio formats). Returns a Value.
   def from_fmt(txt,fmt=Nio::Fmt.default)    
-       neutral = fmt.nio_read_formatted(txt)       
+       neutral = fmt.nio_read_formatted(txt)
+       if neutral.special?
+          case neutral.special
+            when :nan
+              return nan
+            when :inf
+              return infinity(neutral.sign=='-' ? -1 : +1)
+          end
+       end
        if neutral.rep_pos<neutral.digits.length
          nd = fmt.get_base==10 ? decimal_digits_necessary : (significand_digits*Math.log(radix)/Math.log(fmt.get_base)).ceil+1
          fmt = fmt.mode(:sig,nd)

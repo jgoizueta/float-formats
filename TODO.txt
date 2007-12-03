@@ -4,3 +4,6 @@
 * A solution is needed for the documentation of the format constants of FltPnt in RDoc.
   Apart from researching how to control RDoc, it could be convenient to add a comments
   (and name) parameters to the floating point formats and use them for documentation.
+* Find out how did the CDC handled its double type, was the same exponent range used as for the single type
+  and the low order half had to be zero when the exponent would go out of range? (as in PowerPC double-double)
+* Define the PowerPC double-double type (as a pair of IEEE_binary64).

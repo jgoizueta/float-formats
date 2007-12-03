@@ -240,6 +240,10 @@ You can contact me through Rubyforge:http://rubyforge.org/sendmessage.php?touser
 [<i>Packed Decimal Encoding IEEE-754-r.</i> J.H.M. Bonten.]
   http://home.hetnet.nl/mr_1/81/jhm.bonten/computers/bitsandbytes/wordsizes/ibmpde.htm
 
+[<i>DRAFT Standard for Floating-Point Arithmetic P754.</i> IEEE.]
+  http://www.validlab.com/754R/drafts/archive/2007-10-05.pdf
+  
+
 
 ===HP 10 digits calculators
 

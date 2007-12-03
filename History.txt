@@ -2,6 +2,10 @@
 
 *  HP-71B formats defined
 
+*  Add half precision IEEE format (binary16)
+
+*  New names for IEEE formats
+
 *  new methods hex_to_float, hex_from_float in float-formats/native
 
 *  Allow non-bcd values in fields of BCD formats by passing
@@ -11,10 +15,13 @@
 *  to/from_integral_sign_significand_exponent methods now
    have the sign as an integer +1,-1 rather than as the
    internal representation 0,1,etc.
+
+*  Handle special values (Infinities and NaN) in #from_fmt, #from_number
    
 *  Bug fixes
     - Fix the encoding-decoding of nan and infinity in Decimal format.
     - Fix the decoding of NaN in Binary & Hexadecimal
+    - The definition of IEEE_binary128 was not correct
 
 == 0.1.0 2007-11-04
 
