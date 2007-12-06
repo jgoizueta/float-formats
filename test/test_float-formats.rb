@@ -131,5 +131,39 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal '+INFINITY', HP71B.infinity.to_fmt.upcase
     assert_equal '9000000000000F00', HP71B.infinity.neg.to_bits_text(16).upcase
   end
+  def test_quad
+    assert_equal "3fff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.from_fmt('1').to_hex.downcase
+    assert_equal "7ffe ffff ffff ffff ffff ffff ffff ffff".tr(' ',''), IEEE_binary128_BE.max_value.to_hex.downcase
+    assert_equal '1.19E4932', IEEE_binary128.max_value.to_fmt(Nio::Fmt.prec(4))
+    assert_equal "c000 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.from_fmt('-2').to_hex.downcase
+    assert_equal "0000 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.from_fmt('0').to_hex.downcase
+    assert_equal "8000 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.from_fmt('-0').to_hex.downcase
+    assert_equal "7fff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.infinity.to_hex.downcase
+    assert_equal "ffff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.infinity(-1).to_hex.downcase
+    assert_equal "3ffd 5555 5555 5555 5555 5555 5555 5555".tr(' ',''), IEEE_binary128_BE.from_number(Rational(1,3)).to_hex.downcase
+    assert_equal "3fff 0000 0000 0000 0000 0000 0000 0001".tr(' ',''), IEEE_binary128_BE.from_fmt('1').next.to_hex.downcase    
+  end
+  def test_half
+    assert_equal "3c00", IEEE_binary16_BE.from_fmt('1').to_hex.downcase
+    assert_equal "7bff", IEEE_binary16_BE.max_value.to_hex.downcase
+    assert_equal '65504', IEEE_binary16_BE.max_value.to_fmt
+    assert_equal "0400", IEEE_binary16_BE.min_normalized_value.to_hex.downcase
+    assert_equal "6.103515625E-5", IEEE_binary16_BE.min_normalized_value.to_fmt
+    assert_equal "0001", IEEE_binary16_BE.min_value.to_hex.downcase
+    assert_equal "5.9604644775390625E-8", IEEE_binary16_BE.min_value.to_fmt
+    assert_equal "0000", IEEE_binary16_BE.from_fmt('0').to_hex.downcase
+    assert_equal "8000", IEEE_binary16_BE.from_fmt('-0').to_hex.downcase
+    assert_equal "7c00".tr(' ',''), IEEE_binary16_BE.infinity.to_hex.downcase
+    assert_equal "fc00".tr(' ',''), IEEE_binary16_BE.infinity(-1).to_hex.downcase
+  end
+  def test_special
+    assert_equal '+Infinity', IEEE_binary32.from_number(1.0/0.0).to_fmt 
+    assert_equal '-Infinity', IEEE_binary32.from_number(-1.0/0.0).to_fmt 
+    assert_equal '+Infinity', IEEE_binary32.from_fmt('+Infinity').to_fmt 
+    assert_equal '-Infinity', IEEE_binary32.from_fmt('-Infinity').to_fmt 
+    assert_equal 'NAN', IEEE_binary32.from_number(0.0/0.0).to_fmt.upcase
+    assert_equal 'NAN', IEEE_binary32.from_fmt('NaN').to_fmt.upcase
+  end
+  
 
 end

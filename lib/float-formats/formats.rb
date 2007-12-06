@@ -52,6 +52,7 @@ IEEE_binary128 = BinaryFormat.new(
   :gradual_underflow=>true, :infinity=>true, :nan=>true
 )
 
+
 # old names
 IEEE_binaryx = IEEE_binary80
 IEEE_HALF = IEEE_binary16
@@ -373,15 +374,13 @@ CDC_SINGLE = CDCFLoatingPoint.new(
 # The CDC_DOUBLE can be splitted in two CDC_SINGLE values:
 #   get_bitfields(v,[CDC_SINGLE.total_bits]*2,CDC_DOUBLE.endianness).collect{|x| int_to_bytes(x,0,CDC_SINGLE.endianness)}
 # and the value of the double is the sum of the values of the singles.
-# This is a single-single type (similar to the double-double used in PowerPC)
-# unlike the single, we must use :fractional_significand mode because with :integral_significand
+# Unlike the single, we must use :fractional_significand mode because with :integral_significand
 # the exponent would refer to the whole significand, but it must refer only to the most significant half.
 # we substract the number of bits in the single to the bias and exponent because of this change,
 # and add 48 to the min_exponent to avoid the exponent of the low order single to be out of range
 # because the exponent of the low order single is adjusted to 
 # the position of its digits by substracting 48 from the high order exponent
-# We could also use the normal range for the exponent of the high order half and force the low order half to be zero
-# when its exponent would be out of range (TO DO: find out how did the CDC really work)
+# when its exponent would be out of range
 # Note that when computing the low order exponent with the fields handler we must take into account the sign 
 # because for negative numbers all the fields are one-complemented.
 CDC_DOUBLE= CDCFLoatingPoint.new(
@@ -643,7 +642,31 @@ C51_BCD_LONG_DOUBLE = C51BCDFloatingPoint.new(
   :zero_encoded_exp=>0, :min_encoded_exp=>0,:max_encoded_exp=>127
 ) 
 
-
+=begin
+# Note:
+# One could be tempted to define a double-double type as:
+    IEEE_DOUBLE_DOUBLE = BinaryFormat.new(
+      :fields=>[:significand,52,:lo_exponent,11,:lo_sign,1,:significand,52,:exponent,11,:sign,1], 
+      :fields_handler=>lambda{|fields|     
+        fields[2] = fields[5];
+        bits,max_exp = 53,2047    
+        if fields[4]>bits && fields[4]<max_exp
+          fields[1] = fields[4] - bits
+        else # 0, denormals, small numbers, NaN, Infinities
+          fields[0] = fields[1] = 0
+        end
+      },
+      :bias=>1023, :bias_mode=>:normalized_significand,
+      :hidden_bit=>true,
+      :endianness=>:little_endian, :round=>:even,
+      :gradual_underflow=>true, :infinity=>true, :nan=>true
+    )
+#  But this is incorrect since there's a hidden bit in the low double too and it must be normalized.
+#  In general the halfs of the significand need not be adjacent, they
+#  can have exponets with a separation higher than 53; (in fact the minimum separation seems to be 54)
+#  and they can have different sings, too;
+#  double-double is too tricky to be supported by this package.
+=end
 
  
 

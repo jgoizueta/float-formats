@@ -305,6 +305,11 @@ also used in the Sinclair Spectrum.
 [<i>Advanced Development System</i> Franklin Software, Inc.]
   http://www.fsinc.com/reference/html/com9anm.htm
 
+===CDC6600
+[<i>CONTROL DATA 6400/6500/6600 COMPUTER SYSTEMS Reference Manual</i>]
+  Manuals available at http://bitsavers.org/
+ 
+
 ===Cray
 [<i>CRAY-1 COMPUTER SYSTEM Hardware Reference Manual</i>]
   See pg 3-20 from 2240004 or pg 4-30 from HR-0808 or pg 4-21 from HP-0032.

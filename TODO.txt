@@ -7,3 +7,5 @@
 * Find out how did the CDC handled its double type, was the same exponent range used as for the single type
   and the low order half had to be zero when the exponent would go out of range? (as in PowerPC double-double)
 * Define the PowerPC double-double type (as a pair of IEEE_binary64).
+* next_after, ulp methods
+* add arithmetic to Value using Rational (BigDecimal for decimal types?)
