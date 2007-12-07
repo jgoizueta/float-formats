@@ -16,42 +16,29 @@ module FltPnt
 
 # IEEE 754 binary types, as stored in little endian architectures such as Intel, Alpha
 
-IEEE_binary16 = BinaryFormat.new(
-  :fields=>[:significand,10,:exponent,5,:sign,1], 
-  :bias=>15, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true,
-  :endianness=>:little_endian, :round=>:even,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_binary32 = BinaryFormat.new(
-  :fields=>[:significand,23,:exponent,8,:sign,1], 
-  :bias=>127, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true,
-  :endianness=>:little_endian, :round=>:even,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_binary64 = BinaryFormat.new(
-  :fields=>[:significand,52,:exponent,11,:sign,1], 
-  :bias=>1023, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true,
-  :endianness=>:little_endian, :round=>:even,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_binary80 = BinaryFormat.new(
-  :fields=>[:significand,64,:exponent,15,:sign,1], 
-  :bias=>16383, :bias_mode=>:normalized_significand,
-  :hidden_bit=>false, :min_encoded_exp=>1, :round=>:even,
-  :endianness=>:little_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_binary128 = BinaryFormat.new(
-  :fields=>[:significand,112,:exponent,15,:sign,1], 
-  :bias=>16383, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true, :min_encoded_exp=>1, :round=>:even,
-  :endianness=>:little_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
 
+module IEEE
+  # Define a IEEE binary format by passing parameters in a hash;
+  # :significand and :exponent are used to defined the fields,
+  # optional parameters may follow.
+  def IEEE.binary(parameters)
+    significand_bits = parameters[:significand]
+    exponent_bits = parameters[:exponent]
+    BinaryFormat.new({
+      :fields=>[:significand,significand_bits,:exponent,exponent_bits,:sign,1], 
+      :bias=>2**(exponent_bits-1)-1, :bias_mode=>:normalized_significand,
+      :hidden_bit=>true,
+      :endianness=>:little_endian, :round=>:even,
+      :gradual_underflow=>true, :infinity=>true, :nan=>true
+    }.merge(parameters))
+  end
+end
+
+IEEE_binary16 = IEEE.binary(:significand=>10, :exponent=>5)
+IEEE_binary32 = IEEE.binary(:significand=>23,:exponent=>8)
+IEEE_binary64 = IEEE.binary(:significand=>52,:exponent=>11)
+IEEE_binary80 = IEEE.binary(:significand=>64,:exponent=>15, :hidden_bit=>false, :min_encoded_exp=>1)
+IEEE_binary128 = IEEE.binary(:significand=>112,:exponent=>15)
 
 # old names
 IEEE_binaryx = IEEE_binary80
@@ -64,40 +51,12 @@ IEEE_128 = IEEE_binary128
 
 # IEEE 754 in big endian order (SPARC, Motorola 68k, PowerPC)
 
-IEEE_binary16_BE = BinaryFormat.new(
-  :fields=>[:significand,10,:exponent,5,:sign,1], 
-  :bias=>15, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true,
-  :endianness=>:big_endian, :round=>:even,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_binary32_BE = BinaryFormat.new(
-  :fields=>[:significand,23,:exponent,8,:sign,1], 
-  :bias=>127, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true,
-  :endianness=>:big_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true)
-IEEE_binary64_BE = BinaryFormat.new(
-  :fields=>[:significand,52,:exponent,11,:sign,1], 
-  :bias=>1023, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true, :round=>:even,
-  :endianness=>:big_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_binary80_BE = BinaryFormat.new(
-  :fields=>[:significand,64,:exponent,15,:sign,1], 
-  :bias=>16383, :bias_mode=>:normalized_significand,
-  :hidden_bit=>false, :round=>:even,
-  :endianness=>:big_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_binary128_BE = BinaryFormat.new(
-  :fields=>[:significand,112,:exponent,15,:sign,1], 
-  :bias=>16383, :bias_mode=>:normalized_significand,
-  :hidden_bit=>true, :min_encoded_exp=>1, :round=>:even,
-  :endianness=>:big_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
+IEEE_binary16_BE = IEEE.binary(:significand=>10, :exponent=>5, :endianness=>:big_endian)
+IEEE_binary32_BE = IEEE.binary(:significand=>23,:exponent=>8, :endianness=>:big_endian)
+IEEE_binary64_BE = IEEE.binary(:significand=>52,:exponent=>11, :endianness=>:big_endian)
+IEEE_binary80_BE = IEEE.binary(:significand=>64,:exponent=>15, :endianness=>:big_endian, :hidden_bit=>false, :min_encoded_exp=>1)
+IEEE_binary128_BE = IEEE.binary(:significand=>112,:exponent=>15, :endianness=>:big_endian)
+
 
 # old names
 IEEE_H_BE = IEEE_binary16_BE
@@ -106,6 +65,7 @@ IEEE_D_BE = IEEE_binary64_BE
 IEEE_X_BE = IEEE_binary80_BE
 IEEE_128_BE = IEEE_binary128_BE
 IEEE_Q_BE = IEEE_binary128_BE
+
 
 # Decimal IEEE 754r formats
 
