@@ -6,6 +6,8 @@
 
 *  New names for IEEE formats
 
+*  Add some IEEE 754r interchange formats
+
 *  new methods hex_to_float, hex_from_float in float-formats/native
 
 *  Allow non-bcd values in fields of BCD formats by passing

@@ -14,14 +14,12 @@ module FltPnt
 
 # Floating Point Format Definitions ==========================================
 
-# IEEE 754 binary types, as stored in little endian architectures such as Intel, Alpha
-
 
 module IEEE
-  # Define a IEEE binary format by passing parameters in a hash;
+  # Define an IEEE binary format by passing parameters in a hash;
   # :significand and :exponent are used to defined the fields,
   # optional parameters may follow.
-  def IEEE.binary(parameters)
+  def self.binary(parameters)
     significand_bits = parameters[:significand]
     exponent_bits = parameters[:exponent]
     BinaryFormat.new({
@@ -32,7 +30,34 @@ module IEEE
       :gradual_underflow=>true, :infinity=>true, :nan=>true
     }.merge(parameters))
   end
+  # Define an IEEE binary interchange format given its width in bits
+  def self.interchange_binary(width_in_bits, options={})
+    raise "Invalid IEEE binary interchange format definition: size (#{width_in_bits}) is not valid" unless (width_in_bits%32)==0 && (width_in_bits/32)>=4
+    p = width_in_bits - (4*Math.log(width_in_bits)/Math.log(2)).round.to_i + 13
+    binary({:significand=>p-1, :exponent=>width_in_bits-p}.merge(options))
+  end    
+  
+  def self.decimal(parameters)
+    significand_continuation_bits = parameters[:significand]
+    exponent_continuation_bits = parameters[:exponent]
+    DPDFormat.new({
+      :fields=>[:significand_continuation,significand_continuation_bits,:exponent_continuation,exponent_continuation_bits,:combination,5,:sign,1],
+      :endianness=>:big_endian,
+      :gradual_underflow=>true, :infinity=>true, :nan=>true
+    }.merge(parameters))
+  end
+
+  def self.interchange_decimal(width_in_bits, options={})
+    raise "Invalid IEEE decimal interchange format definition: size (#{width_in_bits}) is not valid" unless (width_in_bits%32)==0
+    p = width_in_bits*9/32 - 2
+    t = (p-1)*10/3
+    w = width_in_bits - t - 6
+    decimal({:significand=>t, :exponent=>w}.merge(options))
+  end    
+
 end
+
+# IEEE 754 binary types, as stored in little endian architectures such as Intel, Alpha
 
 IEEE_binary16 = IEEE.binary(:significand=>10, :exponent=>5)
 IEEE_binary32 = IEEE.binary(:significand=>23,:exponent=>8)
@@ -40,14 +65,6 @@ IEEE_binary64 = IEEE.binary(:significand=>52,:exponent=>11)
 IEEE_binary80 = IEEE.binary(:significand=>64,:exponent=>15, :hidden_bit=>false, :min_encoded_exp=>1)
 IEEE_binary128 = IEEE.binary(:significand=>112,:exponent=>15)
 
-# old names
-IEEE_binaryx = IEEE_binary80
-IEEE_HALF = IEEE_binary16
-IEEE_SINGLE = IEEE_binary32
-IEEE_DOUBLE = IEEE_binary64
-IEEE_EXTENDED = IEEE_binary80
-IEEE_QUAD = IEEE_binary128
-IEEE_128 = IEEE_binary128
 
 # IEEE 754 in big endian order (SPARC, Motorola 68k, PowerPC)
 
@@ -58,8 +75,24 @@ IEEE_binary80_BE = IEEE.binary(:significand=>64,:exponent=>15, :endianness=>:big
 IEEE_binary128_BE = IEEE.binary(:significand=>112,:exponent=>15, :endianness=>:big_endian)
 
 
+# some IEEE745r interchange binary formats
+
+IEEE_binary256 = IEEE.interchange_binary(256)
+IEEE_binary512 = IEEE.interchange_binary(512)
+IEEE_binary1024 = IEEE.interchange_binary(1024)
+IEEE_binary256_BE = IEEE.interchange_binary(256, :endianness=>:big_endian)
+IEEE_binary512_BE = IEEE.interchange_binary(512, :endianness=>:big_endian)
+IEEE_binary1024_BE = IEEE.interchange_binary(1024, :endianness=>:big_endian)
+
+
 # old names
-IEEE_H_BE = IEEE_binary16_BE
+IEEE_binaryx = IEEE_binary80
+IEEE_HALF = IEEE_binary16
+IEEE_SINGLE = IEEE_binary32
+IEEE_DOUBLE = IEEE_binary64
+IEEE_EXTENDED = IEEE_binary80
+IEEE_QUAD = IEEE_binary128
+IEEE_128 = IEEE_binary128IEEE_H_BE = IEEE_binary16_BE
 IEEE_S_BE = IEEE_binary32_BE
 IEEE_D_BE = IEEE_binary64_BE
 IEEE_X_BE = IEEE_binary80_BE
@@ -69,23 +102,19 @@ IEEE_Q_BE = IEEE_binary128_BE
 
 # Decimal IEEE 754r formats
 
-IEEE_decimal32 = DPDFormat.new(
-  :fields=>[:significand_continuation,20,:exponent_continuation,6,:combination,5,:sign,1],
-  :endianness=>:big_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_decimal64 = DPDFormat.new(
-  :fields=>[:significand_continuation,50,:exponent_continuation,8,:combination,5,:sign,1],
-  :endianness=>:big_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
-IEEE_decimal128 = DPDFormat.new(
-  :fields=>[:significand_continuation,110,:exponent_continuation,12,:combination,5,:sign,1],
-  :endianness=>:big_endian,
-  :gradual_underflow=>true, :infinity=>true, :nan=>true
-)
+IEEE_decimal32 = IEEE.decimal(:significand=>20, :exponent=>6)
+IEEE_decimal64 = IEEE.decimal(:significand=>50, :exponent=>8)
+IEEE_decimal128 = IEEE.decimal(:significand=>110, :exponent=>12)
+
+# some IEEE745r interchange binary formats
+
+IEEE_decimal96 = IEEE.interchange_decimal(96)
+IEEE_decimal128 = IEEE.interchange_decimal(128)
+IEEE_decimal192 = IEEE.interchange_decimal(192)
+IEEE_decimal256 = IEEE.interchange_decimal(256)
    
 # old names
+
 IEEE_DEC32 = IEEE_decimal32
 IEEE_DEC64 = IEEE_decimal64
 IEEE_DEC128 = IEEE_decimal128
