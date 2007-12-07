@@ -33,14 +33,22 @@ The latest version of Float-Formats and its source code can be downloaded from
 
 A number of common formats are defined as constants in the FltPnt module:
 
-==IEEE
-<b>IEEE 754 binary</b> floating point representations in little endian order:
-IEEE_SINGLE, IEEE_DOUBLE, IEEE_EXTENDED, IEEE_128 and
-as little endian: IEEE_S_BE, IEEE_D_BE, IEEE_X_BE, IEEE_128_BE.
-Note that the standard defines extended formats with either 64 bits or precision
-(IEEE_EXTENDED, IEEE_X_BE) or 112 (IEEE_128, IEEE_128_BE).
+==IEEE 754r
+<b>binary</b> floating point representations in little endian order:
+IEEE_binary16 (half precision), 
+IEEE_binary32 (single precision),
+IEEE_binary64 (double precision),
+IEEE_binary80 (extended), IEEE_binary128 (quadruple precision) and
+as little endian: IEEE_binary16_BE, etc.
 
-<b>IEEE 754r decimal</b> formats (using DPD): IEEE_DEC32, IEEE_DEC64 and IEEE_DEC128.
+<b>decimal</b> formats (using DPD): 
+IEEE_decimal32, IEEE_decimal64 and IEEE_decimal128.
+
+<b>interchange binary & decimal</b> formats: 
+IEEE_binary256, IEEE_binary512, IEEE_binary1024, IEEE_decimal192, IEEE_decimal256.
+Others can be defined with IEEE.interchange_binary and IEEE.interchange_decimal
+(see the IEEE module).
+
 
 ==Legacy
 Formats of historical interest, some of which are found
@@ -68,9 +76,9 @@ Formats used in the Intel 8051 by the C51 compiler:
 
 
 ==Calculators
-Formats used in HP SATURN based calculators (RPL): (SATURN, SATURN_X),
-Classic HP 10 digit calculators: (HP_CLASSIC).
-
+Formats used in HP RPL calculators: (RPL, RPL_X),
+HP-71B formats (HP71B, HP71B_X)
+and classic HP 10 digit calculators: (HP_CLASSIC).
 
 
 =Using the pre-defined formats

@@ -7,5 +7,4 @@ require 'float-formats/formats'
 
 # FltPnt contains constants for common floating point formats.
 module FltPnt
-  
 end

@@ -14,7 +14,7 @@ module FltPnt
 
 # Floating Point Format Definitions ==========================================
 
-
+# Helper methods to define IEEE 754r formats
 module IEEE
   # Define an IEEE binary format by passing parameters in a hash;
   # :significand and :exponent are used to defined the fields,
@@ -30,6 +30,7 @@ module IEEE
       :gradual_underflow=>true, :infinity=>true, :nan=>true
     }.merge(parameters))
   end
+  
   # Define an IEEE binary interchange format given its width in bits
   def self.interchange_binary(width_in_bits, options={})
     raise "Invalid IEEE binary interchange format definition: size (#{width_in_bits}) is not valid" unless (width_in_bits%32)==0 && (width_in_bits/32)>=4
@@ -37,6 +38,9 @@ module IEEE
     binary({:significand=>p-1, :exponent=>width_in_bits-p}.merge(options))
   end    
   
+  # Define an IEEE decimal format by passing parameters in a hash;
+  # :significand and :exponent are used to defined the fields,
+  # optional parameters may follow.
   def self.decimal(parameters)
     significand_continuation_bits = parameters[:significand]
     exponent_continuation_bits = parameters[:exponent]
@@ -47,6 +51,7 @@ module IEEE
     }.merge(parameters))
   end
 
+  # Define an IEEE decimal interchange format given its width in bits
   def self.interchange_decimal(width_in_bits, options={})
     raise "Invalid IEEE decimal interchange format definition: size (#{width_in_bits}) is not valid" unless (width_in_bits%32)==0
     p = width_in_bits*9/32 - 2
@@ -109,7 +114,6 @@ IEEE_decimal128 = IEEE.decimal(:significand=>110, :exponent=>12)
 # some IEEE745r interchange binary formats
 
 IEEE_decimal96 = IEEE.interchange_decimal(96)
-IEEE_decimal128 = IEEE.interchange_decimal(128)
 IEEE_decimal192 = IEEE.interchange_decimal(192)
 IEEE_decimal256 = IEEE.interchange_decimal(256)
    
@@ -244,6 +248,10 @@ SATURN_X = BCDFormat.new(
   :endianness=>:little_endian, :round=>:even,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 )
+         
+         
+RPL = SATURN
+RPL_X = SATURN_X
          
 # SATURN HP-71B (IEEE, NON-RPL) formats
 
@@ -408,17 +416,15 @@ UNIVAC_DOUBLE = BinaryFormat.new(
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 )
                                                                                                                         
-# Sofware floating point implementatin for the Apple II (6502)
-# the significand & sign are a single field in two's commplement
 
-APPLE = BinaryFormat.new(
+# :stopdoc: # the next definition is not handled correctly by RDoc
+APPLE_INSANE = BinaryFormat.new(
   :fields=>[:significand,23,:sign,1,:exponent,8],
   :bias=>128, :bias_mode=>:normalized_significand,
   :hidden_bit=>false, :min_encoded_exp=>0,
   :neg_mode=>:radix_complement_significand,
   :endianness=>:big_endian,
   :gradual_underflow=>true, :infinity=>false, :nan=>false) { |fp|
-                        
   # This needs a peculiar treatment for the negative values, which not simply use two's complement
   # but also avoid having the sign and msb of the significand equal.
   # Note that here we have a separate sign bit, but it can also be considered as the msb of the significand
@@ -442,9 +448,13 @@ APPLE = BinaryFormat.new(
     #puts ""
     [f,e]
   end
-
 }
+# :startdoc:
 
+
+# Sofware floating point implementatin for the Apple II (6502)
+# the significand & sign are a single field in two's commplement
+APPLE = APPLE_INSANE
 
 # Wang 2200 Basic Decimal floating point
 WANG2200 = BCDFormat.new(
