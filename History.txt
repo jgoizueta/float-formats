@@ -19,6 +19,8 @@
    internal representation 0,1,etc.
 
 *  Handle special values (Infinities and NaN) in #from_fmt, #from_number
+
+*  Add ulp methods to Value and FP classes and to Float
    
 *  Bug fixes
     - Fix the encoding-decoding of nan and infinity in Decimal format.

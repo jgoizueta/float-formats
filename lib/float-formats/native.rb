@@ -99,6 +99,27 @@ class Float
   
   # Maximum significand  == Math.ldexp(Math.ldexp(1,Float::MANT_DIG)-1,-Float::MANT_DIG)
   MAX_F = Math.frexp(Float::MAX)[0]   == Math.ldexp(Math.ldexp(1,Float::MANT_DIG)-1,-Float::MANT_DIG)
+
+  # ulp (unit in the last place) according to the definition proposed by J.M. Muller in
+  # "On the definition of ulp(x)" INRIA No. 5504
+  def ulp
+    return self if nan?     
+    x = abs
+    if x < Math.ldexp(1,MIN_EXP) # x < RADIX*MIN_N
+      res = Math.ldexp(1,MIN_EXP-MANT_DIG) # res = MIN_D
+    elsif x > Math.ldexp(1-Math.ldexp(1,-MANT_DIG),MAX_EXP)  # x > MAX
+      res = Math.ldexp(1,MAX_EXP-MANT_DIG) # res = MAX - MAX.prev
+    else
+      f,e = Math.frexp(x)
+      if f==Math.ldexp(1,-1)
+        res = Math.ldexp(1,e-MANT_DIG-1)
+      else
+        res = Math.ldexp(1,e-MANT_DIG)
+      end        
+    end  
+    res  
+  end
+  
      
 end
 

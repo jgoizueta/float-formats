@@ -600,6 +600,27 @@ class FormatBase
       from_integral_sign_significand_exponent(s,f,e)
     end
   end      
+  
+  # ulp (unit in the last place) according to the definition proposed by J.M. Muller in
+  # "On the definition of ulp(x)" INRIA No. 5504
+  def ulp(v)
+    sign,sig,exp = to_integral_sign_significand_exponent(v)
+        
+    mnexp = radix_min_exp(:integral_significand)
+    mxexp = radix_max_exp(:integral_significand)
+    prec = significand_digits
+      
+    if exp==:nan
+      return_bytes v
+    elsif exp==:infinity
+      from_integral_sign_significand_exponent(1,1,mxexp) # from_integral_sign_significand_exponent(1,fmt.radix_power(prec-1),mxexp-prec+1)    
+    elsif exp==:zero || exp <= mnexp
+      min_value
+    else
+      exp -= 1 if sig==radix_power(prec-1) # minimum normalized significand      
+      from_integral_sign_significand_exponent(1,1,exp)
+    end 
+  end
       
   # Produce an encoded floating point value from the integral value
   # of the sign, significand and exponent.
@@ -1565,6 +1586,10 @@ class Value
   
   def neg
     @fptype.neg(@value)
+  end
+  
+  def ulp
+    @fptype.ulp(@value)    
   end
   
   def fp_format

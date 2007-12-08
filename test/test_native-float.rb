@@ -40,4 +40,38 @@ class TestNativeFloat < Test::Unit::TestCase
       
     end
     
+    
+    def check_ulp_around(x)
+      assert_equal x-x.prev, x.prev.ulp
+      assert_equal x-x.prev, x.ulp
+      assert_equal x.next-x, x.next.ulp
+      assert_equal x.next.next-x.next, x.next.next.ulp
+    end
+    
+    def test_ulp
+      r = Float::RADIX
+      assert_equal Float::MIN_D, 0.0.ulp
+      assert_equal Float::MIN_D, Float::MIN_D.ulp
+      assert_equal Float::MIN_D, Float::MIN_D.next.ulp
+      assert_equal Float::MIN_D, (0.5*(Float::MIN_D+Float::MAX_D)).ulp
+      assert_equal Float::MIN_D, Float::MAX_D.prev.ulp
+      assert_equal Float::MIN_D, Float::MAX_D.ulp
+      assert_equal Float::MIN_D, Float::MIN_N.ulp
+      assert_equal Float::MIN_D, Float::MIN_N.next.ulp
+      assert_equal Float::MIN_D, (r*Float::MIN_N).prev.ulp
+      assert_equal Float::MIN_D, (r*Float::MIN_N).ulp
+      assert_equal r*Float::MIN_D, (r*Float::MIN_N).next.ulp
+      check_ulp_around 1.0
+      assert_equal 1.0.next-1.0, 1.5.ulp
+      check_ulp_around r.to_f
+      check_ulp_around Math.ldexp(1,10)
+      check_ulp_around Math.ldexp(1,-10)
+      check_ulp_around Float::MAX/r
+      assert_equal Float::MAX-Float::MAX.prev, Float::MAX.prev.ulp
+      assert_equal Float::MAX-Float::MAX.prev, Float::MAX.ulp
+      assert_equal Float::MAX-Float::MAX.prev, (1.0/0.0).ulp
+      assert((0.0/0.0).ulp.nan?)
+      assert_equal Math.ldexp(1,10)-Math.ldexp(1,10).prev, Math.ldexp(1,10).prev.ulp
+    end
+    
 end
