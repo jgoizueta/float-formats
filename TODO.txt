@@ -1,3 +1,14 @@
+* refactoring: adapt tests and documentation
+* next_after method, 
+* add comparisons to Value <=>
+* add arithmetic to Value using Rational (BigDecimal for decimal types?)
+  (maybe some directly on sign-significand-exponent); AlgM can be used for rounding
+* implement BurgerDybvig for Values; (use the iterative scale2 instead of scale)  
+* reserach if the double rounding that's happening in from_fmt may be a real problem
+  (the neutral is first formatted to decimal_digits_necessary, then to a FP datum)
+* rename :normalized_significand to :scientific_significand ?
+* find alternative naming for from_ methods
+
 * classes.rb :
   - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
     methods; some refactoring is in order
@@ -6,6 +17,3 @@
   (and name) parameters to the floating point formats and use them for documentation.
 * Find out how did the CDC handled its double type, was the same exponent range used as for the single type
   and the low order half had to be zero when the exponent would go out of range? (as in PowerPC double-double)
-* Define the PowerPC double-double type (as a pair of IEEE_binary64).
-* next_after, ulp methods
-* add arithmetic to Value using Rational (BigDecimal for decimal types?)
