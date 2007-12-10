@@ -6,9 +6,83 @@
 * implement BurgerDybvig for Values; (use the iterative scale2 instead of scale)  
 * reserach if the double rounding that's happening in from_fmt may be a real problem
   (the neutral is first formatted to decimal_digits_necessary, then to a FP datum)
-* rename :normalized_significand to :scientific_significand ?
-* find alternative naming for from_ methods
+* rename :normalized_significand to :scientific_significand ? :denormal to :subnormal ? etc.
+* rename as_ methods removing the as_; consider better names for number, text, splitted/split
+* Consider implementing the format classes as classes rather than objects; see this
+  proof-of-concept snippet:
 
+    module FP
+      class Base
+        
+        def initialize(s,m,e)
+          @s,@m,@e = s,m,e
+        end
+        
+        def value
+          @s*@m*self.class.radix_power(@e)
+        end
+                
+        def self.define(parameters)
+          @radix = parameters[:radix]
+          @precision = parameters[:precision]
+        end
+        
+        class <<self
+          attr_reader :radix, :precision
+        end
+        
+        def self.radix_power(n)
+          radix**n
+        end    
+        
+        def self.epsilon
+          self.new(+1,1,1-precision)
+        end        
+        
+      end
+      
+      class DecimalBase < Base
+        def self.define(parameters)
+          parameters[:radix]=10
+          super parameters
+        end
+      end
+            
+      module_function
+
+      def define(name,parameters)
+        base = parameters[:base] || Base
+        FP.const_set name, cls=Class.new(base)
+        cls.define parameters
+        FP.send :define_method,name,lambda{|s,m,e| cls.new(s,m,e)}
+        FP.send :module_function, name
+        yield cls if block_given?
+      end              
+
+    end
+
+    FP.define :Bin, :radix=>2, :precision=>8
+    
+    puts FP::Bin.radix
+    puts FP::Bin.epsilon.value
+    x = FP::Bin(+1,123,-3)
+    puts x.value
+    
+    module FP
+      define :Dec, :base=>DecimalBase, :precision=>5
+    end    
+
+    puts FP::Dec.epsilon.value
+    puts FP::Dec(+1,123,-2).value
+
+    FP.define(:DecX, :precision=>3) { |format|
+      def format.radix
+        7
+      end
+    }
+    puts FP::DecX(+1,2,1).value
+    
+    
 * classes.rb :
   - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
     methods; some refactoring is in order

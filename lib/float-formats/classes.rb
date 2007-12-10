@@ -64,6 +64,8 @@ class FormatBase
   #   (we assume the number of bytes is even). (PDP-11).  
   def initialize(params={})
     
+    @normalized = params[:normalized]
+    @normalized = true if @normalized.nil?
     @fields_handler = params[:fields_handler]
     
     @exponent_radix = params[:exponent_radix] || radix
@@ -290,27 +292,53 @@ class FormatBase
     end
   end  
   
+  def canonicalized(s,m,e,normalized=nil)
+    #puts "s=#{s} m=#{m} e=#{e}"
+    #return [s,m,e]
+    normalize = @normalized if normalized.nil? 
+    min_exp = radix_min_exp(:integral_significand)
+    e = min_exp if e==:denormal
+    if m.kind_of?(Integer) && m>0 && e.kind_of?(Integer)      
+      while e<min_exp
+        e += 1
+        f /= radix # to do round
+      end
+    end
+    s,m,e = normalized(s,m,e) if normalize
+
+    if m==0
+      e=:zero
+    end
+    #puts " -> s=#{s} m=#{m} e=#{e}"
+    [s,m,e]    
+  end
+  
 
   protected
+  
+  
   def normalized(s,m,e)
-    if m.kind_of?(Integer)      
+    if m.kind_of?(Integer) && e.kind_of?(Integer)
       min_exp = radix_min_exp(:integral_significand)
       if m>0
-        while m<maximum_integral_significand && e>min_exp
+        mx = radix_power(significand_digits-2)
+        while m<=mx && e>min_exp
           e -= 1
           m *= radix
         end      
+        if @normalized && !@gradual_underflow
+          if e<=min_exp && m<minimum_normalized_integral_significand
+            m = 0
+            e = :zero
+          end
+        end
       end
     end
     [s,m,e]
   end
 
-  def return_value(s,m,e,normalize=nil)
-    normalize || @normalized # @normalized should be false for some decimal types
-    if normalize
-      s,m,e = normalized(s,m,e)
-    end
-    Value.new self, s, m, e    
+  def return_value(s,m,e,normalize=nil)    
+    Value.new self, s,m,e,normalize
   end
   public
   
@@ -420,6 +448,8 @@ class FormatBase
     end      
   end
   
+  # from methods
+  
   
   def nio_read(txt,fmt=Nio::Fmt.default)
        neutral = fmt.nio_read_formatted(txt)
@@ -441,7 +471,7 @@ class FormatBase
        rounding = neutral.rounding    
        if neutral.base==radix
          s = +1
-       else         
+       else    
          s,f,e = algM(f,e,rounding,neutral.base).split
        end
        if neutral.sign=='-'
@@ -450,26 +480,25 @@ class FormatBase
        return_value s,f,e
     
   end
-  def from_bytes(b) # bytes(b) ? String#as_fp(class) ? 
+  def bytes(b)
     return_value(*unpack(b))
   end
-  def from_hex(hex)
+  def hex(hex)
     from_bytes hex_to_bytes(hex)
   end  
-  def from_number(v, mode=:approx)
+  def number(v, mode=:approx)
     fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
     nio_read(v.nio_write(fmt),fmt)
   end
-  def from_fmt(txt, fmt=Nio::Fmt.default) # ?
+  def text(txt, fmt=Nio::Fmt.default) # ?
     nio_read(txt,fmt)
   end
-  def from_parts(sign,significand,exponent)
+  def splitted(sign,significand,exponent) # from_a parts join ?
     Value.new self, sign,significand,exponent
   end
 
   # Defines a floating-point number from the encoded integral value.
-  # Returns a Value.  
-  def from_bits_integer(i)
+  def bits(i)
     v = int_to_bytes(i)
     if v.size<total_bytes
       fill = (0.chr*(total_bytes-v.size))
@@ -486,7 +515,7 @@ class FormatBase
   # Defines a floating-point number from a text representation of the
   # encoded integral value in a given base.
   # Returns a Value.  
-  def from_bits_text(txt,base)
+  def bits_text(txt,base)
     i = Integer.nio_read(txt,Nio::Fmt.base(base))
     from_bits_integer i
   end
@@ -1333,6 +1362,10 @@ class HexadecimalFormat < FieldsInBitsFormatBase
 end
 
 
+def convert_bytes(bytes,from_format,to_format)
+  from_format.bytes(bytes).convert_to(to_format)
+end
+
 # A class to handle a floating-point representation (bytes) and its format class in a single object.
 # This eases the definition and manipulation of floating-point values:
 #
@@ -1345,13 +1378,11 @@ end
 #   puts w.next.to_hex(true)            # -> CE CC 8C 3F
 #  
 class Value
-  def initialize(fptype,sign,significand,exponent)
+  def initialize(fptype,sign,significand,exponent,normalize=nil)
     @fptype = fptype
-    @sign = sign
-    @significand = significand
-    @exponent = exponent
+    @sign,@significand,@exponent = @fptype.canonicalized(sign,significand,exponent,normalize)    
   end
-  def split
+  def split # to_a parts ? 
     return [@sign,@significand,@exponent]
   end
   
@@ -1363,9 +1394,9 @@ class Value
   
   # from/to integral_sign_significand_exponent 
   
-  def nio_write(fmt)
+  def nio_write(fmt=Nio::Fmt.default)
     # this always treats the floating-point values as exact quantities
-    case e
+    case @exponent
       when :zero
         v = 0.0/@sign
       when :infinity
@@ -1374,12 +1405,16 @@ class Value
         v = 0.0/0.0
       else
         if @fptype.radix==10
-          v = BigDecimal("#{sign}#{m}E#{e}")
+          s = @sign<0 ? '-' : ''
+          v = BigDecimal("#{s}#{@significand}E#{@exponent}")
         else
           v = @significand*@fptype.radix_power(@exponent)*@sign
         end
     end        
     v.nio_write(fmt)  
+  end
+  def as_text(fmt=Nio::Fmt.default)
+    nio_write(fmt)
   end
   def as_bytes
     @fptype.pack(@sign,@significand,@exponent)
@@ -1393,17 +1428,17 @@ class Value
     number_class.nio_read(v,fmt)    
   end
   def as_bits
-    bytes_to_int(as_bytes, @endianness)    
+    bytes_to_int(as_bytes, @fptype.endianness)    
   end        
   # Returns the encoded integral value of a floating point number
   # as a text representation in a given base.
   # Accepts either a Value or a byte String.
-  def as_bits_text(v,base)
+  def as_bits_text(base)
     i = as_bits
     fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
     if [2,4,8,16].include?(base)
       n = (Math.log(base)/Math.log(2)).round.to_i
-      digits = (total_bits+n-1)/n
+      digits = (@fptype.total_bits+n-1)/n
       fmt.pad0s!(digits)      
     end
     i.nio_write(fmt)
@@ -1415,7 +1450,7 @@ class Value
   end  
   
   # Converts a floating point value to another format
-  def convert_to(v,fpclass)
+  def convert_to(fpclass)
     fpclass.nio_read(nio_write)
   end
 
@@ -1430,7 +1465,7 @@ class Value
     
     if e!=:nan && e!=:infinity      
       if f==0
-        if @fptype.gradual_underflow
+        if @fptype.gradual_underflow?
           e = @fptype.radix_min_exp(:integral_significand)
           f = 1
         else
@@ -1442,7 +1477,11 @@ class Value
       end
       if f>=@fptype.radix_power(@fptype.significand_digits)
         f /= @fptype.radix
-        e += 1
+        if e==:denormal
+          e = @fptype.radix_min_exp(:integral_significand)
+        else
+          e += 1
+        end
         if e>@fptype.radix_max_exp(:integral_significand)
           e = :infinity
           f = 0
@@ -1458,15 +1497,15 @@ class Value
   def prev 
     s,f,e = @sign,@significand,@exponent
     return neg.next.neg if s<0
-    return next.neg if e==:zero
+    return self.next.neg if e==:zero
     if e!=:nan && e!=:infinity      
       f -= 1
       if f<@fptype.minimum_normalized_integral_significand
-        if e>@fptype.radix_min_exp(:integral_significand)
+        if e!=:denormal && e>@fptype.radix_min_exp(:integral_significand)
           e -= 1
           f *= @fptype.radix
         else
-          if @fptype.gradual_underflow
+          if @fptype.gradual_underflow?
             e = :denormal
           else
             e = :zero
@@ -1515,7 +1554,7 @@ class Value
   
   private
   def test_equal(v)
-    @fptype==v.fp_format && @sign==v.sign && @significand==v.significand && @exponent==v.exponent
+    @fptype==v.fp_format && split==v.split
   end
 
   

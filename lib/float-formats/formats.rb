@@ -46,6 +46,7 @@ module IEEE
     exponent_continuation_bits = parameters[:exponent]
     DPDFormat.new({
       :fields=>[:significand_continuation,significand_continuation_bits,:exponent_continuation,exponent_continuation_bits,:combination,5,:sign,1],
+      :normalized=>false,
       :endianness=>:big_endian,
       :gradual_underflow=>true, :infinity=>true, :nan=>true
     }.merge(parameters))
@@ -467,8 +468,8 @@ WANG2200 = BCDFormat.new(
 
   # needs special handling because significand and exponent are both stored
   # as sign-magnitude, with both signs combined in a single nibble (decimal digit)
-  def wang2200.to_integral_sign_significand_exponent(v)
-    f = to_fields_hash(v)
+  def wang2200.unpack(v)
+    f = unpack_fields_hash(v)
     m = f[:significand]
     e = f[:exponent]
     ss = f[:signs]
@@ -494,7 +495,7 @@ WANG2200 = BCDFormat.new(
     [s,m,e]    
   end
 
-  def wang2200.from_integral_sign_significand_exponent(s,m,e)
+  def wang2200.pack(s,m,e)
     s = sign_from_unit(s)
     msb = radix_power(@significand_digits-1)
     es = 0    
@@ -538,7 +539,7 @@ WANG2200 = BCDFormat.new(
     ss = (s%2) + (es==0 ? 0 : 8)
     # reverse exponent nibbles
     e = ("%0#{exponent_digits}d"%e).reverse.to_i
-    from_fields_hash :signs=>ss, :significand=>m, :exponent=>e
+    pack_fields_hash :signs=>ss, :significand=>m, :exponent=>e
   end
 }
       
@@ -554,7 +555,7 @@ class C51BCDFloatingPoint < BCDFormat # :nodoc:
   def minus_sign_value
     1
   end
-  def to_integral_sign_significand_exponent(v)
+  def unpack(v)
     f = to_fields_hash(v)
     m = f[:significand]
     e_s = f[:exponent_sign]
@@ -581,7 +582,7 @@ class C51BCDFloatingPoint < BCDFormat # :nodoc:
     @field_meaning[i]==:significand
   end
 
-  def from_integral_sign_significand_exponent(s,m,e)
+  def pack(s,m,e)
     s = sign_from_unit(s)
     msb = radix_power(@significand_digits-1)
     es = 0    
@@ -618,7 +619,7 @@ class C51BCDFloatingPoint < BCDFormat # :nodoc:
     end    
     exp_bits = exponent_digits
     e_s = e + (s << exp_bits)
-    from_fields_hash :significand=>m, :exponent_sign=>e_s
+    pack_fields_hash :significand=>m, :exponent_sign=>e_s
   end
 end
 
