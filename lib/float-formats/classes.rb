@@ -547,7 +547,7 @@ class FormatBase
   # Computes the next adjacent floating point value.
   # Accepts either a Value or a byte String.
   # Returns a Value.  
-  def next_float(v)    
+  def next_float(v)   
     s,f,e = to_integral_sign_significand_exponent(v)
     return neg(prev_float(neg(v))) if s<0 && e!=:zero
     s = -s if e==:zero && s<0
@@ -838,16 +838,18 @@ class FormatBase
     q = u.div v
     r = u-q*v
     v_r = v-r
-    z = from_integral_sign_significand_exponent(+1,q,k)
     if r<v_r
-      z
     elsif r>v_r
-      z = next_float(z)
+      q += 1
     elsif (round_mode==:even && q.even?) || (round_mode==:zero)
-      z
     else
-      z = next_float(z)
+      q += 1
     end
+    if q==radix_power(significand_digits)
+      q = radix_power(significand_digits-1)
+      k += 1
+    end
+    from_integral_sign_significand_exponent(+1,q,k)
   end
   
   def algM(f,e,round_mode,eb=10)

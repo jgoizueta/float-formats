@@ -26,6 +26,11 @@
     - Fix the encoding-decoding of nan and infinity in Decimal format.
     - Fix the decoding of NaN in Binary & Hexadecimal
     - The definition of IEEE_binary128 was not correct
+    - In formats such as XS256 where the minimum exponent is not used only for zero
+      and there is a hidden bit, then minimum nonzero significand is radix*(prec-1)+1
+      rather than radix*(prec-1); the latter value could be computed in ratio_float
+      and then packed in the representation, being replaced by zero. This would
+      result in an incorrect encoding of the minimum nonzero value.
 
 == 0.1.0 2007-11-04
 
