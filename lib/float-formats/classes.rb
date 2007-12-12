@@ -306,7 +306,7 @@ class FormatBase
     end
     s,m,e = normalized(s,m,e) if normalize
 
-    if m==0
+    if m==0 && e.kind_of?(Integer)
       e=:zero
     end
     #puts " -> s=#{s} m=#{m} e=#{e}"
@@ -321,8 +321,7 @@ class FormatBase
     if m.kind_of?(Integer) && e.kind_of?(Integer)
       min_exp = radix_min_exp(:integral_significand)
       if m>0
-        mx = radix_power(significand_digits-2)
-        while m<=mx && e>min_exp
+        while m<minimum_normalized_integral_significand && e>min_exp
           e -= 1
           m *= radix
         end      
@@ -442,7 +441,7 @@ class FormatBase
   # Floating point representation of Not-a-Number.
   def nan
     if @nan_encoded_exp
-      pack(+1, 0, :nan)
+      return_value(+1, 0, :nan)
     else
       nil
     end      
@@ -1389,7 +1388,18 @@ class Value
   def nan?
     @exponent == :nan
   end
-  # infinite?, normal, etc
+  def zero?
+    return @exponent==:zero || significand==0
+  end
+  def infinite?
+    return @exponent==:infinity
+  end
+  def subnormal?
+    return @exponent==:denormal || (@significand.kind_of?(Integer) && @significand<@fptype.minimum_normalized_integral_significand
+  end
+  def normal?
+    @exponend.kind_of?(Integer) && @significand>=@fptype.minimum_normalized_integral_significand
+  end
   
   
   # from/to integral_sign_significand_exponent 
@@ -1540,7 +1550,48 @@ class Value
     
   
 
+  def <=>(other)
+    return 1 if nan? || other.nan?
+    return 0 if zero? && other.zero?
+    this_sign,this_significand,this_exponent = split
+    other_sign, other_significand, other_exponent = other.split
+    return -1 if other_sign < this_sign
+    return 1 if other_sign > this_sign
+    return 0 if infinity? && other.infinity?
+    
+    if this_sign<0
+      this_significand,other_significand = other_significand,this_significand
+      this_exponent,other_exponent = other_exponent,this_exponent    
+    end
+    
+    if this_exponent==other_exponent
+      return this_significand <=> other_significand
+    else
+      mns = @fptype.minimum_normalized_integral_significand
+      this_normal = this_significand >= mns
+      other_normal = other_significand >= mns
+      if this_normal && other_normal
+        return this_exponent <=> other_exponent
+      else
+        while this_signficand<mns && this_exponent>min_exp
+          this_exponent -= 1
+          this_signficand *= radix
+        end      
+        while other_signficand<mns && other_exponent>min_exp
+          other_exponent -= 1
+          other_signficand *= radix
+        end    
+        if this_exponent==other_exponent
+          return this_significand <=> other_significand
+        else
+          return this_exponent <=> other_exponent
+        end                
+      end
+    end      
+  end
+  include Comparable
 
+  #todo hash cononicalizing first
 
   
   def fp_format
@@ -1548,14 +1599,7 @@ class Value
   end
   
   
-  def ==(obj); test_equal(obj); end
-  def eql?(obj); test_equal(obj); end
-  def ===(obj); test_equal(obj); end
-  
   private
-  def test_equal(v)
-    @fptype==v.fp_format && split==v.split
-  end
 
   
 end  
