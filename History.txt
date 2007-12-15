@@ -1,4 +1,4 @@
-== 0.1.1 2007-11-09
+== 0.1.1 2007-12-15
 
 *  HP-71B formats defined
 
@@ -14,9 +14,7 @@
    hex values as Strings; allow such values to be used for 
    nan/infinity exponents.
 
-*  to/from_integral_sign_significand_exponent methods now
-   have the sign as an integer +1,-1 rather than as the
-   internal representation 0,1,etc.
+*  Nio 0.2.1 is now required
 
 *  Handle special values (Infinities and NaN) in #from_fmt, #from_number
 
