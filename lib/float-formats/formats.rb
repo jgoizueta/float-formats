@@ -490,12 +490,10 @@ WANG2200 = BCDFormat.new(
       e = -e if es%2!=0
       e -= (significand_digits-1)
     end
-    s = sign_to_unit(s)
     [s,m,e]    
   end
 
   def wang2200.from_integral_sign_significand_exponent(s,m,e)
-    s = sign_from_unit(s)
     msb = radix_power(@significand_digits-1)
     es = 0    
     if e==:zero
@@ -574,7 +572,6 @@ class C51BCDFloatingPoint < BCDFormat # :nodoc:
       # normalized number
       e = decode_exponent(e, :integral_significand)
     end
-    s = sign_to_unit(s)
     [s,m,e]    
   end
   def bcd_field?(i)
@@ -582,7 +579,6 @@ class C51BCDFloatingPoint < BCDFormat # :nodoc:
   end
 
   def from_integral_sign_significand_exponent(s,m,e)
-    s = sign_from_unit(s)
     msb = radix_power(@significand_digits-1)
     es = 0    
     if e==:zero

@@ -16,10 +16,10 @@ class TestFloatFormats < Test::Unit::TestCase
           assert t.next_float(z)==t.min_value,"#{tn}: nxt 0 == min"
 
           mz = t.from_fmt('-0')
-          assert t.next_float(t.min_value(-1))==mz,"#{tn}: nxt -min == -0"
-          assert t.prev_float(mz)==t.min_value(-1),"#{tn}: prv -0 == -min"
+          assert t.next_float(t.min_value(1))==mz,"#{tn}: nxt -min == -0"
+          assert t.prev_float(mz)==t.min_value(1),"#{tn}: prv -0 == -min"
 
-          assert t.prev_float(z)==t.min_value(-1),"#{tn}: prv 0 == -min"
+          assert t.prev_float(z)==t.min_value(1),"#{tn}: prv 0 == -min"
           assert t.next_float(mz)==t.min_value,"#{tn}: nxt -0 == min"
       end
         
@@ -139,7 +139,7 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal "0000 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.from_fmt('0').to_hex.downcase
     assert_equal "8000 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.from_fmt('-0').to_hex.downcase
     assert_equal "7fff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.infinity.to_hex.downcase
-    assert_equal "ffff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.infinity(-1).to_hex.downcase
+    assert_equal "ffff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.infinity(1).to_hex.downcase
     assert_equal "3ffd 5555 5555 5555 5555 5555 5555 5555".tr(' ',''), IEEE_binary128_BE.from_number(Rational(1,3)).to_hex.downcase
     assert_equal "3fff 0000 0000 0000 0000 0000 0000 0001".tr(' ',''), IEEE_binary128_BE.from_fmt('1').next.to_hex.downcase    
   end
@@ -154,7 +154,7 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal "0000", IEEE_binary16_BE.from_fmt('0').to_hex.downcase
     assert_equal "8000", IEEE_binary16_BE.from_fmt('-0').to_hex.downcase
     assert_equal "7c00".tr(' ',''), IEEE_binary16_BE.infinity.to_hex.downcase
-    assert_equal "fc00".tr(' ',''), IEEE_binary16_BE.infinity(-1).to_hex.downcase
+    assert_equal "fc00".tr(' ',''), IEEE_binary16_BE.infinity(1).to_hex.downcase
   end
   def test_special
     assert_equal '+Infinity', IEEE_binary32.from_number(1.0/0.0).to_fmt 
