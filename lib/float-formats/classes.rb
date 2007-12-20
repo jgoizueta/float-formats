@@ -588,7 +588,7 @@ class FormatBase
     @field_meaning = []
     @fields = {}
     @splitted_fields = nil
-    field_definitions.enum_slice(2).each do |m,l|
+    field_definitions.each_slice(2) do |m,l|
       @field_lengths << l
       @field_meaning << m
       if @fields[m].nil?
