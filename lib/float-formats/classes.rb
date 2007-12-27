@@ -158,7 +158,7 @@ class FormatBase
   # Accepts either a Value or a byte String.
   # Returns a Value.  
   def next
-    s,f,e = @sign,@significand,@exponent
+    s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
     return neg.prev.neg if s<0 && e!=:zero
     s = -s if e==:zero && s<0
     
@@ -194,7 +194,7 @@ class FormatBase
   # Accepts either a Value or a byte String.
   # Returns a Value.  
   def prev 
-    s,f,e = @sign,@significand,@exponent
+    s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
     return neg.next.neg if s<0
     return self.next.neg if e==:zero
     if e!=:nan && e!=:infinity      
@@ -540,10 +540,10 @@ class FormatBase
     end
   end  
   
-  def self.canonicalized(s,m,e,normalized=nil)
+  def self.canonicalized(s,m,e,normalize=nil)
     #puts "s=#{s} m=#{m} e=#{e}"
     #return [s,m,e]
-    normalize = @normalized if normalized.nil? 
+    normalize = @normalized if normalize.nil? 
     min_exp = radix_min_exp(:integral_significand)
     e = min_exp if e==:denormal
     if m.kind_of?(Integer) && m>0 && e.kind_of?(Integer)      
@@ -1617,6 +1617,51 @@ class HexadecimalFormat < FieldsInBitsFormatBase
   
 end
 
+
+  def -@
+    neg
+  end
+  def +(v)
+    # TODO: coercion
+    if v.fptype==fptype
+      t = BigDecimal
+      x = as(BigDecimal,:exact) + v.as(BigDecimal,:exact)
+      fptype.number(x)        
+    else
+      # TODO
+    end
+  end
+  def /(v)
+    # TODO: coercion
+    if v.fptype==fptype
+      t = BigDecimal
+      prec = fptype.decimal_digits_necessary
+      x = as(BigDecimal,:exact).div(v.as(BigDecimal,:exact),prec)
+      fptype.number(x)        
+    else
+      # TODO
+    end
+  end
+  def -(v)
+    # TODO: coercion
+    if v.fptype==fptype
+      t = BigDecimal
+      x = as(BigDecimal,:exact) - v.as(BigDecimal,:exact)
+      fptype.number(x)        
+    else
+      # TODO
+    end
+  end
+  def *(v)
+    # TODO: coercion
+    if v.fptype==fptype
+      t = BigDecimal
+      x = as(BigDecimal,:exact) * v.as(BigDecimal,:exact)
+      fptype.number(x)        
+    else
+      # TODO
+    end
+  end
 
 module_function
 
