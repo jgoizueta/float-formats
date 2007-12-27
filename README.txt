@@ -91,58 +91,54 @@ The properties of the floating point formats can be queried (which can be
 used for tables or reports comparing different formats):
 
 Size in bits of the representations:
-  puts IEEE_SINGLE.total_bits                        -> 32
+  puts IEEE_binary32.total_bits                        -> 32
 
 Numeric radix:
-  puts IEEE_SINGLE.radix                             -> 2
+  puts IEEE_binary32.radix                             -> 2
 
 Digits of precision (radix-based)
-  puts IEEE_SINGLE.significand_digits                -> 24
+  puts IEEE_binary32.significand_digits                -> 24
 
 Minimum and maximum values of the radix-based exponent:
-  puts IEEE_SINGLE.radix_min_exp                     -> -126
-  puts IEEE_SINGLE.radix_max_exp                     -> 127
+  puts IEEE_binary32.radix_min_exp                     -> -126
+  puts IEEE_binary32.radix_max_exp                     -> 127
 
 Decimal precision
-  puts IEEE_SINGLE.decimal_digits_stored             -> 6
-  puts IEEE_SINGLE.decimal_digits_necessary          -> 9
+  puts IEEE_binary32.decimal_digits_stored             -> 6
+  puts IEEE_binary32.decimal_digits_necessary          -> 9
 
 Minimum and maximum decimal exponents:
-  puts IEEE_SINGLE.decimal_min_exp                   -> -37
-  puts IEEE_SINGLE.decimal_max_exp                   -> 38
+  puts IEEE_binary32.decimal_min_exp                   -> -37
+  puts IEEE_binary32.decimal_max_exp                   -> 38
 
 ==Encode and decode numbers
 
-The <tt>from_</tt> methods of the floating-format classes generate a floating point value
-stored in a byte string from a variety of definitions:
-* <tt>from_integral_sign_significand_exponent</tt> defines the value by three integers:
+For each floating-point format class there is a constructor method with the same
+name which can build a floating-point value from a variety of parameters:
+* Using three integers:
   the sign (+1 for +, -1 for -), the significand (coefficient or mantissa)
   and the exponent.
-* <tt>from_fmt</tt> : converts a text numeral (with an optional Nio format specifier)
-  to a floating point value
-* <tt>from_number</tt> : converts a numerical value
+* From a text numeral (with an optional Nio format specifier)
+* From a number : converts a numerical value
   to a floating point representation.
-
-All these methods return an object of type Value that contains the encoded value (#bytes)
-and the Floating point format class (#fp_format).
   
-  File.open('binary_file.dat','wb'){|f| f.write IEEE_EXTENDED.from_fmt('0.1').bytes}
+  File.open('binary_file.dat','wb'){|f| f.write IEEE_binary80('0.1').bytes}
   
-  puts IEEE_EXTENDED.from_fmt('0.1').to_hex(true)    -> CD CC CC CC CC CC CC CC FB 3F
-  puts IEEE_EXTENDED.from_number(0.1).to_hex(true)   -> CD CC CC CC CC CC CC CC FB 3F
-  puts IEEE_EXTENDED.from_integral_sign_significand_exponent(+1,123,-2).to_hex(true) -> 00 00 00 00 00 00 00 F6 03 40
-  puts IEEE_DEC32.from_fmt('1.234').to_hex(true)     -> 22 20 05 34
+  puts IEEE_binary80('0.1').to_hex(true)    -> CD CC CC CC CC CC CC CC FB 3F
+  puts IEEE_binary80(0.1).to_hex(true)   -> CD CC CC CC CC CC CC CC FB 3F
+  puts IEEE_binary80(+1,123,-2).to_hex(true) -> 00 00 00 00 00 00 00 F6 03 40
+  puts IEEE_DEC32('1.234').to_hex(true)     -> 22 20 05 34
 
 A floating-point encoded value can be converted to useful formats wit the to_ methods:
 * <tt>to_integral_sign_significand_exponent</tt>
 * <tt>to_fmt</tt>
 * <tt>to_number</tt>
 
-  puts IEEE_EXTENDED.to_number(File.read('binary_file.dat'))
-  v = IEEE_EXTENDED.from_fmt('0.1')
-  puts v.to_integral_sign_significand_exponent.inspect
-  puts v.to_fmt
-  puts v.to_number(Float)
+  puts IEEE_binary80.bytes(File.read('binary_file.dat')).as(Rational)
+  v = IEEE_binary80('0.1')
+  puts v.split
+  puts v.as_text
+  puts v.as(Float)
     
 ==Special values:  
 
@@ -151,14 +147,14 @@ Let's show the decimal expression of some interesting values using
 
   fmt = Nio::Fmt.mode(:gen,3)  
 
-  puts IEEE_SINGLE.min_value.to_fmt(fmt)             -> 1.4E-45
-  puts IEEE_SINGLE.min_normalized_value.to_fmt(fmt)  -> 1.18E-38
-  puts IEEE_SINGLE.max_value.to_fmt(fmt)             -> 3.4E38
-  puts IEEE_SINGLE.epsilon.to_fmt(fmt)               -> 1.19E-7
+  puts IEEE_SINGLE.min_value.as_text(fmt)             -> 1.4E-45
+  puts IEEE_SINGLE.min_normalized_value.as_text(fmt)  -> 1.18E-38
+  puts IEEE_SINGLE.max_value.as_text(fmt)             -> 3.4E38
+  puts IEEE_SINGLE.epsilon.as_text(fmt)               -> 1.19E-7
 
 ==Convert between formats
 
-  v = IEEE_EXTENDED.from_fmt('1.1')
+  v = IEEE_EXTENDED.text('1.1')
   v = v.convert_to(IEEE_SINGLE)
   v = v.convert_to(IEEE_DEC64)
   
@@ -195,15 +191,15 @@ For example, here we define a binary floating point 32-bits format with
 We'll use excess notation with bias 127 for the exponent, interpreting
 the significand bits as a fractional number with the radix point after
 the first bit, which will be hidden:
-  MY_FP = BinaryFormat.new(
+  FltPnt.define(:MY_FP, BinaryFormat,
     :fields=>[:significand,22,:exponent,9,:sign,1],
     :bias=>127, :bias_mode=>:normalized_significand,
     :hidden_bit=>true)
 Now we can encode values in this format, decode values, convet to other
 formats, query it's range, etc:
 
-     puts MY_FP.from_fmt('0.1').to_bits_text(16)     -> 1ee66666
-     puts MY_FP.max_value.to_fmt(Nio::Fmt.prec(3))   -> 7.88E115
+     puts MY_FP('0.1').as_bits_text(16)     -> 1ee66666
+     puts MY_FP.max_value.as_text(Nio::Fmt.prec(3))   -> 7.88E115
   
 You can look at float-formats/formats.rb to see how the built-in formats
 are defined.

@@ -44,11 +44,31 @@ module FltPnt
 
 # General Floating Point Format Base class
 class FormatBase
-  include FltPnt  
+  include FltPnt # make FltPnt module functions available to instance methods
+  extend FltPnt  # make FltPnt module functions available to class methods
   
-  def initialize(sign,significand,exponent,normalize=nil)
-    @sign,@significand,@exponent = self.class.canonicalized(sign,significand,exponent,normalize)    
+  def initialize(*args)
+    if args.size == 3 || args.size==4 # && args.first.kind_of?(Integer) && args[1].kind_of?(Integer) && args.last.kind_of?(Integer)
+      sign,significand,exponent,normalize = args    
+      @sign,@significand,@exponent = self.class.canonicalized(sign,significand,exponent,normalize)    
+    else
+      v = fptype.nan
+      case args.first
+        when fptype
+          v = args.first
+        when FormatBase
+          v = args.first.convert_to(fptype)
+        when String
+          v = fptype.text(*args)
+        when Numeric
+          v = fptype.number(args.first)          
+        when Symbol
+          v = fptype.send(*args)
+      end      
+      @sign,@significand,@exponent = v.split
+    end
   end
+  attr_reader :sign, :significand, :exponent
   def split # to_a parts ? 
     return [@sign,@significand,@exponent]
   end
@@ -242,13 +262,13 @@ class FormatBase
       if this_normal && other_normal
         return this_exponent <=> other_exponent
       else
-        while this_signficand<mns && this_exponent>min_exp
+        while this_significand<mns && this_exponent>min_exp
           this_exponent -= 1
-          this_signficand *= radix
+          this_significand *= radix
         end      
-        while other_signficand<mns && other_exponent>min_exp
+        while other_significand<mns && other_exponent>min_exp
           other_exponent -= 1
-          other_signficand *= radix
+          other_significand *= radix
         end    
         if this_exponent==other_exponent
           return this_significand <=> other_significand
@@ -567,6 +587,17 @@ class FormatBase
   def self.return_value(s,m,e,normalize=nil)    
     self.new s,m,e,normalize
   end
+  def self.input_bytes(v)
+    if v.kind_of?(FormatBase)
+      raise "Invalid f.p. format" if v.fp_format!=self
+      v = v.as_bytes 
+    elsif !v.kind_of?(String)
+      raise "Invalid f.p. object"
+      v = nil
+    end
+    v 
+  end    
+  
   public
   
 
@@ -1601,8 +1632,14 @@ def define(*arguments)
   end
   FltPnt.const_set name, cls=Class.new(base)
   cls.define parameters
-  FltPnt.send :define_method,name,lambda{|s,m,e| cls.new(s,m,e)}
-  FltPnt.send :module_function, name
+  constructor = lambda { |*args| cls.new(*args) }
+  if RUBY_VERSION<"1.9.0"
+    FltPnt.send :define_method,name,constructor
+    FltPnt.send :module_function, name
+  else
+    FltPnt.send! :define_method,name,constructor
+    FltPnt.send! :module_function, name
+  end
   yield cls if block_given?
 end    
 

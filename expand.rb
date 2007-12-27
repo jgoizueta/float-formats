@@ -6,6 +6,11 @@
 # * handle general multiline statements (currently only thoses ending in "(,"). use irb or xmp ?
 
 require 'rubygems'
+require 'stringio'
+require File.dirname(__FILE__) + '/lib/float-formats'
+require File.dirname(__FILE__) + '/lib/float-formats/native.rb'
+
+
 
 fn = ARGV.shift
 

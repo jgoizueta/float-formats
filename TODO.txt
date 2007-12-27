@@ -1,6 +1,6 @@
-* refactoring: adapt tests and documentation
+* refactoring: adapt documentation
+* clean up constructors and do error checking
 * next_after method, 
-* add comparisons to Value <=>
 * add arithmetic to Value using Rational (BigDecimal for decimal types?)
   (maybe some directly on sign-significand-exponent); AlgM can be used for rounding
 * implement BurgerDybvig for Values; (use the iterative scale2 instead of scale)  
