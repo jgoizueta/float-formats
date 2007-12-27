@@ -1389,13 +1389,13 @@ class Value
     @exponent == :nan
   end
   def zero?
-    return @exponent==:zero || significand==0
+    return @exponent==:zero || @significand==0
   end
   def infinite?
     return @exponent==:infinity
   end
   def subnormal?
-    return @exponent==:denormal || (@significand.kind_of?(Integer) && @significand<@fptype.minimum_normalized_integral_significand
+    return @exponent==:denormal || (@significand.kind_of?(Integer) && @significand<@fptype.minimum_normalized_integral_significand)
   end
   def normal?
     @exponend.kind_of?(Integer) && @significand>=@fptype.minimum_normalized_integral_significand
@@ -1557,7 +1557,7 @@ class Value
     other_sign, other_significand, other_exponent = other.split
     return -1 if other_sign < this_sign
     return 1 if other_sign > this_sign
-    return 0 if infinity? && other.infinity?
+    return 0 if infinite? && other.infinite?
     
     if this_sign<0
       this_significand,other_significand = other_significand,this_significand

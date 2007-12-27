@@ -116,7 +116,7 @@ Minimum and maximum decimal exponents:
 The <tt>from_</tt> methods of the floating-format classes generate a floating point value
 stored in a byte string from a variety of definitions:
 * <tt>from_integral_sign_significand_exponent</tt> defines the value by three integers:
-  the sign (0 for +, 1 for -), the significand (coefficient or mantissa)
+  the sign (+1 for +, -1 for -), the significand (coefficient or mantissa)
   and the exponent.
 * <tt>from_fmt</tt> : converts a text numeral (with an optional Nio format specifier)
   to a floating point value
@@ -130,7 +130,7 @@ and the Floating point format class (#fp_format).
   
   puts IEEE_EXTENDED.from_fmt('0.1').to_hex(true)    -> CD CC CC CC CC CC CC CC FB 3F
   puts IEEE_EXTENDED.from_number(0.1).to_hex(true)   -> CD CC CC CC CC CC CC CC FB 3F
-  puts IEEE_EXTENDED.from_integral_sign_significand_exponent(0,123,-2).to_hex(true) -> 00 00 00 00 00 00 00 F6 03 40
+  puts IEEE_EXTENDED.from_integral_sign_significand_exponent(+1,123,-2).to_hex(true) -> 00 00 00 00 00 00 00 F6 03 40
   puts IEEE_DEC32.from_fmt('1.234').to_hex(true)     -> 22 20 05 34
 
 A floating-point encoded value can be converted to useful formats wit the to_ methods:
