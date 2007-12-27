@@ -69,10 +69,11 @@ class FormatBase
     @exponend.kind_of?(Integer) && @significand>=self.class.minimum_normalized_integral_significand
   end
   
+  include Nio::Formattable
   
   # from/to integral_sign_significand_exponent 
   
-  def nio_write(fmt=Nio::Fmt.default)
+  def nio_write_neutral(fmt)
     # this always treats the floating-point values as exact quantities
     case @exponent
       when :zero
@@ -89,7 +90,7 @@ class FormatBase
           v = @significand*fptype.radix_power(@exponent)*@sign
         end
     end        
-    v.nio_write(fmt)  
+    v.nio_write_neutral(fmt)  
   end
   def as_text(fmt=Nio::Fmt.default)
     nio_write(fmt)
@@ -677,8 +678,7 @@ class FormatBase
   # from methods
   
   
-  def self.nio_read(txt,fmt=Nio::Fmt.default)
-       neutral = fmt.nio_read_formatted(txt)
+  def self.nio_read_neutral(neutral)
        if neutral.special?
           case neutral.special
             when :nan
@@ -688,9 +688,8 @@ class FormatBase
           end
        end
        if neutral.rep_pos<neutral.digits.length
-         nd = fmt.get_base==10 ? decimal_digits_necessary : (significand_digits*Math.log(radix)/Math.log(fmt.get_base)).ceil+1
-         fmt = fmt.mode(:sig,nd)
-         neutral = fmt.nio_read_formatted(fmt.nio_write_formatted(fmt.nio_read_formatted(txt)))
+         nd = neutral.base==10 ? decimal_digits_necessary : (significand_digits*Math.log(radix)/Math.log(fmt.get_base)).ceil+1
+         neutral = neutral.round(nd,:sig)
        end
        f = neutral.digits.to_i(neutral.base)
        e = neutral.dec_pos-neutral.digits.length
