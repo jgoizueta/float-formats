@@ -1633,13 +1633,8 @@ def define(*arguments)
   FltPnt.const_set name, cls=Class.new(base)
   cls.define parameters
   constructor = lambda { |*args| cls.new(*args) }
-  if RUBY_VERSION<"1.9.0"
-    FltPnt.send :define_method,name,constructor
-    FltPnt.send :module_function, name
-  else
-    FltPnt.send! :define_method,name,constructor
-    FltPnt.send! :module_function, name
-  end
+  FltPnt.send :define_method,name,constructor
+  FltPnt.send :module_function, name
   yield cls if block_given?
 end    
 
