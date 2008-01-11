@@ -1,86 +1,157 @@
-# utility to process a file that contains RDoc text
-# where all indented code is Ruby code to add the output
-# of the Ruby lines
-# To do: 
-# * if the input file has extension .rb then process only comment lines.
-# * handle general multiline statements (currently only thoses ending in "(,"). use irb or xmp ?
+require 'irb/ruby-lex'
+require 'stringio'
+
+class MimickIRB < RubyLex
+  attr_accessor :started
+
+  class Continue < StandardError; end
+  class Empty < StandardError; end
+
+  def initialize
+    super
+    set_input(StringIO.new)
+  end
+
+  def run(str)
+    obj = nil
+    @io << str
+    @io.rewind
+    unless l = lex
+      raise Empty if @line == ''
+    else
+      case l.strip
+      when "reset"
+        @line = ""
+      when "time"
+        @line = "puts %{You started \#{IRBalike.started.since} ago.}"
+      else
+        @line << l << "\n"
+        if @ltype or @continue or @indent > 0
+          raise Continue
+        end
+      end
+    end
+    unless @line.empty?
+      obj = eval @line, TOPLEVEL_BINDING
+    end
+    @line = ''
+    @exp_line_no = @line_no
+
+    @indent = 0
+    @indent_stack = []
+
+    $stdout.rewind
+    output = $stdout.read
+    $stdout.truncate(0)
+    $stdout.rewind
+    [output, obj]
+  rescue Object => e
+    case e when Empty, Continue
+    else @line = ""
+    end
+    raise e
+  ensure
+    set_input(StringIO.new)
+  end
+
+end
+
+
+class ExampleExpander
+  def initialize(sep=" -> ", align=52)
+    @sep = sep
+    @align = align    
+    @irb = MimickIRB.new
+    @output = ""
+  end
+  def add_line(line)
+    line = line.chomp
+    line = $1 if /(.+)#{@sep}.*/.match line
+    $stdout = StringIO.new
+    begin
+      out,obj = @irb.run line
+      @output << line_output(line,out)
+    rescue MimickIRB::Empty
+      @output << line_output(line)
+    rescue MimickIRB::Continue
+      @output << line_output(line)
+    rescue Object => e
+      msg = "#{e.class}: #{e.message}"
+      @output << line_output(line,msg)
+      STDERR.puts "#{msg}\n"
+    end
+    $stdout = STDOUT      
+  end
+  def output
+    @output
+  end
+  def clear
+    @output = ""
+  end
+  protected
+  def line_output(line,output=nil)
+    if output
+      output = output.chomp
+      output = nil if output.strip.empty?
+    end
+    out = line.dup
+    out << " "*[0,(@align-line.size)].max + @sep + output if output
+    out << "\n"
+    out
+  end
+end
+
+
+def expand_text(txt,non_code_block_prefix=nil) # text with indented blocks of code
+  exex = ExampleExpander.new
+  indent = nil
+  
+  txt_out = ""
+  
+  line_num = 0
+  accum = ""
+  skip_until_blank = false
+  txt.each do |line|
+    line_num += 1
+    code = false
+    line.chomp!
+    
+    if skip_until_blank
+      if line.strip.empty?
+        skip_until_blank = false
+      end
+    else
+    
+      unless line.strip.empty?
+        line_indent = /^\s*/.match(line)[0]
+        indent ||= line_indent
+        indent = line_indent if line_indent.size < indent.size
+        if line[line_indent.size,1]=='*'
+          inner_indent = /^\s*/.match(line[line_indent.size+1..-1])[0]
+          indent += '*'+inner_indent
+        else
+          if line_indent.size > indent.size
+            code = true
+          end      
+        end
+      end
+      if code
+        exex.add_line line
+        line = exex.output.chomp
+        exex.clear
+      else
+        skip_until_blank = true if line[0,1]==non_code_block_prefix
+      end
+    end
+    txt_out << line + "\n"
+  end
+  txt_out
+  
+end  
 
 require 'rubygems'
-require 'stringio'
+
 require File.dirname(__FILE__) + '/lib/float-formats'
 require File.dirname(__FILE__) + '/lib/float-formats/native.rb'
 
-
-
-fn = ARGV.shift
-
-txt = File.read(fn)
-
-txt_out = ""
-
-out = StringIO.new
-
-code_out_align = 52
-code_out_sep = " -> "
-
-indent = nil
-line_num = 0
-accum = ""
-skip_until_blank = false
-txt.each do |line|
-  line_num += 1
-  code = false
-  line.chomp!
-  
-  if skip_until_blank
-    if line.strip.empty?
-      skip_until_blank = false
-    end
-  else
-  
-    unless line.strip.empty?
-      line_indent = /^\s*/.match(line)[0]
-      indent ||= line_indent
-      indent = line_indent if line_indent.size < indent.size
-      if line[line_indent.size,1]=='*'
-        inner_indent = /^\s*/.match(line[line_indent.size+1..-1])[0]
-        indent += '*'+inner_indent
-      else
-        if line_indent.size > indent.size
-          code = true
-        end      
-      end
-    end
-    if code
-      
-      line = $1 if /(.+)#{code_out_sep}.*/.match line
-      
-      if "(,".include?(line[-1,1])
-        accum << line
-      else    
-        code = accum + line
-        accum = ""
-        $stdout = StringIO.new
-        #$stderr.puts line
-        begin
-          eval code, TOPLEVEL_BINDING
-          rescue => err
-          $stderr.puts "error in line #{line_num}:\n#{line}"
-          $stderr.puts "  "+err
-        end
-        out = $stdout.string
-        unless out.empty?
-          line << " "*[0,(code_out_align-line.size)].max + code_out_sep + out.chomp
-        end     
-      end
-
-    else
-      skip_until_blank = true if line[0,1]=="["
-    end
-    
-  end
-  txt_out << line + "\n"
-end
-
-$stdout = STDOUT
-puts txt_out
+puts expand_text(File.read(ARGV.shift),"[")
