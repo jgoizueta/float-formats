@@ -56,22 +56,34 @@ class FormatBase
       case args.first
         when fptype
           v = args.first
+          raise "Too many arguments for FormatBase constructor" if args.size>1
+        when Array
+          v = args.first
+          raise "Too many arguments for FormatBase constructor" if args.size>1
         when FormatBase
           v = args.first.convert_to(fptype)
+          raise "Too many arguments for FormatBase constructor" if args.size>1
         when String
           v = fptype.text(*args)
+        when Bytes
+          v = fptype.bytes(*args)
         when Numeric
           v = fptype.number(args.first)          
+          raise "Too many arguments for FormatBase constructor" if args.size>1
         when Symbol
           v = fptype.send(*args)
       end      
-      @sign,@significand,@exponent = v.split
+      @sign,@significand,@exponent = v.to_a
     end
   end
   attr_reader :sign, :significand, :exponent
+  def to_a
+    split
+  end
   def split # to_a parts ? 
     return [@sign,@significand,@exponent]
   end
+  
   
   def nan?
     @exponent == :nan
@@ -122,9 +134,22 @@ class FormatBase
     as_bytes.to_hex(sep_bytes)
   end
   def as(number_class, mode=:approx)
-    fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
-    v = nio_write(fmt)
-    number_class.nio_read(v,fmt)    
+    if number_class==Bytes    
+      as_bytes
+    elsif number_class==String
+      mode = Nio::Fmt.default if mode==:approx
+      as_text(mode)  
+    elsif Nio::Fmt===number_class
+      as_text(number_class)           
+    elsif number_class==Array
+      split
+    elsif Symbol===number_class
+      send "as_#{number_class}"      
+    else # assume number_class.ancestors.include?(Numeric)
+        fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
+        v = nio_write(fmt)
+        number_class.nio_read(v,fmt)    
+    end
   end
   def as_bits
     as_bytes.to_i(fptype.endianness)    
@@ -740,7 +765,7 @@ class FormatBase
     return_value(*unpack(b))
   end
   def self.hex(hex)
-    from_bytes Bytes.from_hex(hex)
+    bytes Bytes.from_hex(hex)
   end  
   def self.number(v, mode=:approx)
     fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
@@ -766,14 +791,14 @@ class FormatBase
     elsif v.size>total_bytes  
       raise "Invalid floating point value"             
     end
-    from_bytes v
+    bytes v
   end
   # Defines a floating-point number from a text representation of the
   # encoded integral value in a given base.
   # Returns a Value.  
   def self.bits_text(txt,base)
     i = Integer.nio_read(txt,Nio::Fmt.base(base))
-    from_bits_integer i
+    bits i
   end
 
   

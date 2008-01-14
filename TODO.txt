@@ -1,13 +1,12 @@
 * refactoring: adapt documentation
-* clean up constructors and do error checking
 * next_after method, 
-* add arithmetic to Value using Rational (BigDecimal for decimal types?)
+* add arithmetic using Rational (BigDecimal for decimal types?)
   (maybe some directly on sign-significand-exponent); AlgM can be used for rounding
 * implement BurgerDybvig for Values; (use the iterative scale2 instead of scale)  
 * reserach if the double rounding that's happening in nio_read_neutral may be a real problem
   (the neutral is first rounded to decimal_digits_necessary, then to a FP datum)
 * rename :normalized_significand to :scientific_significand ? :denormal to :subnormal ? etc.
-* rename as_ methods removing the as_; consider better names for number, text, splitted/split
+* rename as_ methods removing the as_; rename "as" to "to"; consider better names for number (numeric?), text, splitted/split
     
 * classes.rb :
   - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
