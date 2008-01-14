@@ -14,14 +14,35 @@ class Bytes < DelegateClass(String)
     case bytes
       when Bytes
         @bytes = bytes.to_s
+      when Array
+        @bytes = bytes.pack("C*")
       else
-        @bytes = bytes
+        @bytes = bytes.to_str
     end
+    @bytes.force_encoding(Encoding::BINARY) if RUBY_VERSION>="1.9.0"
     super @bytes
   end  
   
   def dup
     Bytes.new @bytes.dup
+  end
+  
+  if RUBY_VERSION>="1.9.0"
+    def size
+      bytesize
+    end
+    alias _get_str []
+    alias _set_str []=
+    def [](*params)
+      if params.size == 1
+        _get_str(params.first).ord # bytes.to_a[params.first]
+      else
+        Bytes.new(_get_str(*params))
+      end
+    end
+    def []=(i,v)
+      _set_str i, v.chr(Encoding::BINARY)
+    end
   end
   
   # return an hex representation of a byte string
