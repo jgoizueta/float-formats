@@ -617,8 +617,7 @@ class FormatBase
       raise "Invalid f.p. format" if v.fp_format!=self
       v = v.as_bytes 
     elsif !v.kind_of?(Bytes)
-      raise "Invalid f.p. object"
-      v = nil
+      v = Bytes.new(v)
     end
     v 
   end    

@@ -115,7 +115,7 @@ def expand_text(txt,non_code_block_prefix=nil) # text with indented blocks of co
     line_num += 1
     code = false
     line.chomp!
-    
+        
     if skip_until_blank
       if line.strip.empty?
         skip_until_blank = false
@@ -153,5 +153,6 @@ require 'rubygems'
 
 require File.dirname(__FILE__) + '/lib/float-formats'
 require File.dirname(__FILE__) + '/lib/float-formats/native.rb'
+include FltPnt
 
 puts expand_text(File.read(ARGV.shift),"[")
