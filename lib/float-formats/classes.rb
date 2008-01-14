@@ -119,7 +119,7 @@ class FormatBase
     fptype.pack(@sign,@significand,@exponent)
   end
   def as_hex(sep_bytes=false)
-    bytes_to_hex(as_bytes,sep_bytes)
+    as_bytes.to_hex(sep_bytes)
   end
   def as(number_class, mode=:approx)
     fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
@@ -127,7 +127,7 @@ class FormatBase
     number_class.nio_read(v,fmt)    
   end
   def as_bits
-    bytes_to_int(as_bytes, fptype.endianness)    
+    as_bytes.to_i(fptype.endianness)    
   end        
   # Returns the encoded integral value of a floating point number
   # as a text representation in a given base.
@@ -591,7 +591,7 @@ class FormatBase
     if v.kind_of?(FormatBase)
       raise "Invalid f.p. format" if v.fp_format!=self
       v = v.as_bytes 
-    elsif !v.kind_of?(String)
+    elsif !v.kind_of?(Bytes)
       raise "Invalid f.p. object"
       v = nil
     end
@@ -740,7 +740,7 @@ class FormatBase
     return_value(*unpack(b))
   end
   def self.hex(hex)
-    from_bytes hex_to_bytes(hex)
+    from_bytes Bytes.from_hex(hex)
   end  
   def self.number(v, mode=:approx)
     fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
@@ -755,13 +755,13 @@ class FormatBase
 
   # Defines a floating-point number from the encoded integral value.
   def self.bits(i)
-    v = int_to_bytes(i)
+    v = Bytes.from_i(i)
     if v.size<total_bytes
       fill = (0.chr*(total_bytes-v.size))
       if @endianness==:little_endian
-        bytes = fill
+        v << fill
       else
-        bytes = fill + bytes
+        v = Bytes.new(fill) + bytes
       end
     elsif v.size>total_bytes  
       raise "Invalid floating point value"             
@@ -1079,8 +1079,8 @@ class BCDFormat < DecimalFormatBase
 
   def self.unpack_fields(v)
     # bytes have always nibbles in big-endian order
-    v = reverse_byte_nibbles(convert_endianness(input_bytes(v),@endianness,:little_endian))
-    nibbles = bytes_to_hex(v)    
+    v = input_bytes(v).convert_endianness(@endianness,:little_endian).reverse_byte_nibbles
+    nibbles = v.to_hex
     # now we have a little endian nibble string        
     nibble_fields = []
     i = 0
@@ -1117,9 +1117,7 @@ class BCDFormat < DecimalFormatBase
       nibbles << f.reverse
       i += 1
     end
-    v = hex_to_bytes(nibbles)
-    v = convert_endianness(reverse_byte_nibbles(v),:little_endian,@endianness)
-    v
+    Bytes.from_hex(nibbles).reverse_byte_nibbles.convert_endianness(:little_endian,@endianness)
   end
   # this has beed added to allow some fields to contain binary integers rather than bcd
   def self.bcd_field?(i)
@@ -1244,7 +1242,7 @@ class DPDFormat < DecimalFormatBase
   
   def self.unpack_fields(v)
     # convert internal binary fields to bcd decoded fields
-    a = get_bitfields(input_bytes(v),@internal_field_lengths,@endianness)
+    a = input_bytes(v).to_bitfields(@internal_field_lengths,@endianness)
     h = {}
     (0...a.size).each do |i|
       h[@internal_field_meaning[i]] = a[i]
@@ -1316,7 +1314,7 @@ class DPDFormat < DecimalFormatBase
       end    
     h = {:sign=>i_sign, :combination=>i_combination, :exponent_continuation=>i_exponent_continuation, :significand_continuation=>i_significand_continuation}
     fields =  @internal_field_meaning.collect{|f| h[f]}
-    set_bitfields(@internal_field_lengths,fields,@endianness)        
+    Bytes.from_bitfields(@internal_field_lengths,fields,@endianness)        
   end
   
 
@@ -1397,12 +1395,12 @@ class FieldsInBitsFormatBase < FormatBase
     2
   end
   def self.unpack_fields(v)
-    get_bitfields(input_bytes(v),@field_lengths,@endianness)
+    input_bytes(v).to_bitfields(@field_lengths,@endianness)
   end
   def self.pack_fields(*fields)
     fields = fields[0] if fields.size==1 and fields[0].kind_of?(Array)
     handle_fields fields
-    set_bitfields(@field_lengths,fields,@endianness)
+    Bytes.from_bitfields(@field_lengths,fields,@endianness)
   end  
   # :startdoc:               
 end

@@ -5,161 +5,178 @@ require 'nio'
 require 'nio/sugar'
 
 require 'enumerator'
+require 'delegate'
 
 module FltPnt
 
-
-module_function
-
-# return an hex representation of a byte string
-def bytes_to_hex(sgl,sep_bytes=false)
-  hx = sgl.unpack('H*')[0].upcase
-  if sep_bytes
-    sep = ""
-    (0...hx.size).step(2) do |i|
-      sep << " " unless i==0
-      sep << hx[i,2]
-    end        
-    hx = sep
-  end
-  hx
-end
-   
-# generate a byte string from an hex representation
-def hex_to_bytes(hex)  
-  [hex.tr(' ','')].pack('H*')
-end
+class Bytes < DelegateClass(String)
+  def initialize(bytes)
+    case bytes
+      when Bytes
+        @bytes = bytes.to_s
+      else
+        @bytes = bytes
+    end
+    super @bytes
+  end  
   
-# ===== Byte string manipulation ==========================================================
+  def dup
+    Bytes.new @bytes.dup
+  end
+  
+  # return an hex representation of a byte string
+  def to_hex(sep_bytes=false)
+    hx = @bytes.unpack('H*')[0].upcase
+    if sep_bytes
+      sep = ""
+      (0...hx.size).step(2) do |i|
+        sep << " " unless i==0
+        sep << hx[i,2]
+      end        
+      hx = sep
+    end
+    hx
+  end
+  
+  # generate a byte string from an hex representation
+  def Bytes.from_hex(hex)
+    Bytes.new [hex.tr(' ','')].pack('H*')
+  end
+  
+  
+  # Reverse the order of the bits in each byte.
+  def reverse_byte_bits!
+    @bytes = @bytes.unpack('b*').pack("B*")[0]
+    self
+  end
+  def reverse_byte_bits
+    dup.reverse_byte_bits!
+  end
 
-# Reverse the order of the bits in each byte.
-def reverse_byte_bits(b)
-  b.chr.unpack('b*').pack("B*")[0]
-end
 
-# Reverse the order of the nibbles in each byte.
-def reverse_byte_nibbles(v)
-  if v.kind_of?(String)
-    # ... reverse each byte
+  # Reverse the order of the nibbles in each byte.
+  def reverse_byte_nibbles!
     w = ""
-    v.each_byte do |b|
+    @bytes.each_byte do |b|
       w << ((b >> 4)|((b&0xF)<<4))
     end
-    v = w
-  else
-    # assume one byte
-    # from_hex(to_hex(v).reverse)
-    v = (v >> 4)|((v&0xF)<<4)
+    @bytes = w
+    self
   end
-  v
-end
-# reverse the order of bytes in 16-bit words
-def reverse_byte_pairs(b)
-    w = ""
-    (0...b.size).step(2) do |i|
-      w << b[i+1]
-      w << b[i]
-    end
-    w  
-end
-   
-# Supported endianness modes for byte strings are:
-# [<tt>:little_endian</tt>] (Intel order): least significant bytes come first.
-# [<tt>:big_endian</tt>] (Network order): most significant bytes come first.
-# [<tt>:little_big_endian</tt> or <tt>:middle_endian</tt>] (PDP-11 order): each pair of bytes
-#                                                          (16-bit word) has the bytes in little endian order, but the words
-#                                                          are stored in big endian order (we assume the number of bytes is even).
-# Note that the <tt>:big_little_endian</tt> order which would logically complete the set is
-# not currently supported as it has no known uses.
-def convert_endianness(byte_str, from_endianness, to_endianness)
-  if from_endianness!=to_endianness
-    if ([:little_endian,:big_endian]+[from_endianness, to_endianness]).uniq.size==2
-      # no middle_endian order
-      byte_str = byte_str.reverse
-    else
-      # from or to is middle_endian
-      if [:middle_endian, :little_big_endian].include?(to_endianness)
-        # from little_big_endian
-        byte_str = convert_endianness(byte_str, from_endianness, :big_endian)
-        byte_str = reverse_byte_pairs(byte_str)
-        # now swap the byte pairs            
+  def reverse_byte_nibbles
+    dup.reverse_byte_nibbles!
+  end
+  
+  # reverse the order of bytes in 16-bit words
+  def reverse_byte_pairs!
+      w = ""
+      (0...@bytes.size).step(2) do |i|
+        w << @bytes[i+1]
+        w << @bytes[i]
+      end
+      @bytes = w  
+      self
+  end
+  def reverse_byte_pairs
+    dup.reverse_byte_pairs!
+  end
+  
+  # Supported endianness modes for byte strings are:
+  # [<tt>:little_endian</tt>] (Intel order): least significant bytes come first.
+  # [<tt>:big_endian</tt>] (Network order): most significant bytes come first.
+  # [<tt>:little_big_endian</tt> or <tt>:middle_endian</tt>] (PDP-11 order): each pair of bytes
+  #                                                          (16-bit word) has the bytes in little endian order, but the words
+  #                                                          are stored in big endian order (we assume the number of bytes is even).
+  # Note that the <tt>:big_little_endian</tt> order which would logically complete the set is
+  # not currently supported as it has no known uses.
+  def convert_endianness!(from_endianness, to_endianness)
+    if from_endianness!=to_endianness      
+      if ([:little_endian,:big_endian]+[from_endianness, to_endianness]).uniq.size==2
+        # no middle_endian order
+        reverse!
       else
-        # from little_big_endian
-        byte_str = reverse_byte_pairs(byte_str)
-        byte_str = convert_endianness(byte_str, :big_endian, to_endianness)      
-      end        
+        # from or to is middle_endian
+        if [:middle_endian, :little_big_endian].include?(to_endianness)
+          # from little_big_endian          
+          convert_endianness!(from_endianness, :big_endian).reverse_byte_pairs!
+        else
+          # from little_big_endian
+          reverse_byte_pairs!.convert_endianness!(:big_endian, to_endianness)
+        end        
+      end
     end
+    self
   end
-  byte_str
-end
-
+  def convert_endianness(from_endianness, to_endianness)
+    dup.convert_endianness!(from_endianness, to_endianness)
+  end
+  
 # Binary data is handled here in three representations:
 #  as an Integer
 #  as a byte sequence (String) (with specific endianness)
 #  an an hex-string (nibble values) (with specific endianness)
 
-# Convert a byte string to an integer
-def bytes_to_int(bytes, byte_endianness=:little_endian, bits_little_endian=false)
-  i = 0
-  bytes = convert_endianness(bytes, byte_endianness, :big_endian)
-  bytes.each_byte do |b|
-    # reverse b is bits_little_endian
-    if bits_little_endian
-      b = reverse_byte_bits(b)
-    end    
-    i <<= 8
-    i |= b
-  end
-  i
-end
-
-# Convert an integer to a byte string
-def int_to_bytes(i, len=0, byte_endianness=:little_endian, bits_little_endian=false)
-  return nil if i<0
-  bytes = ""
-  while i>0
-    b = (i&0xFF)
-    if bits_little_endian
-      b = reverse_byte_bits(b)
-    end    
-    #puts "i=#{i} b<<#{b}"
-    bytes << b
-    i >>= 8
-  end
-  bytes << 0 while bytes.size<len
-  bytes = convert_endianness(bytes, :little_endian, byte_endianness)  
-  bytes
-end
-
-
-# convert a byte string to separate fixed-width bit-fields as integers
-def get_bitfields(bytes,lens,byte_endianness=:little_endian, bits_little_endian=false)
-  fields = []
-  i = bytes_to_int(bytes,byte_endianness,bits_little_endian)
-  for len in lens
-    mask = (1<<len)-1    
-    fields << (i&mask)
-    i >>= len
-  end
-  fields
-end
-
-# pack fixed-width bit-fields as integers into a byte string
-def set_bitfields(lens,fields,byte_endianness=:little_endian, bits_little_endian=false)
-  i = 0
-  lens = lens.reverse
-  fields = fields.reverse
-  
-  bits = 0
-        
-  (0...lens.size).each do |j|
-    i <<= lens[j]
-    i |= fields[j]    
-    bits += lens[j]
+  # Convert a byte string to an integer
+  def to_i(byte_endianness=:little_endian, bits_little_endian=false)
+    i = 0
+    bytes = convert_endianness(byte_endianness, :big_endian)
+    bytes = bytes.reverse_byte_bits if bits_little_endian
+    bytes.each_byte do |b|
+      i <<= 8
+      i |= b
+    end
+    i
   end  
-  int_to_bytes i,(bits+7)/8,byte_endianness, bits_little_endian
+  
+  
+  # Convert an integer to a byte string
+  def Bytes.from_i(i, len=0, byte_endianness=:little_endian, bits_little_endian=false)
+    return nil if i<0
+    bytes = Bytes.new("")
+    while i>0
+      b = (i&0xFF)
+      bytes << b
+      i >>= 8
+    end
+    bytes << 0 while bytes.size<len
+    bytes.reverse_byte_bits! if bits_little_endian    
+    bytes.convert_endianness!(:little_endian, byte_endianness)  
+    bytes
+  end
+  
+  # convert a byte string to separate fixed-width bit-fields as integers
+  def to_bitfields(lens,byte_endianness=:little_endian, bits_little_endian=false)
+    fields = []
+    i = to_i(byte_endianness,bits_little_endian)
+    for len in lens
+      mask = (1<<len)-1    
+      fields << (i&mask)
+      i >>= len
+    end
+    fields
+  end
+  
+  # pack fixed-width bit-fields as integers into a byte string
+  def Bytes.from_bitfields(lens,fields,byte_endianness=:little_endian, bits_little_endian=false)
+    i = 0
+    lens = lens.reverse
+    fields = fields.reverse
+    
+    bits = 0
+          
+    (0...lens.size).each do |j|
+      i <<= lens[j]
+      i |= fields[j]    
+      bits += lens[j]
+    end  
+    from_i i,(bits+7)/8,byte_endianness, bits_little_endian
+  end  
+    
 end
 
+
+module_function
+  
 # DPD (Densely Packed Decimal) encoding
 
 # The bcd2dpd and dpd2bcd methods are adapted from Mike Cowlishaw's Rexx program:
