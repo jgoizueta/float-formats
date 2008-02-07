@@ -168,5 +168,41 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal 'NAN', IEEE_binary32.text('NaN').as_text.upcase
   end
   
+  def test_double_double
+    
+    assert_equal 128, IEEE_DOUBLE_DOUBLE.total_bits
+    assert_equal 16, IEEE_DOUBLE_DOUBLE.total_bytes
+    assert_equal 107, IEEE_DOUBLE_DOUBLE.significand_digits
+    assert_equal 31, IEEE_DOUBLE_DOUBLE.decimal_digits_stored
+    assert_equal 34, IEEE_DOUBLE_DOUBLE.decimal_digits_necessary
+    assert_equal 308, IEEE_DOUBLE_DOUBLE.decimal_max_exp
+    assert_equal(-307, IEEE_DOUBLE_DOUBLE.decimal_min_exp)
+    assert_equal 1023, IEEE_DOUBLE_DOUBLE.radix_max_exp
+    assert_equal(-1022, IEEE_DOUBLE_DOUBLE.radix_min_exp)
+    fmt = Nio::Fmt.prec(2)
+    assert_equal '1.8E308', IEEE_DOUBLE_DOUBLE.max_value.as_text(fmt)
+    assert_equal '2.2E-308', IEEE_DOUBLE_DOUBLE.min_normalized_value.as_text(fmt)
+    assert_equal '4.9E-324', IEEE_DOUBLE_DOUBLE.half.min_value.as_text(fmt)
+        
+    assert_equal "0.5", IEEE_DOUBLE_DOUBLE('0.5').as_text
+    assert_equal "000000000000E03F0000000000000000", IEEE_DOUBLE_DOUBLE('0.5').as_hex
+    assert_equal "000000000000E03F0000000000004039", IEEE_DOUBLE_DOUBLE('0.5').next.as_hex
+    assert_equal "9A9999999999B93F9A999999999959BC", IEEE_DOUBLE_DOUBLE('0.1').as_hex
+    assert_equal "9A9999999999B93F99999999999959BC", IEEE_DOUBLE_DOUBLE('0.1').next.as_hex
+    
+    assert_equal IEEE_DOUBLE_DOUBLE('0.5'), IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.5').split_halfs)
+    assert_equal IEEE_DOUBLE_DOUBLE('0.5').next, IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.5').next.split_halfs)
+    assert_equal IEEE_DOUBLE_DOUBLE('0.1'), IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.1').split_halfs)
+    assert_equal IEEE_DOUBLE_DOUBLE('0.1').next, IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.1').next.split_halfs)
+        
+    assert_equal "00000000000050390000000000000000", IEEE_DOUBLE_DOUBLE.epsilon.as_hex    
+    assert_equal "000000000000F87F0000000000000000", IEEE_DOUBLE_DOUBLE.nan.as_hex
+    assert_equal "NAN", IEEE_DOUBLE_DOUBLE.nan.as_text.upcase
+    assert_equal "000000000000F07F0000000000000000", IEEE_DOUBLE_DOUBLE.infinity.as_hex
+    assert_equal "+INFINITY", IEEE_DOUBLE_DOUBLE.infinity.as_text.upcase
+    assert_equal "00000000000000000000000000000000", IEEE_DOUBLE_DOUBLE.zero.as_hex
+    assert_equal "0", IEEE_DOUBLE_DOUBLE.zero.as_text.upcase        
+  end
+  
 
 end

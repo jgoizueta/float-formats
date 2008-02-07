@@ -131,7 +131,11 @@ class FormatBase
     fptype.pack(@sign,@significand,@exponent)
   end
   def as_hex(sep_bytes=false)
-    as_bytes.to_hex(sep_bytes)
+    if (fptype.total_bits % 8)==0
+      as_bytes.to_hex(sep_bytes)
+    else
+      as_bits.to_hex
+    end
   end
   def as(number_class, mode=:approx)
     if number_class==Bytes    
@@ -152,20 +156,21 @@ class FormatBase
     end
   end
   def as_bits
-    as_bytes.to_i(fptype.endianness)    
+    as_bytes.bits(fptype.endianness,false,fptype.total_bits)    
   end        
   # Returns the encoded integral value of a floating point number
   # as a text representation in a given base.
   # Accepts either a Value or a byte String.
-  def as_bits_text(base)
-    i = as_bits
-    fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
-    if [2,4,8,16].include?(base)
-      n = (Math.log(base)/Math.log(2)).round.to_i
-      digits = (fptype.total_bits+n-1)/n
-      fmt.pad0s!(digits)      
-    end
-    i.nio_write(fmt)
+  def as_bits_text(base) 
+    as_bits.to_s(base)
+    #i = as_bits
+    #fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
+    #if [2,4,8,16].include?(base)
+    #  n = (Math.log(base)/Math.log(2)).round.to_i
+    #  digits = (fptype.total_bits+n-1)/n
+    #  fmt.pad0s!(digits)      
+    #end
+    #i.to_i.nio_write(fmt)
   end
 
   # Computes the negation of a floating point value
@@ -333,6 +338,7 @@ class FormatBase
   #   little endian order, but the words are stored in big endian order
   #   (we assume the number of bytes is even). (PDP-11).  
   def self.define(params={})
+    @parameters = params
     
     @normalized = params[:normalized]
     @normalized = true if @normalized.nil?
@@ -448,7 +454,9 @@ class FormatBase
     # define format properties:
     # [+radix+] Numeric base
     # [+significand_digits+] Number of digits in the significand (precision)
-    attr_reader :radix, :significand_digits
+    # [+hidden_bit+] Has the format a hidden bit?
+    # [+parameters+] Parameters used to define the class
+    attr_reader :radix, :significand_digits, :parameters, :hidden_bit
     # attr_accessor
   end
   
@@ -1684,6 +1692,192 @@ end
       # TODO
     end
   end
+  
+# Class to define formats such as "double double" by pairing two floating-point
+# values which define a higher precision value by its sum.
+# The :half parameter is a format class that defines the type of each part
+# of the numbers.
+# The formats defined here have a fixed precision, although these formats
+# can actually have a variable precision.
+# For binary formats there's an option to gain one bit of precision
+# by adjusting the sign of the second number. This is enabled by the
+# :extra_prec option.
+# For example, the "double double" format used in PowerPC is this
+#   FltPnt.define :DoubleDouble, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
+# Although this has a fixed 107 bits precision, the format as used in 
+# the PowerPC can have greater precision for specific values (by having
+# greater separation between the exponents of both halves)
+class DoubleFormat < FormatBase
+  
+  def self.define(params)      
+    @half = params[:half]
+    params = @half.parameters.merge(params)
+    if @half.radix==2
+      @extra_prec = params[:extra_prec]
+    else
+      @extra_prec = false
+    end
+    params[:significand_digits] = 2*@half.significand_digits
+    params[:significand_digits] += 1 if @extra_prec
+    @significand_digits = params[:significand_digits]
+        
+    @hidden_bit = params[:hidden_bit] = @half.hidden_bit    
+        
+    fields1 = []
+    fields2 = []
+    params[:fields].each_slice(2) do |s,v|
+      fields1 << s # (s.to_s+"_1").to_sym
+      fields1 << v
+      fields2 << (s.to_s+"_2").to_sym
+      fields2 << v      
+    end
+    params[:fields] = fields1 + fields2    
+    
+    define_fields params[:fields]  
+        
+    super params
+  end
+  
+  def self.radix
+    @half.radix
+  end
+  
+  def self.half
+    @half
+  end
+
+  def self.unpack(v)
+    sz = @half.total_bytes
+    v1 = @half.unpack(v[0...sz])
+    v2 = @half.unpack(v[sz..-1])
+    if v1.last == :nan
+      nan
+    elsif v1.last == :infinity
+      infinity(v1.sign)
+    else 
+      v2 = @half.zero.split if @half.new(*v1).subnormal?
+      params = v1 + v2
+      join_fp(*params)    
+    end
+  end
+  
+  def self.pack(s,m,e)
+    if e.kind_of?(Symbol)
+      f1 = @half.pack(s,m,e)
+      f2 = @half.pack(+1,0,:zero)
+    else
+      s1,m1,e1,s2,m2,e2 = split_fp(s,m,e)
+      f1 = @half.pack(s1,m1,e1)
+      f2 = @half.pack(s2,m2,e2)
+    end
+    Bytes.new(f1+f2)
+  end
+  
+  def split_halfs
+    b = as_bytes
+    sz = fptype.half.total_bytes
+    b1 = b[0...sz]
+    b2 = b[sz..-1]
+    [fptype.half.bytes(b1), fptype.half.bytes(b2)]    
+  end
+  
+  def self.join_halfs(h1,h2)
+    self.bytes(Bytes.new(h1.as_bytes+h2.as_bytes))
+  end
+
+  def self.total_nibbles
+    2*total_bytes
+  end
+  def self.total_bytes
+    2*@half.total_bytes
+  end
+  def self.total_bits
+    8*total_bytes
+  end
+
+  private
+  def self.split_fp(s,m,e)
+    n = @half.significand_digits
+    if @half.radix==2    
+      if @extra_prec
+        if (m & (1<<n))==0 # m.bits[n] == 0
+          m1 = m >> (n+1) # m/2**(n+1)
+          e1 = e + n + 1
+          s1 = s
+          m2 = m & ((1<<n) - 1) # m%2**n
+          e2 = e
+          s2 = s
+        else
+          m1 = (m >> (n+1)) + 1 # m/2**(n+1) + 1
+          e1 = e + n + 1
+          s1 = s
+          if m1>=(1<<n) # 2**n
+            m1 >>= 1
+            e1 += 1
+          end
+          if m2==0
+            m2 = (1<<(n-1)) # 2**(n-1)
+            e2 = e+1
+            s2 = -s
+          else
+            m2 = -((m & ((1<<n) - 1)) - (1<<n)) # m%2**n - 2**n
+            e2 = e
+            s2 = -s
+          end
+        end
+      else # m has 2*n bits
+        m1 = m >> n
+        e1 = e + n
+        s1 = s
+        m2 = m & ((1<<n) - 1) # m%2**n
+        e2 = e
+        s2 = s
+      end
+    else
+        m1 = m / @half.radix_power(n)
+        e1 = e + n
+        s1 = s
+        m2 = m % @half.radix_power(n)
+        e2 = e
+        s2 = s
+    end
+    [s1,m1,e1,s2,m2,e2]
+  end
+  
+  def self.join_fp(s1,m1,e1,s2,m2,e2)
+    if m2==0 || e2==:zero
+      s = s1
+      m = m1
+      e = e1
+    else
+      m = s1*(m1<<(e1-e2)) + s2*m2    
+      e = e2  
+    end
+    if m<0
+      s = -1
+      m = -m
+    else
+      s = +1
+    end
+    if m!=0 && e1.kind_of?(Numeric)
+      # normalize  
+      nn = significand_digits
+      while m >= (1 << nn)
+        m >>= 1
+        e += 1
+      end
+      while m>0 && m < (1 << (nn-1))
+        m <<= 1
+        e -= 1
+      end
+    end
+    [s,m,e]
+  end  
+  
+  
+end
+  
+  
 
 module_function
 

@@ -9,6 +9,93 @@ require 'delegate'
 
 module FltPnt
 
+class Bits
+  # Define a bit string given the number of bits and
+  # optinally the initial value (as an integer).
+  def initialize(num_bits,v=0)
+    @n = num_bits
+    @v = v
+  end
+  
+  # convert to text representation in a given base
+  def to_s(base=2)
+    n = Bits.power_of_two(base)
+    if n
+      fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
+      digits = (size+n-1)/n
+      fmt.pad0s!(digits)      
+      @v.nio_write(fmt)
+    else
+      @v.to_s(base)
+    end      
+  end
+  # produce bit string from a text representation
+  def self.from_s(txt,base=2,len=nil)
+    txt = txt.tr('., _','')
+    v = txt.to_i(base)
+    if len.nil?
+      n = power_of_two(base)
+      if n
+        len = txt.size * n
+      end
+    end
+    from_i v, len
+  end
+  
+  # convert to integer
+  def to_i
+    @v
+  end
+  # produce bit string from an integer
+  def self.from_i(v,len=nil)
+    len ||= (Math.log(v)/Math.log(2)).ceil # v.to_s(2).size
+    Bits.new(len,v)
+  end
+  
+  # Access a bit value. The least significant bit has index 0.
+  def [](i)
+    (@v >> i) & 1
+  end
+  # Set a bit. The least significant bit has index 0. The bit value
+  # can be passed as an integer or a boolean value.
+  def []=(i,b)
+    b = (b && b!=0) ? 1 : 0
+    @v &= ~(1 << i)
+    @v |=  (b << i)
+    b
+  end
+  # number of bits
+  def size
+    @n
+  end
+  
+  protected
+  def self.is_power_of_two?(v)
+    if v==0
+      false
+    else
+      v &= (v-1)
+      if v==0
+        true
+      else
+        false
+      end
+    end
+  end
+  def self.power_of_two(v)
+    if is_power_of_two?(v)
+      n = 0
+      while v!=1
+        n += 1
+        v >>= 1
+      end
+      n
+    else
+      nil
+    end      
+  end  
+end
+
 class Bytes < DelegateClass(String)
   def initialize(bytes)
     case bytes
@@ -192,6 +279,16 @@ class Bytes < DelegateClass(String)
     end  
     from_i i,(bits+7)/8,byte_endianness, bits_little_endian
   end  
+  
+  def bits(byte_endianness=:little_endian, bits_little_endian=false,nbits=nil)
+    i = to_i(byte_endianness, bits_little_endian)
+    nbits ||= 8*size
+    Bits.from_i(i,nbits)
+  end
+  def Bytes.bits(bits,byte_endianness=:little_endian, bits_little_endian=false,nbits=nil)
+    nbits ||= (bits.size+7)/8
+    from_i bits.to_i, nbits, byte_endianness, bits_little_endian
+  end
     
 end
 

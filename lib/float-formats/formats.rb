@@ -621,32 +621,9 @@ FltPnt.define :C51_BCD_LONG_DOUBLE, C51BCDFloatingPoint,
   :bias=>64, :bias_mode=>:fractional_significand,
   :zero_encoded_exp=>0, :min_encoded_exp=>0,:max_encoded_exp=>127
 
-=begin
-# Note:
-# One could be tempted to define a double-double type as:
 
-    FltPnt.define :IEEE_DOUBLE_DOUBLE, BinaryFormat,
-      :fields=>[:significand,52,:lo_exponent,11,:lo_sign,1,:significand,52,:exponent,11,:sign,1], 
-      :fields_handler=>lambda{|fields|     
-        fields[2] = fields[5];
-        bits,max_exp = 53,2047    
-        if fields[4]>bits && fields[4]<max_exp
-          fields[1] = fields[4] - bits
-        else # 0, denormals, small numbers, NaN, Infinities
-          fields[0] = fields[1] = 0
-        end
-      },
-      :bias=>1023, :bias_mode=>:normalized_significand,
-      :hidden_bit=>true,
-      :endianness=>:little_endian, :round=>:even,
-      :gradual_underflow=>true, :infinity=>true, :nan=>true
-      
-#  But this is incorrect since there's a hidden bit in the low double too and it must be normalized.
-#  In general the halfs of the significand need not be adjacent, they
-#  can have exponets with a separation higher than 53; (in fact the minimum separation seems to be 54)
-#  and they can have different sings, too;
-#  double-double is too tricky to be supported by this package.
-=end
+# double-double format as used in the PowerPC
+FltPnt.define :IEEE_DOUBLE_DOUBLE, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
 
  
 
