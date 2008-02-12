@@ -1770,7 +1770,7 @@ class DoubleFormat < FormatBase
       f1 = @half.pack(s1,m1,e1)
       f2 = @half.pack(s2,m2,e2)
     end
-    Bytes.new(f1+f2)
+    f1+f2
   end
   
   def split_halfs
@@ -1782,7 +1782,7 @@ class DoubleFormat < FormatBase
   end
   
   def self.join_halfs(h1,h2)
-    self.bytes(Bytes.new(h1.as_bytes+h2.as_bytes))
+    self.bytes(h1.as_bytes+h2.as_bytes)
   end
 
   def self.total_nibbles

@@ -130,6 +130,19 @@ class Bytes < DelegateClass(String)
     def []=(i,v)
       _set_str i, v.chr(Encoding::BINARY)
     end
+  else
+    alias _get_str []
+    def [](*params)
+      if params.size == 1
+        _get_str(params.first)
+      else
+        Bytes.new(_get_str(*params))
+      end
+    end
+  end
+  
+  def +(b)
+    Bytes.new(to_str + b.to_str)
   end
   
   # return an hex representation of a byte string
