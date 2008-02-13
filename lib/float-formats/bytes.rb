@@ -121,7 +121,7 @@ class Bytes < DelegateClass(String)
     alias _get_str []
     alias _set_str []=
     def [](*params)
-      if params.size == 1
+      if params.size == 1 && !params.first.kind_of?(Range)
         _get_str(params.first).ord # bytes.to_a[params.first]
       else
         Bytes.new(_get_str(*params))
