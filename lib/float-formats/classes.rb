@@ -1656,7 +1656,7 @@ end
     if v.fptype==fptype
       t = BigDecimal
       x = as(BigDecimal,:exact) + v.as(BigDecimal,:exact)
-      fptype.number(x)        
+      fptype.number(x,:exact)        
     else
       # TODO
     end
@@ -1667,7 +1667,7 @@ end
       t = BigDecimal
       prec = fptype.decimal_digits_necessary
       x = as(BigDecimal,:exact).div(v.as(BigDecimal,:exact),prec)
-      fptype.number(x)        
+      fptype.number(x,:exact)        
     else
       # TODO
     end
@@ -1677,7 +1677,7 @@ end
     if v.fptype==fptype
       t = BigDecimal
       x = as(BigDecimal,:exact) - v.as(BigDecimal,:exact)
-      fptype.number(x)        
+      fptype.number(x,:exact)        
     else
       # TODO
     end
@@ -1686,8 +1686,8 @@ end
     # TODO: coercion
     if v.fptype==fptype
       t = BigDecimal
-      x = as(BigDecimal,:exact) * v.as(BigDecimal,:exact)
-      fptype.number(x)        
+      x = as(BigDecimal,:exact) * v.as(BigDecimal,:exact)      
+      fptype.number(x,:exact)        
     else
       # TODO
     end

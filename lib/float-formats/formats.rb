@@ -330,7 +330,7 @@ FltPnt.define :CRAY, BinaryFormat,
 # by sign bit reversal, one's complement followed by sign bit reversal is used, which is equivalent
 # to use a bias diminished by one for negative exponents. Note that the exponent encoded value that equals the bias is 
 # not used (is used as a NaN indicator)
-class CDCFLoatingPoint < BinaryFormat # :nodoc:
+class CDCFormat < BinaryFormat # :nodoc:
   def self.encode_exponent(e,mode)
     ee = super
     ee -= 1 if e<0
@@ -343,7 +343,7 @@ class CDCFLoatingPoint < BinaryFormat # :nodoc:
   end  
 end
 
-FltPnt.define :CDC_SINGLE, CDCFLoatingPoint,
+FltPnt.define :CDC_SINGLE, CDCFormat,
   :fields=>[:significand,48, :exponent,11, :sign,1],
   :bias=>1024, :bias_mode=>:integral_significand,
   :min_exp=>-1023,
@@ -364,7 +364,7 @@ FltPnt.define :CDC_SINGLE, CDCFLoatingPoint,
 # when its exponent would be out of range
 # Note that when computing the low order exponent with the fields handler we must take into account the sign 
 # because for negative numbers all the fields are one-complemented.
-FltPnt.define :CDC_DOUBLE, CDCFLoatingPoint,
+FltPnt.define :CDC_DOUBLE, CDCFormat,
   :fields=>[:significand,48,:lo_exponent,11,:lo_sign,1,:significand,48,:exponent,11,:sign,1],
   :fields_handler=>lambda{|fields| 
         fields[1]=(fields[4]>0&&fields[4]<2047) ? fields[4]-((-1)**fields[5])*48 : fields[4]
@@ -525,7 +525,7 @@ FltPnt.define(:WANG2200,BCDFormat,
       
       
 # C51 (C compiler for the Intel 8051) BCD Floating point formats
-class C51BCDFloatingPoint < BCDFormat # :nodoc:
+class C51BCDFormat < BCDFormat # :nodoc:
   def self.exponent_radix
     2
   end
@@ -603,19 +603,19 @@ class C51BCDFloatingPoint < BCDFormat # :nodoc:
   end
 end
 
-FltPnt.define :C51_BCD_FLOAT, C51BCDFloatingPoint,
+FltPnt.define :C51_BCD_FLOAT, C51BCDFormat,
   :fields=>[:exponent_sign, 2, :significand,6],
   :endiannes=>:big_endian,
   :bias=>64, :bias_mode=>:fractional_significand,
   :zero_encoded_exp=>0, :min_encoded_exp=>0,:max_encoded_exp=>127
 
-FltPnt.define :C51_BCD_DOUBLE,C51BCDFloatingPoint,
+FltPnt.define :C51_BCD_DOUBLE,C51BCDFormat,
   :fields=>[:exponent_sign, 2, :significand,10],
   :endiannes=>:big_endian,
   :bias=>64, :bias_mode=>:fractional_significand,
   :zero_encoded_exp=>0, :min_encoded_exp=>0,:max_encoded_exp=>127
 
-FltPnt.define :C51_BCD_LONG_DOUBLE, C51BCDFloatingPoint,
+FltPnt.define :C51_BCD_LONG_DOUBLE, C51BCDFormat,
   :fields=>[:exponent_sign, 2, :significand,12],
   :endiannes=>:big_endian,
   :bias=>64, :bias_mode=>:fractional_significand,
