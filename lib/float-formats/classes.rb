@@ -40,6 +40,29 @@ require 'nio/sugar'
 require 'enumerator'
 require 'float-formats/bytes.rb'
 
+# this allow to define a default precision for BigDecimal divisions
+class BigDecimal
+  @@div_precision = 0
+  def self.div_precision(v=nil)
+    prev_prec = @@div_precision
+    @@div_precision = v if v
+    prev_prec
+  end
+  alias _div div
+  def div(v,p=nil)
+    p ||= @@div_precision
+    _div(v,p)
+  end
+  alias _div_op /
+  def /(v)
+    if @@div_precision.nil?
+      _div_op(v)
+    else
+      div(v)
+    end
+  end
+end
+
 module FltPnt
 
 # General Floating Point Format Base class
@@ -1654,9 +1677,10 @@ end
   def +(v)
     # TODO: coercion
     if v.fptype==fptype
-      t = BigDecimal
-      x = as(BigDecimal,:exact) + v.as(BigDecimal,:exact)
-      fptype.number(x,:exact)        
+      fptype.arithmetic do |t|
+        x = as(t,:exact) + v.as(t,:exact)
+        fptype.number(x,:exact)        
+      end
     else
       # TODO
     end
@@ -1664,10 +1688,10 @@ end
   def /(v)
     # TODO: coercion
     if v.fptype==fptype
-      t = BigDecimal
-      prec = fptype.decimal_digits_necessary
-      x = as(BigDecimal,:exact).div(v.as(BigDecimal,:exact),prec)
-      fptype.number(x,:exact)        
+      fptype.arithmetic do |t|
+        x = as(t,:exact) / v.as(t,:exact)
+        fptype.number(x,:exact)        
+      end
     else
       # TODO
     end
@@ -1675,9 +1699,10 @@ end
   def -(v)
     # TODO: coercion
     if v.fptype==fptype
-      t = BigDecimal
-      x = as(BigDecimal,:exact) - v.as(BigDecimal,:exact)
-      fptype.number(x,:exact)        
+      fptype.arithmetic do |t|
+        x = as(t,:exact) - v.as(t,:exact)
+        fptype.number(x,:exact)        
+      end
     else
       # TODO
     end
@@ -1685,11 +1710,48 @@ end
   def *(v)
     # TODO: coercion
     if v.fptype==fptype
-      t = BigDecimal
-      x = as(BigDecimal,:exact) * v.as(BigDecimal,:exact)      
-      fptype.number(x,:exact)        
+      fptype.arithmetic do |t|
+        x = as(t,:exact) * v.as(t,:exact)
+        fptype.number(x,:exact)        
+      end
     else
       # TODO
+    end
+  end
+    
+  class FormatBase
+    @@arithmetic_type = BigDecimal
+    # Type used internally for arithmetic operations.
+    def self.arithmetic_type
+      @@arithmetic_type
+    end
+    # Change type used for arithmetic; valid types are BigDecimal, Rational.
+    def self.arithmetic_type=(t)
+      @@arithmetic_type=t
+    end
+    # Set up the arithmetic environment; the arithmetic type is passed to the block.
+    def self.arithmetic
+      if @@arithmetic_type==BigDecimal
+        keep_round_mode = BigDecimal.mode(BigDecimal::ROUND_MODE)
+        keep_limit = BigDecimal.limit
+        keep_div_prec = BigDecimal.div_precision
+        prec = decimal_digits_necessary
+        BigDecimal.div_precision prec
+        if radix==10
+          BigDecimal.limit prec
+          BigDecimal.mode BigDecimal::ROUND_MODE, BigDecimal::ROUND_HALF_EVEN
+        else
+          #BigDecimal.limit prec*2
+          BigDecimal.mode BigDecimal::ROUND_MODE, BigDecimal::ROUND_DOWN    
+        end
+        result = yield(BigDecimal)
+        BigDecimal.limit keep_limit
+        BigDecimal.mode BigDecimal::ROUND_MODE, keep_round_mode            
+        BigDecimal.div_precision keep_div_prec
+        result
+      else
+        yield @@arithmetic_type
+      end
     end
   end
   
@@ -1844,7 +1906,7 @@ class DoubleFormat < FormatBase
     [s1,m1,e1,s2,m2,e2]
   end
   
-  def self.join_fp(s1,m1,e1,s2,m2,e2)
+  def FormatBase.join_fp(s1,m1,e1,s2,m2,e2)
     if m2==0 || e2==:zero
       s = s1
       m = m1
