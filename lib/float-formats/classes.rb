@@ -40,7 +40,7 @@ require 'nio/sugar'
 require 'enumerator'
 require 'float-formats/bytes.rb'
 
-# this allow to define a default precision for BigDecimal divisions
+# this allows to define a default precision for BigDecimal divisions
 class BigDecimal
   @@div_precision = 0
   def self.div_precision(v=nil)
@@ -49,17 +49,29 @@ class BigDecimal
     prev_prec
   end
   alias _div div
-  def div(v,p=nil)
-    p ||= @@div_precision
-    _div(v,p)
+  def div(v,*params)
+    if params.size>0
+      # TO DO: raise on incorrect number or type of arguments
+      p = params.first
+      p = @@div_precision if p==0 || p.nil? && @@div_precision
+      _div(v,p)
+    else
+      _div(v)
+    end
   end
   alias _div_op /
   def /(v)
     if @@div_precision.nil?
       _div_op(v)
     else
-      div(v)
+      div(v,0)
     end
+  end
+  alias _sqrt sqrt
+  def sqrt(p=nil)
+    p ||= BigDecimal.limit if BigDecimal.limit>0
+    p ||= @@div_precision
+    _sqrt p
   end
 end
 
