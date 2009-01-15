@@ -1,4 +1,35 @@
-require 'config/requirements'
-require 'config/hoe' # setup Hoe + all gem configuration
+# Look in the tasks/setup.rb file for the various options that can be
+# configured in this Rakefile. The .rake files in the tasks directory
+# are where the options are used.
 
-Dir['tasks/**/*.rake'].each { |rake| load rake }
+begin
+  require 'bones'
+  Bones.setup
+rescue LoadError
+  load 'tasks/setup.rb'
+end
+
+ensure_in_path 'lib'
+#require 'float-formats'
+require 'float-formats/version'
+
+task :default => 'spec:run'
+
+
+PROJ.name = 'float-formats'
+PROJ.description = "Floating-Point Formats"
+PROJ.authors = 'Javier Goizueta'
+PROJ.email = 'javier@goizueta.info'
+PROJ.version = FltPnt::VERSION::STRING
+PROJ.rubyforge.name = 'ruby-decimal'
+PROJ.url = "http://#{PROJ.rubyforge.name}.rubyforge.org"
+PROJ.rdoc.opts = [
+  "--main", "README.txt",
+  '--title', 'Float-Formats Documentation',
+  "--opname", "index.html",
+  "--line-numbers",
+  "--inline-source"
+  ]
+depend_on 'nio', '>=0.2.0'
+
+# EOF
