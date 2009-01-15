@@ -11,13 +11,13 @@
 # of the exponent values. For excess-notation encoded exponents this means that
 # the value of the bias depends upon the interpretation of the significand.
 # * integral significand: the significand is interpreted as an integer, i.e. the radix
-#   point is at the right (after the last digit); 
+#   point is at the right (after the last digit);
 #   Some examples of this pont of view:
 #   - HP-50G LONGFLOAT library
 #   - HP-16C Floating Point-Integer conversion
 # * fractional significand: the radix point is at the left, before the first significand digit
 #   (before the hidden bit if there is one); the value v of a normalized significand is 1/r<=v<1
-#   Examples: 
+#   Examples:
 #   - The C standard library frexp/ldexp uses this interpretation, and the <float.h> constants.
 #     (and so this is also used by Ruby's Math.frexp and the constants defined in Float)
 #   - Don Knuth's The Art of Computer Programming, Vol.2
@@ -81,11 +81,11 @@ module FltPnt
 class FormatBase
   include FltPnt # make FltPnt module functions available to instance methods
   extend FltPnt  # make FltPnt module functions available to class methods
-  
+
   def initialize(*args)
     if args.size == 3 || args.size==4 # && args.first.kind_of?(Integer) && args[1].kind_of?(Integer) && args.last.kind_of?(Integer)
-      sign,significand,exponent,normalize = args    
-      @sign,@significand,@exponent = self.class.canonicalized(sign,significand,exponent,normalize)    
+      sign,significand,exponent,normalize = args
+      @sign,@significand,@exponent = self.class.canonicalized(sign,significand,exponent,normalize)
     else
       v = fptype.nan
       case args.first
@@ -103,11 +103,11 @@ class FormatBase
         when Bytes
           v = fptype.bytes(*args)
         when Numeric
-          v = fptype.number(args.first)          
+          v = fptype.number(args.first)
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when Symbol
           v = fptype.send(*args)
-      end      
+      end
       @sign,@significand,@exponent = v.to_a
     end
   end
@@ -115,11 +115,11 @@ class FormatBase
   def to_a
     split
   end
-  def split # to_a parts ? 
+  def split # to_a parts ?
     return [@sign,@significand,@exponent]
   end
-  
-  
+
+
   def nan?
     @exponent == :nan
   end
@@ -135,11 +135,11 @@ class FormatBase
   def normal?
     @exponend.kind_of?(Integer) && @significand>=self.class.minimum_normalized_integral_significand
   end
-  
+
   include Nio::Formattable
-  
-  # from/to integral_sign_significand_exponent 
-  
+
+  # from/to integral_sign_significand_exponent
+
   def nio_write_neutral(fmt)
     # this always treats the floating-point values as exact quantities
     case @exponent
@@ -156,8 +156,8 @@ class FormatBase
         else
           v = @significand*fptype.radix_power(@exponent)*@sign
         end
-    end        
-    v.nio_write_neutral(fmt)  
+    end
+    v.nio_write_neutral(fmt)
   end
   def as_text(fmt=Nio::Fmt.default)
     nio_write(fmt)
@@ -173,37 +173,37 @@ class FormatBase
     end
   end
   def as(number_class, mode=:approx)
-    if number_class==Bytes    
+    if number_class==Bytes
       as_bytes
     elsif number_class==String
       mode = Nio::Fmt.default if mode==:approx
-      as_text(mode)  
+      as_text(mode)
     elsif Nio::Fmt===number_class
-      as_text(number_class)           
+      as_text(number_class)
     elsif number_class==Array
       split
     elsif Symbol===number_class
-      send "as_#{number_class}"      
+      send "as_#{number_class}"
     else # assume number_class.ancestors.include?(Numeric)
         fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
         v = nio_write(fmt)
-        number_class.nio_read(v,fmt)    
+        number_class.nio_read(v,fmt)
     end
   end
   def as_bits
-    as_bytes.bits(fptype.endianness,false,fptype.total_bits)    
-  end        
+    as_bytes.bits(fptype.endianness,false,fptype.total_bits)
+  end
   # Returns the encoded integral value of a floating point number
   # as a text representation in a given base.
   # Accepts either a Value or a byte String.
-  def as_bits_text(base) 
+  def as_bits_text(base)
     as_bits.to_s(base)
     #i = as_bits
     #fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
     #if [2,4,8,16].include?(base)
     #  n = (Math.log(base)/Math.log(2)).round.to_i
     #  digits = (fptype.total_bits+n-1)/n
-    #  fmt.pad0s!(digits)      
+    #  fmt.pad0s!(digits)
     #end
     #i.to_i.nio_write(fmt)
   end
@@ -211,8 +211,8 @@ class FormatBase
   # Computes the negation of a floating point value
   def neg
     fptype.new(-@sign,@significand,@exponent)
-  end  
-  
+  end
+
   # Converts a floating point value to another format
   def convert_to(fpclass)
     fpclass.nio_read(nio_write)
@@ -221,13 +221,13 @@ class FormatBase
 
   # Computes the next adjacent floating point value.
   # Accepts either a Value or a byte String.
-  # Returns a Value.  
+  # Returns a Value.
   def next
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
     return neg.prev.neg if s<0 && e!=:zero
     s = -s if e==:zero && s<0
-    
-    if e!=:nan && e!=:infinity      
+
+    if e!=:nan && e!=:infinity
       if f==0
         if fptype.gradual_underflow?
           e = fptype.radix_min_exp(:integral_significand)
@@ -237,7 +237,7 @@ class FormatBase
           f = fptype.minimum_normalized_integral_significand
         end
       else
-        f += 1        
+        f += 1
       end
       if f>=fptype.radix_power(fptype.significand_digits)
         f /= fptype.radix
@@ -254,15 +254,15 @@ class FormatBase
       fptype.new s, f, e
     end
   end
-      
+
   # Computes the previous adjacent floating point value.
   # Accepts either a Value or a byte String.
-  # Returns a Value.  
-  def prev 
+  # Returns a Value.
+  def prev
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
     return neg.next.neg if s<0
     return self.next.neg if e==:zero
-    if e!=:nan && e!=:infinity      
+    if e!=:nan && e!=:infinity
       f -= 1
       if f<fptype.minimum_normalized_integral_significand
         if e!=:denormal && e>fptype.radix_min_exp(:integral_significand)
@@ -279,18 +279,18 @@ class FormatBase
     end
     # to do: handle infinity.prev = max_value etc.
     fptype.new s, f, e
-  end      
-  
+  end
+
   # ulp (unit in the last place) according to the definition proposed by J.M. Muller in
   # "On the definition of ulp(x)" INRIA No. 5504
   def ulp
     sign,sig,exp = @sign,@significand,@exponent
-        
+
     mnexp = fptype.radix_min_exp(:integral_significand)
     mxexp = fptype.radix_max_exp(:integral_significand)
     prec = fptype.significand_digits
-      
-    if exp==:nan      
+
+    if exp==:nan
     elsif exp==:infinity
       sign,sig,exp = 1,1,mexp
     elsif exp==:zero || exp <= mnexp
@@ -298,11 +298,11 @@ class FormatBase
     else
       exp -= 1 if sig==fptype.minimum_normalized_integral_significand
       sign,sig,exp = 1,1,exp
-    end 
+    end
     fptype.new s, f, e
   end
-    
-  
+
+
 
   def <=>(other)
     return 1 if nan? || other.nan?
@@ -312,12 +312,12 @@ class FormatBase
     return -1 if other_sign < this_sign
     return 1 if other_sign > this_sign
     return 0 if infinite? && other.infinite?
-    
+
     if this_sign<0
       this_significand,other_significand = other_significand,this_significand
-      this_exponent,other_exponent = other_exponent,this_exponent    
+      this_exponent,other_exponent = other_exponent,this_exponent
     end
-    
+
     if this_exponent==other_exponent
       return this_significand <=> other_significand
     else
@@ -330,39 +330,39 @@ class FormatBase
         while this_significand<mns && this_exponent>min_exp
           this_exponent -= 1
           this_significand *= radix
-        end      
+        end
         while other_significand<mns && other_exponent>min_exp
           other_exponent -= 1
           other_significand *= radix
-        end    
+        end
         if this_exponent==other_exponent
           return this_significand <=> other_significand
         else
           return this_exponent <=> other_exponent
-        end                
+        end
       end
-    end      
+    end
   end
   include Comparable
 
   #todo hash cononicalizing first
 
-  
+
   def fp_format
     fptype
   end
   def fptype
     self.class
   end
-      
-  
-  # Common parameters for all floating-point formats:  
+
+
+  # Common parameters for all floating-point formats:
   # [<tt>:bias_mode</tt>] This defines how the significand is interpreted:
   # * <tt>:fractional_significand</tt> The radix point is before the most significant
   #   digit of the significand (including a hidden bit if there's one).
   # * <tt>:normalized_significand</tt> The radix point is after the most significant
   #   digit of the significand (including a hidden bit if there's one).
-  # * <tt>:integral_significand</tt> The significand is assumed to be an integer, i.e. 
+  # * <tt>:integral_significand</tt> The significand is assumed to be an integer, i.e.
   #   the radix point is after the least significant digit.
   # [<tt>:bias</tt>] Defines the exponent encoding method to be excess notation
   #                  and defines the bias.
@@ -371,21 +371,21 @@ class FormatBase
   # * <tt>:big_endian</tt> (Network order): most significant bytes come first. (Motorola, SPARC,...)
   # * <tt>:little_big_endian</tt> (Middle endian) Each pair of bytes (16-bit word) has the bytes in
   #   little endian order, but the words are stored in big endian order
-  #   (we assume the number of bytes is even). (PDP-11).  
+  #   (we assume the number of bytes is even). (PDP-11).
   def self.define(params={})
     @parameters = params
-    
+
     @normalized = params[:normalized]
     @normalized = true if @normalized.nil?
     @fields_handler = params[:fields_handler]
-    
+
     @exponent_radix = params[:exponent_radix] || radix
-    
+
     @zero_encoded_exp = params[:zero_encoded_exp] || 0
     @min_encoded_exp = params[:min_encoded_exp] || 0
     @denormal_encoded_exp = params[:denormal_encoded_exp]
     @gradual_underflow = params[:gradual_underflow] || (@denormal_encoded_exp ? true : false)
-    if @gradual_underflow         
+    if @gradual_underflow
       @denormal_encoded_exp = 0 if !@denormal_encoded_exp
       if @denormal_encoded_exp>=@min_encoded_exp
         @min_encoded_exp = @denormal_encoded_exp
@@ -402,13 +402,13 @@ class FormatBase
     # the only valid encoded significand with minimun encoded exponent is 0.
     # In case of gradual underflow, the minimum exponent implies a hidden bit value of 0
     @min_encoded_exp += 1 if @min_encoded_exp==@zero_encoded_exp && (@hidden_bit && params[:min_encoded_exp].nil?)
-    
+
     @infinite_encoded_exp = params[:infinite_encoded_exp]
     @nan_encoded_exp = params[:nan_encoded_exp]
-    
+
     @infinity = params[:infinity] || (@infinite_encoded_exp ? true : false)
     @max_encoded_exp = params[:max_encoded_exp] || @exponent_radix**@fields[:exponent]-1 # maximum regular exponent, encoded
-    if @infinity      
+    if @infinity
       @infinite_encoded_exp = @nan_encoded_exp || @max_encoded_exp if !@infinite_encoded_exp
       @max_encoded_exp = @infinite_encoded_exp - 1 if @infinite_encoded_exp.kind_of?(Integer) && @infinite_encoded_exp<=@max_encoded_exp
     end
@@ -417,7 +417,7 @@ class FormatBase
       @nan_encoded_exp = @infinite_encoded_exp || @max_encoded_exp if !@nan_encoded_exp
       @max_encoded_exp = @nan_encoded_exp - 1 if @nan_encoded_exp.kind_of?(Integer) && @nan_encoded_exp<=@max_encoded_exp
     end
-        
+
     @exponent_mode = params[:exponent_mode]
     if @exponent_mode.nil?
       if params[:bias]
@@ -427,7 +427,7 @@ class FormatBase
       end
     end
     @exponent_digits = @fields[:exponent]
-      
+
     if @exponent_mode==:excess
       @bias = params[:bias] || (@exponent_radix**(@fields[:exponent]-1)-1)
       @bias_mode = params[:bias_mode] || :normalized_significand
@@ -450,17 +450,17 @@ class FormatBase
           @integral_bias = @fractional_bias+@significand_digits
           @min_exp -= @significand_digits-1 if @min_exp
           @max_exp -= @significand_digits-1 if @max_exp
-      end         
+      end
     else
       #@bias_mode = :normalized_significand
       @min_exp = params[:min_exp] || (-(@exponent_radix**@exponent_digits)/2 + 1)
       @max_exp = params[:max_exp] || ((@exponent_radix**@exponent_digits)/2 - 1)
     end
     @endianness = params[:endianness] || :little_endian
-    
+
     @min_exp = @min_encoded_exp - @integral_bias if @min_exp.nil?
     @max_exp = @max_encoded_exp - @integral_bias if @max_exp.nil?
-    
+
     if @exponent_mode==:excess
       @integral_max_exp = @max_exp
       @integral_min_exp = @min_exp
@@ -476,15 +476,15 @@ class FormatBase
       @normalized_max_exp = @max_exp
       @normalized_min_exp = @min_exp
     end
-   
-    @round = params[:round] # || :even      
-    
+
+    @round = params[:round] # || :even
+
     @neg_mode = params[:neg_mode] || :sign_magnitude
-    
+
     yield self if block_given?
-    
+
   end
-  
+
   class <<self
     # define format properties:
     # [+radix+] Numeric base
@@ -494,12 +494,12 @@ class FormatBase
     attr_reader :radix, :significand_digits, :parameters, :hidden_bit
     # attr_accessor
   end
-  
+
   # compute a power of the radix (base)
   def self.radix_power(n)
     radix**n
   end
-  
+
   # base-10 logarithm of the radix
   def self.radix_log10
     Math.log(radix)/Math.log(10)
@@ -507,7 +507,7 @@ class FormatBase
   # radix-base logarithm
   def self.radix_log(x)
     Math.log(x)/Math.log(radix)
-  end  
+  end
   # number of decimal digits that can be stored in a floating point value and restored unaltered
   def self.decimal_digits_stored
     ((significand_digits-1)*radix_log10).floor
@@ -536,11 +536,11 @@ class FormatBase
   def self.switch_sign_value(v)
     (v==0) ? minus_sign_value : 0
   end
-  
+
   def self.sign_to_unit(s)
     s==0 ? +1 : -1 # ((-1)**s)
   end
-  
+
   def self.sign_from_unit(u)
     u<0 ? minus_sign_value : 0
   end
@@ -549,18 +549,18 @@ class FormatBase
   # [<tt>:even</tt>] round to nearest with ties toward an even digits
   # [<tt>:inf</tt>] round to nearest with ties toward infinity (away from zero)
   # [<tt>:zero</tt>] round to nearest with ties toward zero
-  # [<tt>nil</tt>] rounding mode not specified  
+  # [<tt>nil</tt>] rounding mode not specified
   def self.rounding_mode
     @round
   end
-    
+
   def self.minimum_normalized_integral_significand
     radix_power(significand_digits-1)
   end
   def self.maximum_integral_significand
     radix_power(significand_digits)-1
   end
-  
+
   # Maximum exponent
   def self.radix_max_exp(significand_mode=:normalized_significand)
     case significand_mode
@@ -588,12 +588,12 @@ class FormatBase
   def self.endianness
     @endianness
   end
-  
+
   # Does the format support gradual underflow? (denormalized numbers)
   def self.gradual_underflow?
     @gradual_underflow
   end
-  
+
   # Exponent bias for excess notation exponent encoding
   # The argument defines the interpretation of the significand and so
   # determines the actual bias value.
@@ -606,15 +606,15 @@ class FormatBase
       when :normalized_significand
         @normalized_bias
     end
-  end  
-  
+  end
+
   def self.canonicalized(s,m,e,normalize=nil)
     #puts "s=#{s} m=#{m} e=#{e}"
     #return [s,m,e]
-    normalize = @normalized if normalize.nil? 
+    normalize = @normalized if normalize.nil?
     min_exp = radix_min_exp(:integral_significand)
     e = min_exp if e==:denormal
-    if m.kind_of?(Integer) && m>0 && e.kind_of?(Integer)      
+    if m.kind_of?(Integer) && m>0 && e.kind_of?(Integer)
       while e<min_exp
         e += 1
         f /= radix # to do round
@@ -626,13 +626,13 @@ class FormatBase
       e=:zero
     end
     #puts " -> s=#{s} m=#{m} e=#{e}"
-    [s,m,e]    
+    [s,m,e]
   end
-  
+
 
   protected
-  
-  
+
+
   def self.normalized(s,m,e)
     if m.kind_of?(Integer) && e.kind_of?(Integer)
       min_exp = radix_min_exp(:integral_significand)
@@ -640,7 +640,7 @@ class FormatBase
         while m<minimum_normalized_integral_significand && e>min_exp
           e -= 1
           m *= radix
-        end      
+        end
         if @normalized && !@gradual_underflow
           if e<=min_exp && m<minimum_normalized_integral_significand
             m = 0
@@ -652,21 +652,21 @@ class FormatBase
     [s,m,e]
   end
 
-  def self.return_value(s,m,e,normalize=nil)    
+  def self.return_value(s,m,e,normalize=nil)
     self.new s,m,e,normalize
   end
   def self.input_bytes(v)
     if v.kind_of?(FormatBase)
       raise "Invalid f.p. format" if v.fp_format!=self
-      v = v.as_bytes 
+      v = v.as_bytes
     elsif !v.kind_of?(Bytes)
       v = Bytes.new(v)
     end
-    v 
-  end    
-  
+    v
+  end
+
   public
-  
+
 
   # Greatest finite normalized floating point number in the representation.
   # It can be made negative by passing the sign (a so this would be the smallest
@@ -708,13 +708,13 @@ class FormatBase
     m = minimum_normalized_integral_significand
     e = 2*(1-significand_digits)
     return_value s,m,e, false
-  end  
+  end
   # The strict epsilon is the smallest value that produces something different from 1.0
   # wehen added to 1.0. It may be smaller than the general epsilon, because
   # of the particular rounding rules used with the floating point format.
   # This is only meaningful when well-defined rules are used for rounding the result
   # of floating-point addition.
-  # Note that (in pseudo-code): 
+  # Note that (in pseudo-code):
   #  ((1.0+strict_epsilon)-1.0)==epsilon
   def self.strict_epsilon(sign=+1, round=nil)
     round ||= @round
@@ -722,23 +722,23 @@ class FormatBase
     m = minimum_normalized_integral_significand
     e = 2*(1-significand_digits)
     # assume radix is even
-    case @round      
-      when :even, :zero, :any_rounding
-        e -= 1
-        m /= 2
-        m *= radix
-        m += 1        
-      when :inf
-        # note that here :inf means "round to nearest with ties tower infinity"
-        e -= 1
-        m /= 2
-        m *= radix
-      when :ceiling, :up
-        # this is the IEEE "toward infinity" rounding
-        return min_value
-      end
+    case @round
+    when :even, :zero, :any_rounding
+      e -= 1
+      m /= 2
+      m *= radix
+      m += 1
+    when :inf
+      # note that here :inf means "round to nearest with ties tower infinity"
+      e -= 1
+      m /= 2
+      m *= radix
+    when :ceiling, :up
+      # this is the IEEE "toward infinity" rounding
+      return min_value
+    end
     return_value s,m,e
-  end  
+  end
   # This is the maximum relative error corresponding to 1/2 ulp:
   #  (radix/2)*radix_power(-significand_precision) == epsilon/2
   # This is called "machine epsilon" in [Goldberg]
@@ -750,8 +750,8 @@ class FormatBase
       m *= minimum_normalized_integral_significand
       e -= significand_digits-1
     return_value s,m,e, false
-  end    
-  
+  end
+
   # Floating point representation of zero.
   def self.zero(sign=+1)
     return_value sign, 0, :zero
@@ -770,12 +770,12 @@ class FormatBase
       return_value(+1, 0, :nan)
     else
       nil
-    end      
+    end
   end
-  
+
   # from methods
-  
-  
+
+
   def self.nio_read_neutral(neutral)
        if neutral.special?
           case neutral.special
@@ -791,24 +791,24 @@ class FormatBase
        end
        f = neutral.digits.to_i(neutral.base)
        e = neutral.dec_pos-neutral.digits.length
-       rounding = neutral.rounding    
+       rounding = neutral.rounding
        if neutral.base==radix
          s = +1
-       else    
+       else
          s,f,e = algM(f,e,rounding,neutral.base).split
        end
        if neutral.sign=='-'
          s = -s
-       end 
+       end
        return_value s,f,e
-    
+
   end
   def self.bytes(b)
     return_value(*unpack(b))
   end
   def self.hex(hex)
     bytes Bytes.from_hex(hex)
-  end  
+  end
   def self.number(v, mode=:approx)
     fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
     nio_read(v.nio_write(fmt),fmt)
@@ -830,21 +830,21 @@ class FormatBase
       else
         v = Bytes.new(fill) + bytes
       end
-    elsif v.size>total_bytes  
-      raise "Invalid floating point value"             
+    elsif v.size>total_bytes
+      raise "Invalid floating point value"
     end
     bytes v
   end
   # Defines a floating-point number from a text representation of the
   # encoded integral value in a given base.
-  # Returns a Value.  
+  # Returns a Value.
   def self.bits_text(txt,base)
     i = Integer.nio_read(txt,Nio::Fmt.base(base))
     bits i
   end
 
-  
-  
+
+
 
 
 
@@ -859,7 +859,7 @@ class FormatBase
         h[@field_meaning[i]] = a[i]
       end
     else
-      
+
       @fields.each_key do |f|
         splits = @splitted_fields[f]
         if splits
@@ -868,7 +868,7 @@ class FormatBase
           splits.each do |i|
             v += k*a[i]
             k *= fields_radix**(@field_lengths[i])
-          end            
+          end
           h[f] = v
         else
           h[f] = a[@field_meaning.index(f)]
@@ -878,7 +878,7 @@ class FormatBase
     h
   end
   # Produce an encoded floating point value using hash of the internal field values.
-  # Returns a Value.  
+  # Returns a Value.
   def self.pack_fields_hash(h)
     if @splitted_fields.nil?
       pack_fields @field_meaning.collect{|f| h[f]}
@@ -891,23 +891,23 @@ class FormatBase
           splits.each do |i|
             k = fields_radix**(@field_lengths[i])
             flds[i] = v % k
-            v /= k            
-          end            
+            v /= k
+          end
         else
           flds[@field_meaning.index(f)] = h[f]
         end
-      end      
+      end
       pack_fields flds
     end
   end
-    
-      
 
-        
-  # :stopdoc: 
+
+
+
+  # :stopdoc:
   protected
   def self.define_fields(field_definitions)
-    
+
     @field_lengths = []
     @field_meaning = []
     @fields = {}
@@ -917,13 +917,13 @@ class FormatBase
       @field_meaning << m
       if @fields[m].nil?
         @fields[m] = l
-      else  
+      else
         @splitted_fields ||= {}
         @splitted_fields[m] = [@field_meaning.index(m)]
         @fields[m] += l
         @splitted_fields[m] <<= @field_meaning.size-1
       end
-    end            
+    end
     raise "Invalid format" if @splitted_fields && !@splitted_fields_supported
   end
   def self.handle_fields(fields)
@@ -938,14 +938,14 @@ class FormatBase
       when :diminished_radix_complement
         if exponent_radix==radix
           f = (radix_power(significand_digits)-1) - f
-          e = (radix_power(exponent_digits)-1) - e   
+          e = (radix_power(exponent_digits)-1) - e
         else
           # unsupported case; we could use the exponent radix for
           # the complement (so for hexadecimal significand/binary exponent we would use binary which is OK)
           raise "Unsupported format"
         end
       when :radix_complement_significand
-        f = ((radix_power(significand_digits)-1) - f + 1) % radix_power(significand_digits)      
+        f = ((radix_power(significand_digits)-1) - f + 1) % radix_power(significand_digits)
       when :radix_complement
         if exponent_radix==radix
           if @field_meaning.index(:exponent) < @field_meaning.index(:significand)
@@ -963,14 +963,14 @@ class FormatBase
             e,f = ls,ms
           else
             e,f = ms,ls
-          end          
+          end
         else
           # unsupported case; we could use the exponent radix for
           # the complement (so for hexadecimal significand/binary exponent we would use binary which is OK)
           raise "Unsupported format"
         end
-    end      
-    [f,e]          
+    end
+    [f,e]
   end
   def self.exponent_digits
     @fields[:exponent]
@@ -979,63 +979,63 @@ class FormatBase
     @exponent_radix
   end
   # radix of the field sizes, used for splitted fields
-  def self.fields_radix 
+  def self.fields_radix
     radix
   end
-  
+
   def self.decode_exponent(e,mode)
     case @exponent_mode
-      when :excess
+    when :excess
         case mode
-          when :integral_significand
-            e -= @integral_bias
-          when :fractional_significand
-            e -= @fractional_bias
-          when :normalized_significand
-            e -= @normalized_bias
-        end  
-      when :radix_complement
+        when :integral_significand
+          e -= @integral_bias
+        when :fractional_significand
+          e -= @fractional_bias
+        when :normalized_significand
+          e -= @normalized_bias
+        end
+    when :radix_complement
         n = @fields[:exponent]
         v = radix_power(n)
-        e = e-v if e >= v/2        
+        e = e-v if e >= v/2
         case mode
-          when :integral_significand
-            e -= (significand_digits-1)
-          when :fractional_significand
-            e += 1
-          when :normalized_significand
-        end  
-      end
+        when :integral_significand
+          e -= (significand_digits-1)
+        when :fractional_significand
+          e += 1
+        when :normalized_significand
+        end
+    end
     e
   end
   def self.encode_exponent(e,mode)
     case @exponent_mode
-      when :excess
-        case mode
-          when :integral_significand
-            e += @integral_bias
-          when :fractional_significand
-            e += @fractional_bias
-          when :normalized_significand
-            e += @normalized_bias
-        end  
-      when :radix_complement
-        case mode
-          when :integral_significand
-            e += (significand_digits-1)
-          when :fractional_significand
-            e -= 1
-          when :normalized_significand
-        end  
-        n = @fields[:exponent]
-        v = radix_power(n)
-        e = e+v if e < 0
+    when :excess
+      case mode
+      when :integral_significand
+        e += @integral_bias
+      when :fractional_significand
+        e += @fractional_bias
+      when :normalized_significand
+        e += @normalized_bias
+      end
+    when :radix_complement
+      case mode
+      when :integral_significand
+        e += (significand_digits-1)
+      when :fractional_significand
+        e -= 1
+      when :normalized_significand
+      end
+      n = @fields[:exponent]
+      v = radix_power(n)
+      e = e+v if e < 0
     end
     e
   end
-    
+
   # these are functions from Nio::Clinger, generalized for arbitrary floating point formats
-  def self.ratio_float(u,v,k,round_mode)        
+  def self.ratio_float(u,v,k,round_mode)
     q = u.div v
     r = u-q*v
     v_r = v-r
@@ -1050,7 +1050,7 @@ class FormatBase
       z.next
     end
   end
-  
+
   def self.algM(f,e,round_mode,eb=10)
 
     if e<0
@@ -1058,18 +1058,18 @@ class FormatBase
     else
       u,v,k = f*(eb**e),1,0
     end
-    
+
     n = significand_digits
     min_e = radix_min_exp(:integral_significand)
     max_e = radix_max_exp(:integral_significand)
-    
+
     rp_n = radix_power(n)
     rp_n_1 = radix_power(n-1)
     r = radix
-    
+
     loop do
        x = u.div(v) # bottleneck
-       # overflow if k>=max_e 
+       # overflow if k>=max_e
        if (x>=rp_n_1 && x<rp_n) || k==min_e || k==max_e
           return ratio_float(u,v,k,round_mode)
        elsif x<rp_n_1
@@ -1077,18 +1077,18 @@ class FormatBase
          k -= 1
        elsif x>=rp_n
          v *= r
-         k += 1         
-       end     
+         k += 1
+       end
     end
 
-  end  
-  # :startdoc:     
+  end
+  # :startdoc:
 end
 
 # Base class for decimal floating point formats
 class DecimalFormatBase < FormatBase
-  # :stopdoc:       
-  def self.define(params)    
+  # :stopdoc:
+  def self.define(params)
     @hidden_bit = false
     super params
   end
@@ -1098,14 +1098,14 @@ class DecimalFormatBase < FormatBase
   def self.radix_power(n)
     10**n
   end
-  
+
   def self.radix_log10
     1
   end
   def self.radix_log(x)
     Math.log(x)/Math.log(10)
-  end  
-  
+  end
+
   def self.decimal_digits_stored
     significand_digits
   end
@@ -1118,22 +1118,22 @@ class DecimalFormatBase < FormatBase
   def self.decimal_min_exp
     radix_min_exp(:normalized_significand)
   end
-  # :startdoc:     
+  # :startdoc:
 end
 
 # BCD (Binary-Coded-Decimal) floating point formats
 class BCDFormat < DecimalFormatBase
   # The fields lengths are defined in decimal digits
-  def self.define(params)    
+  def self.define(params)
 
     @splitted_fields_supported = false
     define_fields params[:fields]
-    
+
     @significand_digits = @fields[:significand]
     super  params
 
   end
-  # :stopdoc:         
+  # :stopdoc:
   def self.total_nibbles
     @field_lengths.inject{|x,y| x+y}
   end
@@ -1148,7 +1148,7 @@ class BCDFormat < DecimalFormatBase
     # bytes have always nibbles in big-endian order
     v = input_bytes(v).convert_endianness(@endianness,:little_endian).reverse_byte_nibbles
     nibbles = v.to_hex
-    # now we have a little endian nibble string        
+    # now we have a little endian nibble string
     nibble_fields = []
     i = 0
     for l in @field_lengths
@@ -1157,7 +1157,7 @@ class BCDFormat < DecimalFormatBase
     end
     # now we conver the nibble strings to numbers
     i = -1
-    nibble_fields.collect do |ns| 
+    nibble_fields.collect do |ns|
       i+=1
       if bcd_field?(i)
         if /\A\d+\Z/.match(ns)
@@ -1170,14 +1170,14 @@ class BCDFormat < DecimalFormatBase
       end
     end
   end
-  def self.pack_fields(*fields)    
+  def self.pack_fields(*fields)
     fields = fields[0] if fields.size==1 and fields[0].kind_of?(Array)
     handle_fields fields
     i = 0
     nibbles = ""
     for l in @field_lengths
-      f = fields[i] 
-      unless f.kind_of?(String)      
+      f = fields[i]
+      unless f.kind_of?(String)
         fmt = bcd_field?(i) ? 'd' : 'X'
         f = "%0#{l}#{fmt}" % fields[i]
       end
@@ -1190,7 +1190,7 @@ class BCDFormat < DecimalFormatBase
   def self.bcd_field?(i)
     true
   end
-  
+
   # assume @exponent_mode==:radix_complement
 
   def self.unpack(v)
@@ -1213,7 +1213,7 @@ class BCDFormat < DecimalFormatBase
       # normalized number
         e = decode_exponent(e, :integral_significand)
     end
-    [s,m,e]    
+    [s,m,e]
   end
 
   def self.pack(s,m,e)
@@ -1229,17 +1229,17 @@ class BCDFormat < DecimalFormatBase
       #s = -1 # ?
       #m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
-      e = @denormal_encoded_exp    
+      e = @denormal_encoded_exp
     else
       # to do: try to adjust m to keep e in range if out of valid range
       # to do: reduce m and adjust e if m too big
-      
+
       min_exp = radix_min_exp(:integral_significand)
       if m>0
         while m<msb && e>min_exp
           e -= 1
           m *= radix
-        end      
+        end
       end
       if m<msb && @denormal_encoded_exp
         e = @denormal_encoded_exp
@@ -1253,7 +1253,7 @@ class BCDFormat < DecimalFormatBase
     m,e = neg_significand_exponent(0,m,e) if s%2==1
     pack_fields_hash :sign=>s, :significand=>m, :exponent=>e
   end
-  # :startdoc:             
+  # :startdoc:
 end
 
 # DPD (Densely-Packed-Decimal) formats
@@ -1263,50 +1263,50 @@ class DPDFormat < DecimalFormatBase
   # * :combination
   # * :exponent_continuation
   # * :significand_continuation
-  def self.define(params)    
-    
+  def self.define(params)
+
     @splitted_fields_supported = false
-    define_fields params[:fields]    
+    define_fields params[:fields]
     @internal_field_lengths = @field_lengths
     @internal_field_meaning = @field_meaning
     @internal_fields = @fields
     raise "Unsupported DPD format" unless @internal_fields[:combination]==5 && @internal_fields[:sign]==1 && [0,4,7].include?(@internal_fields[:significand_continuation]%10)
-    
-    
+
+
     @exponent_bits = 2 + @internal_fields[:exponent_continuation]
-    
+
     extra_bits = (@internal_fields[:significand_continuation] % 10)
-    extra_digits = (extra_bits==0) ? 0 : ((extra_bits==4) ? 1 : 2)    
+    extra_digits = (extra_bits==0) ? 0 : ((extra_bits==4) ? 1 : 2)
     @significand_digits = 1 + 3*(@internal_fields[:significand_continuation]/10) + extra_digits
-    
+
     define_fields [:type,1,:sign,1,:exponent,@exponent_bits,:significand,@significand_digits]
 
     if params[:bias].nil?
-            
+
       params[:bias_mode] = :normalized_significand
-      
+
       @exp_limit = 3*(2**@internal_fields[:exponent_continuation])-1
-            
+
       params[:max_exp] = @exp_limit/2
       params[:min_exp] = -params[:max_exp]
       params[:max_exp] += 1 if (@exp_limit%2)==1
       params[:bias]= -params[:min_exp]
-      
+
     end
 
     super  params
 
   end
-  
-  # :stopdoc:               
+
+  # :stopdoc:
   def self.total_bits
     @internal_field_lengths.inject{|x,y| x+y}
   end
   def self.total_bytes
     (total_bits+7)/8
   end
-  
-  
+
+
   def self.unpack_fields(v)
     # convert internal binary fields to bcd decoded fields
     a = input_bytes(v).to_bitfields(@internal_field_lengths,@endianness)
@@ -1314,7 +1314,7 @@ class DPDFormat < DecimalFormatBase
     (0...a.size).each do |i|
       h[@internal_field_meaning[i]] = a[i]
     end
-    
+
     i_sign = h[:sign]
     i_combination = h[:combination]
     i_exponent_continuation = h[:exponent_continuation]
@@ -1323,67 +1323,67 @@ class DPDFormat < DecimalFormatBase
 
     type = nil
     sign = i_sign==0 ? 0 : 9
-    
+
     a,b,c,d,e = ("%05B"%i_combination).split('').collect{|bit| bit.to_i}
-    
+
     exp_msb = 0
     sig_msd = 0
-    
+
     if a==0 || b==0
       exp_msb = (a<<1)|b
       sig_msd = (c<<2)|(d<<1)|e
-    elsif c==0 || d==0 
+    elsif c==0 || d==0
       exp_msb = (c<<1)|d
       sig_msd = (1<<3)|e
     elsif e==0
       type = :infinity
     else
       type = :nan
-    end        
-    
-    
+    end
+
+
     hex_sig = sig_msd.to_s
     hex_sig << dpd_to_hexbcd(i_significand_continuation,@internal_fields[:significand_continuation])
     significand = hex_sig.to_i
 
     exponent = i_exponent_continuation | (exp_msb << (@exponent_bits-2))
-    [type,sign,exponent,significand]            
+    [type,sign,exponent,significand]
   end
   def self.pack_fields(*fields)
     fields = fields[0] if fields.size==1 and fields[0].kind_of?(Array)
     handle_fields fields
     type,sign,exponent,significand = fields
-        
+
     sig_hex = "%0#{@significand_digits-1}d"%significand
     sig_cont_bits = 4*(@significand_digits-1)
     sig_msd = sig_hex[0,1].to_i
     i_significand_continuation,bits = hexbcd_to_dpd(sig_hex[1..-1])
-    
-    
-    
+
+
+
     exp_msb = exponent>>(@exponent_bits-2)
     i_exponent_continuation = exponent&((1<<(@exponent_bits-2))-1)
-    
+
     i_sign = ((sign==0) ? 0 : 1)
-            
-            
+
+
     case type
-      when :infinity
-        i_combination = 0x1E
-      when :nan
-        i_combination = 0x1F
+    when :infinity
+      i_combination = 0x1E
+    when :nan
+      i_combination = 0x1F
+    else
+      if sig_msd&0x8==0
+        i_combination = sig_msd|(exp_msb<<3)
       else
-        if sig_msd&0x8==0
-          i_combination = sig_msd|(exp_msb<<3)
-        else
-          i_combination = sig_msd|(1<<4)|(exp_msb<<1)
-        end
-      end    
+        i_combination = sig_msd|(1<<4)|(exp_msb<<1)
+      end
+    end
     h = {:sign=>i_sign, :combination=>i_combination, :exponent_continuation=>i_exponent_continuation, :significand_continuation=>i_significand_continuation}
     fields =  @internal_field_meaning.collect{|f| h[f]}
-    Bytes.from_bitfields(@internal_field_lengths,fields,@endianness)        
+    Bytes.from_bitfields(@internal_field_lengths,fields,@endianness)
   end
-  
+
 
   def self.unpack(v)
     f = unpack_fields_hash(v)
@@ -1391,7 +1391,7 @@ class DPDFormat < DecimalFormatBase
     e = f[:exponent]
     s = f[:sign]
     t = f[:type]
-    m,e = neg_significand_exponent(s,m,e) if s%2==1    
+    m,e = neg_significand_exponent(s,m,e) if s%2==1
     if m==0
       # +-zero
       e = :zero
@@ -1406,7 +1406,7 @@ class DPDFormat < DecimalFormatBase
        e = decode_exponent(e, :integral_significand)
     end
     s = sign_to_unit(s)
-    [s,m,e]    
+    [s,m,e]
   end
 
   def self.pack(s,m,e)
@@ -1429,13 +1429,13 @@ class DPDFormat < DecimalFormatBase
     else
       # to do: try to adjust m to keep e in range if out of valid range
       # to do: reduce m and adjust e if m too big
-      
+
       min_exp = radix_min_exp(:integral_significand)
       if m>0 && false
         while m<msb && e>min_exp
           e -= 1
           m *= radix
-        end      
+        end
       end
       if m<msb && @denormal_encoded_exp && false
         e = @denormal_encoded_exp
@@ -1446,18 +1446,18 @@ class DPDFormat < DecimalFormatBase
       end
     end
     s = sign_from_unit(s)
-    m,e = neg_significand_exponent(0,m,e) if s%2==1    
+    m,e = neg_significand_exponent(0,m,e) if s%2==1
     pack_fields_hash :sign=>s, :significand=>m, :exponent=>e, :type=>t
   end
-      
-  # :startdoc:             
-      
-  
+
+  # :startdoc:
+
+
 end
 
 # This is a base class for formats that specify the field lengths in bits
 class FieldsInBitsFormatBase < FormatBase
-  # :stopdoc:    
+  # :stopdoc:
   def self.fields_radix
     2
   end
@@ -1468,27 +1468,27 @@ class FieldsInBitsFormatBase < FormatBase
     fields = fields[0] if fields.size==1 and fields[0].kind_of?(Array)
     handle_fields fields
     Bytes.from_bitfields(@field_lengths,fields,@endianness)
-  end  
-  # :startdoc:               
+  end
+  # :startdoc:
 end
 
 # Binary floating point formats
 class BinaryFormat < FieldsInBitsFormatBase
   # a hidden bit can be define with :hidden_bit
-  def self.define(params)    
+  def self.define(params)
     @hidden_bit = params[:hidden_bit]
     @hidden_bit = true if @hidden_bit.nil?
 
     @splitted_fields_supported = true
     define_fields params[:fields]
-    
+
     @significand_digits = @fields[:significand] + (@hidden_bit ? 1 : 0)
     super  params
 
   end
-  
-  # :stopdoc:               
-  
+
+  # :stopdoc:
+
   def self.radix
     2
   end
@@ -1499,7 +1499,7 @@ class BinaryFormat < FieldsInBitsFormatBase
       2**n
     end
   end
-      
+
   def self.total_bits
     @field_lengths.inject{|x,y| x+y}
   end
@@ -1512,9 +1512,9 @@ class BinaryFormat < FieldsInBitsFormatBase
     m = f[:significand]
     e = f[:exponent]
     s = f[:sign]
-    m,e = neg_significand_exponent(s,m,e) if s%2==1    
-    if (m==0 && !@hidden_bit) || 
-       (m==0 && (e==@zero_encoded_exp || e==@denormal_encoded_exp)) || 
+    m,e = neg_significand_exponent(s,m,e) if s%2==1
+    if (m==0 && !@hidden_bit) ||
+       (m==0 && (e==@zero_encoded_exp || e==@denormal_encoded_exp)) ||
        (e==@zero_encoded_exp && @min_encoded_exp>@zero_encoded_exp && !@denormal_encoded_exp)
        # +-zero
        e = :zero
@@ -1524,7 +1524,7 @@ class BinaryFormat < FieldsInBitsFormatBase
     elsif @infinite_encoded_exp && e==@infinite_encoded_exp && m==0
       # +-inifinity
       e = :infinity
-    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0 
+    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0
       # NaN
       e = :nan
     else
@@ -1533,12 +1533,12 @@ class BinaryFormat < FieldsInBitsFormatBase
       m |= radix_power(@significand_digits-1) if @hidden_bit
     end
     s = sign_to_unit(s)
-    [s,m,e]    
+    [s,m,e]
   end
 
   def self.pack(s,m,e)
     msb = radix_power(@significand_digits-1)
-    
+
     if e==:zero
       e = @zero_encoded_exp || @denormal_encoded_exp
       m = 0
@@ -1550,17 +1550,17 @@ class BinaryFormat < FieldsInBitsFormatBase
       s = minus_sign_value # ?
       m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
-      e = @denormal_encoded_exp      
+      e = @denormal_encoded_exp
     else
       # to do: try to adjust m to keep e in range if out of valid range
       # to do: reduce m and adjust e if m too big
-      
+
       min_exp = radix_min_exp(:integral_significand)
       if m>0
         while m<msb && e>min_exp
           e -= 1
           m <<= 1 # m *= radix
-        end      
+        end
       end
       if m<msb && @denormal_encoded_exp
         e = @denormal_encoded_exp
@@ -1572,26 +1572,26 @@ class BinaryFormat < FieldsInBitsFormatBase
       end
     end
     s = sign_from_unit(s)
-    m,e = neg_significand_exponent(0,m,e) if s%2==1    
-    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e      
+    m,e = neg_significand_exponent(0,m,e) if s%2==1
+    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e
   end
-  # :startdoc:               
-    
+  # :startdoc:
+
 end
 
 # Hexadecimal floating point format
 class HexadecimalFormat < FieldsInBitsFormatBase
-  def self.define(params)    
-    @hidden_bit = false    
+  def self.define(params)
+    @hidden_bit = false
     @splitted_fields_supported = true
-    define_fields params[:fields]    
+    define_fields params[:fields]
     @significand_digits = @fields[:significand]/4
     params[:exponent_radix] = 2
     super  params
   end
-  
-  # :stopdoc:               
-  
+
+  # :stopdoc:
+
   def self.radix
     16
   end
@@ -1612,14 +1612,14 @@ class HexadecimalFormat < FieldsInBitsFormatBase
     m = f[:significand]
     e = f[:exponent]
     s = f[:sign]
-    m,e = neg_significand_exponent(s,m,e) if s%2==1    
+    m,e = neg_significand_exponent(s,m,e) if s%2==1
     if m==0
       # +-zero
       e = :zero
     elsif @infinite_encoded_exp && e==@infinite_encoded_exp && m==0
       # +-inifinity
       e = :infinity
-    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0 
+    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0
       # NaN
       e = :nan
     else
@@ -1627,12 +1627,12 @@ class HexadecimalFormat < FieldsInBitsFormatBase
       e = decode_exponent(e, :integral_significand)
     end
     s = sign_to_unit(s)
-    [s,m,e]    
+    [s,m,e]
   end
 
   def self.pack(s,m,e)
     msb = radix_power(@significand_digits-1)
-    
+
     if e==:zero
       e = @zero_encoded_exp
       m = 0
@@ -1644,17 +1644,17 @@ class HexadecimalFormat < FieldsInBitsFormatBase
       s = minus_sign_value # ?
       m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
-      e = @denormal_encoded_exp || @zero_encoded_exp      
+      e = @denormal_encoded_exp || @zero_encoded_exp
     else
       # to do: try to adjust m to keep e in range if out of valid range
       # to do: reduce m and adjust e if m too big
-      
+
       min_exp = radix_min_exp(:integral_significand)
       if m>0
         while m<msb && e>min_exp
           e -= 1
           m <<= 4 # m *= radix
-        end      
+        end
       end
       if m<msb && @denormal_encoded_exp
         e = @denormal_encoded_exp
@@ -1665,21 +1665,21 @@ class HexadecimalFormat < FieldsInBitsFormatBase
       end
     end
     s = sign_from_unit(s)
-    m,e = neg_significand_exponent(0,m,e) if s%2==1    
-    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e      
+    m,e = neg_significand_exponent(0,m,e) if s%2==1
+    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e
   end
-    
+
 
   def self.minus_sign_value
     (-1) % 2
   end
 
-  def self.exponent_digits    
+  def self.exponent_digits
     @fields[exponent]/4
   end
-  
-  # :startdoc:               
-  
+
+  # :startdoc:
+
 end
 
 
@@ -1691,7 +1691,7 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = as(t,:exact) + v.as(t,:exact)
-        fptype.number(x,:exact)        
+        fptype.number(x,:exact)
       end
     else
       # TODO
@@ -1702,7 +1702,7 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = as(t,:exact) / v.as(t,:exact)
-        fptype.number(x,:exact)        
+        fptype.number(x,:exact)
       end
     else
       # TODO
@@ -1713,7 +1713,7 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = as(t,:exact) - v.as(t,:exact)
-        fptype.number(x,:exact)        
+        fptype.number(x,:exact)
       end
     else
       # TODO
@@ -1724,13 +1724,13 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = as(t,:exact) * v.as(t,:exact)
-        fptype.number(x,:exact)        
+        fptype.number(x,:exact)
       end
     else
       # TODO
     end
   end
-    
+
   class FormatBase
     @@arithmetic_type = BigDecimal
     # Type used internally for arithmetic operations.
@@ -1754,11 +1754,11 @@ end
           BigDecimal.mode BigDecimal::ROUND_MODE, BigDecimal::ROUND_HALF_EVEN
         else
           #BigDecimal.limit prec*2
-          BigDecimal.mode BigDecimal::ROUND_MODE, BigDecimal::ROUND_DOWN    
+          BigDecimal.mode BigDecimal::ROUND_MODE, BigDecimal::ROUND_DOWN
         end
         result = yield(BigDecimal)
         BigDecimal.limit keep_limit
-        BigDecimal.mode BigDecimal::ROUND_MODE, keep_round_mode            
+        BigDecimal.mode BigDecimal::ROUND_MODE, keep_round_mode
         BigDecimal.div_precision keep_div_prec
         result
       else
@@ -1766,7 +1766,7 @@ end
       end
     end
   end
-  
+
 # Class to define formats such as "double double" by pairing two floating-point
 # values which define a higher precision value by its sum.
 # The :half parameter is a format class that defines the type of each part
@@ -1778,12 +1778,12 @@ end
 # :extra_prec option.
 # For example, the "double double" format used in PowerPC is this
 #   FltPnt.define :DoubleDouble, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
-# Although this has a fixed 107 bits precision, the format as used in 
+# Although this has a fixed 107 bits precision, the format as used in
 # the PowerPC can have greater precision for specific values (by having
 # greater separation between the exponents of both halves)
 class DoubleFormat < FormatBase
-  
-  def self.define(params)      
+
+  def self.define(params)
     @half = params[:half]
     params = @half.parameters.merge(params)
     if @half.radix==2
@@ -1794,28 +1794,28 @@ class DoubleFormat < FormatBase
     params[:significand_digits] = 2*@half.significand_digits
     params[:significand_digits] += 1 if @extra_prec
     @significand_digits = params[:significand_digits]
-        
-    @hidden_bit = params[:hidden_bit] = @half.hidden_bit    
-        
+
+    @hidden_bit = params[:hidden_bit] = @half.hidden_bit
+
     fields1 = []
     fields2 = []
     params[:fields].each_slice(2) do |s,v|
       fields1 << s # (s.to_s+"_1").to_sym
       fields1 << v
       fields2 << (s.to_s+"_2").to_sym
-      fields2 << v      
+      fields2 << v
     end
-    params[:fields] = fields1 + fields2    
-    
-    define_fields params[:fields]  
-        
+    params[:fields] = fields1 + fields2
+
+    define_fields params[:fields]
+
     super params
   end
-  
+
   def self.radix
     @half.radix
   end
-  
+
   def self.half
     @half
   end
@@ -1828,13 +1828,13 @@ class DoubleFormat < FormatBase
       nan
     elsif v1.last == :infinity
       infinity(v1.sign)
-    else 
+    else
       v2 = @half.zero.split if @half.new(*v1).subnormal?
       params = v1 + v2
-      join_fp(*params)    
+      join_fp(*params)
     end
   end
-  
+
   def self.pack(s,m,e)
     if e.kind_of?(Symbol)
       f1 = @half.pack(s,m,e)
@@ -1846,15 +1846,15 @@ class DoubleFormat < FormatBase
     end
     f1+f2
   end
-  
+
   def split_halfs
     b = as_bytes
     sz = fptype.half.total_bytes
     b1 = b[0...sz]
     b2 = b[sz..-1]
-    [fptype.half.bytes(b1), fptype.half.bytes(b2)]    
+    [fptype.half.bytes(b1), fptype.half.bytes(b2)]
   end
-  
+
   def self.join_halfs(h1,h2)
     self.bytes(h1.as_bytes+h2.as_bytes)
   end
@@ -1872,7 +1872,7 @@ class DoubleFormat < FormatBase
   private
   def self.split_fp(s,m,e)
     n = @half.significand_digits
-    if @half.radix==2    
+    if @half.radix==2
       if @extra_prec
         if (m & (1<<n))==0 # m.bits[n] == 0
           m1 = m >> (n+1) # m/2**(n+1)
@@ -1917,15 +1917,15 @@ class DoubleFormat < FormatBase
     end
     [s1,m1,e1,s2,m2,e2]
   end
-  
+
   def FormatBase.join_fp(s1,m1,e1,s2,m2,e2)
     if m2==0 || e2==:zero
       s = s1
       m = m1
       e = e1
     else
-      m = s1*(m1<<(e1-e2)) + s2*m2    
-      e = e2  
+      m = s1*(m1<<(e1-e2)) + s2*m2
+      e = e2
     end
     if m<0
       s = -1
@@ -1934,7 +1934,7 @@ class DoubleFormat < FormatBase
       s = +1
     end
     if m!=0 && e1.kind_of?(Numeric)
-      # normalize  
+      # normalize
       nn = significand_digits
       while m >= (1 << nn)
         m >>= 1
@@ -1946,12 +1946,12 @@ class DoubleFormat < FormatBase
       end
     end
     [s,m,e]
-  end  
-  
-  
+  end
+
+
 end
-  
-  
+
+
 
 module_function
 
@@ -1962,7 +1962,7 @@ def define(*arguments)
   elsif arguments[1].kind_of?(Class)
     name,base,parameters = arguments
   else
-    name,parameters = arguments  
+    name,parameters = arguments
     base = parameters[:base] || FormatBase
   end
   FltPnt.const_set name, cls=Class.new(base)
@@ -1971,7 +1971,7 @@ def define(*arguments)
   FltPnt.send :define_method,name,constructor
   FltPnt.send :module_function, name
   yield cls if block_given?
-end    
+end
 
 
 
