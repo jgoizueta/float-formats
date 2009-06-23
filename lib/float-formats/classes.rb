@@ -262,22 +262,26 @@ class FormatBase
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
     return neg.next.neg if s<0
     return self.next.neg if e==:zero
-    if e!=:nan && e!=:infinity
-      f -= 1
-      if f<fptype.minimum_normalized_integral_significand
-        if e!=:denormal && e>fptype.radix_min_exp(:integral_significand)
-          e -= 1
-          f *= fptype.radix
-        else
-          if fptype.gradual_underflow?
-            e = :denormal
+    if e!=:nan
+      if e == :infinity
+        f = fptype.maximum_integral_significand
+        e = fptype.radix_max_exp(:integral_significand)
+      else
+        f -= 1
+        if f<fptype.minimum_normalized_integral_significand
+          if e!=:denormal && e>fptype.radix_min_exp(:integral_significand)
+            e -= 1
+            f *= fptype.radix
           else
-            e = :zero
+            if fptype.gradual_underflow?
+              e = :denormal
+            else
+              e = :zero
+            end
           end
         end
       end
     end
-    # to do: handle infinity.prev = max_value etc.
     fptype.new s, f, e
   end
 
@@ -292,17 +296,15 @@ class FormatBase
 
     if exp==:nan
     elsif exp==:infinity
-      sign,sig,exp = 1,1,mexp
+      sign,sig,exp = 1,1,mxexp
     elsif exp==:zero || exp <= mnexp
-      fptype.min_value
+      return fptype.min_value
     else
       exp -= 1 if sig==fptype.minimum_normalized_integral_significand
       sign,sig,exp = 1,1,exp
     end
-    fptype.new s, f, e
+    fptype.new sign, sig, exp
   end
-
-
 
   def <=>(other)
     return 1 if nan? || other.nan?
@@ -617,7 +619,7 @@ class FormatBase
     if m.kind_of?(Integer) && m>0 && e.kind_of?(Integer)
       while e<min_exp
         e += 1
-        f /= radix # to do round
+        m /= radix # TODO: round
       end
     end
     s,m,e = normalized(s,m,e) if normalize
@@ -1231,8 +1233,8 @@ class BCDFormat < DecimalFormatBase
     elsif e==:denormal
       e = @denormal_encoded_exp
     else
-      # to do: try to adjust m to keep e in range if out of valid range
-      # to do: reduce m and adjust e if m too big
+      # TODO: try to adjust m to keep e in range if out of valid range
+      # TODO: reduce m and adjust e if m too big
 
       min_exp = radix_min_exp(:integral_significand)
       if m>0
@@ -1427,8 +1429,8 @@ class DPDFormat < DecimalFormatBase
     elsif e==:denormal
       e = @denormal_encoded_exp || @zero_encoded_exp
     else
-      # to do: try to adjust m to keep e in range if out of valid range
-      # to do: reduce m and adjust e if m too big
+      # TODO: try to adjust m to keep e in range if out of valid range
+      # TODO: reduce m and adjust e if m too big
 
       min_exp = radix_min_exp(:integral_significand)
       if m>0 && false
@@ -1552,8 +1554,8 @@ class BinaryFormat < FieldsInBitsFormatBase
     elsif e==:denormal
       e = @denormal_encoded_exp
     else
-      # to do: try to adjust m to keep e in range if out of valid range
-      # to do: reduce m and adjust e if m too big
+      # TODO: try to adjust m to keep e in range if out of valid range
+      # TODO: reduce m and adjust e if m too big
 
       min_exp = radix_min_exp(:integral_significand)
       if m>0
@@ -1646,8 +1648,8 @@ class HexadecimalFormat < FieldsInBitsFormatBase
     elsif e==:denormal
       e = @denormal_encoded_exp || @zero_encoded_exp
     else
-      # to do: try to adjust m to keep e in range if out of valid range
-      # to do: reduce m and adjust e if m too big
+      # TODO: try to adjust m to keep e in range if out of valid range
+      # TODO: reduce m and adjust e if m too big
 
       min_exp = radix_min_exp(:integral_significand)
       if m>0
