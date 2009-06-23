@@ -1,4 +1,14 @@
-== 0.1.1 2007-11-09
+== 1.0.0 2009-...
+
+*  New redefined interface
+
+*  to/from_integral_sign_significand_exponent methods now
+   have the sign as an integer +1,-1 rather than as the
+   internal representation 0,1,etc.
+
+*  Arithmetic is possible on FP values
+
+== 0.1.1 2007-11-15
 
 *  HP-71B formats defined
 
@@ -11,17 +21,15 @@
 *  new methods hex_to_float, hex_from_float in float-formats/native
 
 *  Allow non-bcd values in fields of BCD formats by passing
-   hex values as Strings; allow such values to be used for 
+   hex values as Strings; allow such values to be used for
    nan/infinity exponents.
 
-*  to/from_integral_sign_significand_exponent methods now
-   have the sign as an integer +1,-1 rather than as the
-   internal representation 0,1,etc.
+*  Nio 0.2.1 is now reqiured
 
 *  Handle special values (Infinities and NaN) in #from_fmt, #from_number
 
 *  Add ulp methods to Value and FP classes and to Float
-   
+
 *  Bug fixes
     - Fix the encoding-decoding of nan and infinity in Decimal format.
     - Fix the decoding of NaN in Binary & Hexadecimal

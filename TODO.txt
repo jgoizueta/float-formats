@@ -1,14 +1,15 @@
 * refactoring: adapt documentation
-* next_after method, 
+* next_after method,
 * add arithmetic using Rational (BigDecimal for decimal types?)
   (maybe some directly on sign-significand-exponent); AlgM can be used for rounding
-* implement BurgerDybvig for Values; (use the iterative scale2 instead of scale)  
+* implement BurgerDybvig for Values; (use the iterative scale2 instead of scale)
 * reserach if the double rounding that's happening in nio_read_neutral may be a real problem
   (the neutral is first rounded to decimal_digits_necessary, then to a FP datum)
 * rename :normalized_significand to :scientific_significand ? :denormal to :subnormal ? etc.
 * rename as_ methods removing the as_; rename "as" to "to"; consider better names for number (numeric?), text, splitted/split
-    
 * classes.rb :
   - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
     methods; some refactoring is in order
-* confirm git rubyforge repository is working
+* define small DSL to define formats
+* Substitute BigDecimal by Decimal (and use binary arithmetic from BinFloat if/when implemented)
+* rename min_normalized_value to minimum_normal, etc. (following Decimal style)
