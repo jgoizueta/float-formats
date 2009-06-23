@@ -725,7 +725,7 @@ class FormatBase
     e = 2*(1-significand_digits)
     # assume radix is even
     case @round
-    when :even, :zero, :any_rounding
+    when :even, :any_rounding
       e -= 1
       m /= 2
       m *= radix
