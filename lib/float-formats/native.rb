@@ -106,20 +106,15 @@ class Float
     return self if nan?     
     x = abs
     if x < Math.ldexp(1,MIN_EXP) # x < RADIX*MIN_N
-      res = Math.ldexp(1,MIN_EXP-MANT_DIG) # res = MIN_D
-    elsif x > Math.ldexp(1-Math.ldexp(1,-MANT_DIG),MAX_EXP)  # x > MAX
-      res = Math.ldexp(1,MAX_EXP-MANT_DIG) # res = MAX - MAX.prev
+      Math.ldexp(1,MIN_EXP-MANT_DIG) # res = MIN_D
+    elsif x > MAX # x > Math.ldexp(1-Math.ldexp(1,-MANT_DIG),MAX_EXP)
+      Math.ldexp(1,MAX_EXP-MANT_DIG) # res = MAX - MAX.prev
     else
       f,e = Math.frexp(x)
-      if f==Math.ldexp(1,-1)
-        res = Math.ldexp(1,e-MANT_DIG-1)
-      else
-        res = Math.ldexp(1,e-MANT_DIG)
-      end        
+      e -= 1 if f==Math.ldexp(1,-1) # assign the smaller ulp to radix powers
+      Math.ldexp(1,e-MANT_DIG)
     end  
-    res  
   end
-  
      
 end
 
