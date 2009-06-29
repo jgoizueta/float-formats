@@ -27,7 +27,7 @@ module IEEE
       :fields=>[:significand,significand_bits,:exponent,exponent_bits,:sign,1], 
       :bias=>2**(exponent_bits-1)-1, :bias_mode=>:normalized_significand,
       :hidden_bit=>true,
-      :endianness=>:little_endian, :round=>:even,
+      :endianness=>:little_endian, :round=>:half_even,
       :gradual_underflow=>true, :infinity=>true, :nan=>true
     }.merge(parameters))
   end
@@ -132,7 +132,7 @@ FltPnt.define BinaryFormat, :XS128,
   :fields=>[:significand,31,:sign,1,:exponent,8],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
-  :endianness=>:big_endian, :round=>:inf,
+  :endianness=>:big_endian, :round=>:half_up,
   :endianness=>:big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
                         
@@ -142,14 +142,14 @@ FltPnt.define BinaryFormat, :XS256,
   :fields=>[:significand,22,:exponent,9,:sign,1],
   :bias=>256, :bias_mode=>:normalized_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
-  :endianness=>:big_endian, :round=>:inf,
+  :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
 FltPnt.define :XS256_DOUBLE, BinaryFormat,
   :fields=>[:significand,54,:exponent,9,:sign,1],
   :bias=>256, :bias_mode=>:normalized_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
-  :endianness=>:big_endian, :round=>:inf,
+  :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
                        
 # Borland Pascal 48 bits "Real" Format                      
@@ -231,14 +231,14 @@ FltPnt.define :SATURN, BCDFormat,
   :fields=>[:prolog,5,:exponent,3,:significand,12,:sign,1],
   :fields_handler=>lambda{|fields| fields[0]=2933},
   :exponent_mode=>:radix_complement,
-  :endianness=>:little_endian, :round=>:even,
+  :endianness=>:little_endian, :round=>:half_even,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
 FltPnt.define :SATURN_X, BCDFormat,
   :fields=>[:prolog,5,:exponent,5,:significand,15,:sign,1],
   :fields_handler=>lambda{|fields| fields[0]=2955},
   :exponent_mode=>:radix_complement,
-  :endianness=>:little_endian, :round=>:even,
+  :endianness=>:little_endian, :round=>:half_even,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
          
          
@@ -251,7 +251,7 @@ RPL_X = SATURN_X
 FltPnt.define :HP71B, BCDFormat,
   :fields=>[:exponent,3,:significand,12,:sign,1],
   :exponent_mode=>:radix_complement,
-  :endianness=>:little_endian, :round=>:even,
+  :endianness=>:little_endian, :round=>:half_even,
   :gradual_underflow=>true, :infinity=>true, :nan=>true,
   :denormal_encoded_exp=>501,
   :nan_encoded_exp=>"F01", # signaling NaN is F02
@@ -263,7 +263,7 @@ FltPnt.define :HP71B, BCDFormat,
 FltPnt.define :HP71B_X, BCDFormat,
   :fields=>[:exponent,5,:unused2,10,:sign,1, :significand,15,:unused1,1],
   :exponent_mode=>:radix_complement,
-  :endianness=>:little_endian, :round=>:even,
+  :endianness=>:little_endian, :round=>:half_even,
   :gradual_underflow=>false, :infinity=>true, :nan=>true,
   :nan_encoded_exp=>"00F01",
   :infinite_encoded_exp=>"00F00"
@@ -276,7 +276,7 @@ FltPnt.define :HP_CLASSIC, BCDFormat,
   :fields=>[:exponent,3,:significand,10,:sign,1],
   :exponent_mode=>:radix_complement,
   :min_exp=>-99, :max_exp=>99, # the most significant nibble of exponent if for sign only
-  :endianness=>:big_endian, :round=>:inf,
+  :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
                        

@@ -37,43 +37,9 @@
 
 require 'nio'
 require 'nio/sugar'
+require 'bigfloat'
 require 'enumerator'
 require 'float-formats/bytes.rb'
-
-# this allows to define a default precision for BigDecimal divisions
-class BigDecimal
-  @@div_precision = 0
-  def self.div_precision(v=nil)
-    prev_prec = @@div_precision
-    @@div_precision = v if v
-    prev_prec
-  end
-  alias _div div
-  def div(v,*params)
-    if params.size>0
-      # TO DO: raise on incorrect number or type of arguments
-      p = params.first
-      p = @@div_precision if p==0 || p.nil? && @@div_precision
-      _div(v,p)
-    else
-      _div(v)
-    end
-  end
-  alias _div_op /
-  def /(v)
-    if @@div_precision.nil?
-      _div_op(v)
-    else
-      div(v,0)
-    end
-  end
-  alias _sqrt sqrt
-  def sqrt(p=nil)
-    p ||= BigDecimal.limit if BigDecimal.limit>0
-    p ||= @@div_precision
-    _sqrt p
-  end
-end
 
 module FltPnt
 
@@ -150,9 +116,11 @@ class FormatBase
       when :nan
         v = 0.0/0.0
       else
-        if fptype.radix==10
-          s = @sign<0 ? '-' : ''
-          v = BigDecimal("#{s}#{@significand}E#{@exponent}")
+        case fptype.radix
+        when 10
+          v = BigFloat.Decimal(@sign, @significand, @exponent)
+        when 2
+          v = BigFloat.BinFloat(@sign, @significand, @exponent)
         else
           v = @significand*fptype.radix_power(@exponent)*@sign
         end
@@ -222,6 +190,7 @@ class FormatBase
   # Computes the next adjacent floating point value.
   # Accepts either a Value or a byte String.
   # Returns a Value.
+  # TODO: use BigFloat
   def next
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
     return neg.prev.neg if s<0 && e!=:zero
@@ -479,7 +448,7 @@ class FormatBase
       @normalized_min_exp = @min_exp
     end
 
-    @round = params[:round] # || :even
+    @round = params[:round] # || :half_even
 
     @neg_mode = params[:neg_mode] || :sign_magnitude
 
@@ -548,9 +517,9 @@ class FormatBase
   end
 
   # Rounding mode use for this floating-point format; can be one of:
-  # [<tt>:even</tt>] round to nearest with ties toward an even digits
-  # [<tt>:inf</tt>] round to nearest with ties toward infinity (away from zero)
-  # [<tt>:zero</tt>] round to nearest with ties toward zero
+  # [<tt>:half_even</tt>] round to nearest with ties toward an even digits
+  # [<tt>:half_up</tt>] round to nearest with ties toward infinity (away from zero)
+  # [<tt>:half_down</tt>] round to nearest with ties toward zero
   # [<tt>nil</tt>] rounding mode not specified
   def self.rounding_mode
     @round
@@ -718,6 +687,7 @@ class FormatBase
   # of floating-point addition.
   # Note that (in pseudo-code):
   #  ((1.0+strict_epsilon)-1.0)==epsilon
+  # TODO: use BigFloat::Num
   def self.strict_epsilon(sign=+1, round=nil)
     round ||= @round
     s = sign
@@ -725,25 +695,25 @@ class FormatBase
     e = 2*(1-significand_digits)
     # assume radix is even
     case @round
-    when :even, :any_rounding
-      e -= 1
-      m /= 2
-      m *= radix
-      m += 1
-    when :inf
-      # note that here :inf means "round to nearest with ties tower infinity"
-      e -= 1
-      m /= 2
-      m *= radix
-    when :ceiling, :up
-      # this is the IEEE "toward infinity" rounding
+    when :down, :floor, :any_rounding, nil
+      e = 2*(1-significand_digits)
+      m = minimum_normalized_integral_significand
+    when :half_even, :half_down
+      e = 1-2*significand_digits
+      m = 1 + radix_power(significand_digits)/2
+    when :half_up
+      e = 1-2*significand_digits
+      m = radix_power(significand_digits)/2
+    when :ceiling, :up, :up05
       return min_value
     end
-    return_value s,m,e
+    return_value sign,m,e
   end
+
   # This is the maximum relative error corresponding to 1/2 ulp:
   #  (radix/2)*radix_power(-significand_precision) == epsilon/2
   # This is called "machine epsilon" in [Goldberg]
+  # TODO: use BigFloat::Num
   def self.half_epsilon(sign=+1)
     s = sign
     m = radix/2
@@ -793,11 +763,20 @@ class FormatBase
        end
        f = neutral.digits.to_i(neutral.base)
        e = neutral.dec_pos-neutral.digits.length
-       rounding = neutral.rounding
+       case neutral.rounding
+       when :even
+         rounding = :half_even
+       when :inf
+         rounding = :half_up
+       when :zero
+         rounding = :half_down
+       when :truncate
+         rounding = :down
+       end
        if neutral.base==radix
          s = +1
        else
-         s,f,e = algM(f,e,rounding,neutral.base).split
+         s,f,e = BigFloat::Support.algM(f,e,rounding,neutral.base).split
        end
        if neutral.sign=='-'
          s = -s
@@ -1035,57 +1014,6 @@ class FormatBase
     end
     e
   end
-
-  # these are functions from Nio::Clinger, generalized for arbitrary floating point formats
-  def self.ratio_float(u,v,k,round_mode)
-    q = u.div v
-    r = u-q*v
-    v_r = v-r
-    z = self.new(+1,q,k)
-    if r<v_r
-      z
-    elsif r>v_r
-      z.next
-    elsif (round_mode==:even && q.even?) || (round_mode==:zero)
-      z
-    else
-      z.next
-    end
-  end
-
-  def self.algM(f,e,round_mode,eb=10)
-
-    if e<0
-     u,v,k = f,eb**(-e),0
-    else
-      u,v,k = f*(eb**e),1,0
-    end
-
-    n = significand_digits
-    min_e = radix_min_exp(:integral_significand)
-    max_e = radix_max_exp(:integral_significand)
-
-    rp_n = radix_power(n)
-    rp_n_1 = radix_power(n-1)
-    r = radix
-
-    loop do
-       x = u.div(v) # bottleneck
-       # overflow if k>=max_e
-       if (x>=rp_n_1 && x<rp_n) || k==min_e || k==max_e
-          return ratio_float(u,v,k,round_mode)
-       elsif x<rp_n_1
-         u *= r
-         k -= 1
-       elsif x>=rp_n
-         v *= r
-         k += 1
-       end
-    end
-
-  end
-  # :startdoc:
-end
 
 # Base class for decimal floating point formats
 class DecimalFormatBase < FormatBase
@@ -1734,37 +1662,31 @@ end
   end
 
   class FormatBase
-    @@arithmetic_type = BigDecimal
     # Type used internally for arithmetic operations.
     def self.arithmetic_type
-      @@arithmetic_type
-    end
-    # Change type used for arithmetic; valid types are BigDecimal, Rational.
-    def self.arithmetic_type=(t)
-      @@arithmetic_type=t
+      case radix
+      when 10
+        BigFloat::Decimal
+      when 2
+        BigFloat::BinFloat
+      else
+        Rational
+      end
     end
     # Set up the arithmetic environment; the arithmetic type is passed to the block.
     def self.arithmetic
-      if @@arithmetic_type==BigDecimal
-        keep_round_mode = BigDecimal.mode(BigDecimal::ROUND_MODE)
-        keep_limit = BigDecimal.limit
-        keep_div_prec = BigDecimal.div_precision
-        prec = decimal_digits_necessary
-        BigDecimal.div_precision prec
-        if radix==10
-          BigDecimal.limit prec
-          BigDecimal.mode BigDecimal::ROUND_MODE, BigDecimal::ROUND_HALF_EVEN
-        else
-          #BigDecimal.limit prec*2
-          BigDecimal.mode BigDecimal::ROUND_MODE, BigDecimal::ROUND_DOWN
+      case at=arithmetic_type
+      when BigFloat::Num
+        at.context(:precision=>prec) do |context|
+          context.precision = significand_digits
+          context.rounding = @round || :half_even
+          context.emax = radix_max_exp(:normalized_significand)
+          context.emin = radix_min_exp(:normalized_significand)
+          yield at
         end
-        result = yield(BigDecimal)
-        BigDecimal.limit keep_limit
-        BigDecimal.mode BigDecimal::ROUND_MODE, keep_round_mode
-        BigDecimal.div_precision keep_div_prec
-        result
       else
-        yield @@arithmetic_type
+        # Could also use BigFloat::Decimal with decimal_digits_necessary, decimal_max_exp(:integral_significand), ...
+        yield at
       end
     end
   end
