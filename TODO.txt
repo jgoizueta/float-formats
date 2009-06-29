@@ -11,5 +11,5 @@
   - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
     methods; some refactoring is in order
 * define small DSL to define formats
-* Substitute BigDecimal by Decimal (and use binary arithmetic from BinFloat if/when implemented)
+* Substitute BigDecimal by Decimal,BinFloat
 * rename min_normalized_value to minimum_normal, etc. (following Decimal style)
