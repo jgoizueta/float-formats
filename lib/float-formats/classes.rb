@@ -1014,6 +1014,7 @@ class FormatBase
     end
     e
   end
+end
 
 # Base class for decimal floating point formats
 class DecimalFormatBase < FormatBase
