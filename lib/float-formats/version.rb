@@ -1,5 +1,5 @@
 module FltPnt
-  module VERSION #:nodoc:
+  module FORMATS_VERSION #:nodoc:
     MAJOR = 0
     MINOR = 1
     TINY  = 0
