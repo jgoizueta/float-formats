@@ -37,7 +37,7 @@
 
 require 'nio'
 require 'nio/sugar'
-require 'bigfloat'
+require 'flt'
 require 'enumerator'
 require 'float-formats/bytes.rb'
 
@@ -118,9 +118,9 @@ class FormatBase
       else
         case fptype.radix
         when 10
-          v = BigFloat.Decimal(@sign, @significand, @exponent)
+          v = Flt.DecNum(@sign, @significand, @exponent)
         when 2
-          v = BigFloat.BinFloat(@sign, @significand, @exponent)
+          v = Flt.BinNum(@sign, @significand, @exponent)
         else
           v = @significand*fptype.radix_power(@exponent)*@sign
         end
@@ -190,7 +190,7 @@ class FormatBase
   # Computes the next adjacent floating point value.
   # Accepts either a Value or a byte String.
   # Returns a Value.
-  # TODO: use BigFloat
+  # TODO: use Flt
   def next
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
     return neg.prev.neg if s<0 && e!=:zero
@@ -687,7 +687,7 @@ class FormatBase
   # of floating-point addition.
   # Note that (in pseudo-code):
   #  ((1.0+strict_epsilon)-1.0)==epsilon
-  # TODO: use BigFloat::Num
+  # TODO: use Flt::Num
   def self.strict_epsilon(sign=+1, round=nil)
     round ||= @round
     s = sign
@@ -713,7 +713,7 @@ class FormatBase
   # This is the maximum relative error corresponding to 1/2 ulp:
   #  (radix/2)*radix_power(-significand_precision) == epsilon/2
   # This is called "machine epsilon" in [Goldberg]
-  # TODO: use BigFloat::Num
+  # TODO: use Flt::Num
   def self.half_epsilon(sign=+1)
     s = sign
     m = radix/2
@@ -776,7 +776,8 @@ class FormatBase
        if neutral.base==radix
          s = +1
        else
-         s,f,e = BigFloat::Support.algM(f,e,rounding,neutral.base).split
+         # TODO : generate a context compatible with this format
+         s,f,e = Flt::Support::Clinger.algM(context, f,e,rounding,neutral.base).split
        end
        if neutral.sign=='-'
          s = -s
@@ -1667,9 +1668,9 @@ end
     def self.arithmetic_type
       case radix
       when 10
-        BigFloat::Decimal
+        Flt::DecNum
       when 2
-        BigFloat::BinFloat
+        Flt::BinNum
       else
         Rational
       end
@@ -1677,7 +1678,7 @@ end
     # Set up the arithmetic environment; the arithmetic type is passed to the block.
     def self.arithmetic
       case at=arithmetic_type
-      when BigFloat::Num
+      when Flt::Num
         at.context(:precision=>prec) do |context|
           context.precision = significand_digits
           context.rounding = @round || :half_even
@@ -1686,7 +1687,7 @@ end
           yield at
         end
       else
-        # Could also use BigFloat::Decimal with decimal_digits_necessary, decimal_max_exp(:integral_significand), ...
+        # Could also use Flt::Decimal with decimal_digits_necessary, decimal_max_exp(:integral_significand), ...
         yield at
       end
     end

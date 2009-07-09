@@ -2,7 +2,8 @@
 
 require 'nio'
 require 'nio/sugar'
-require 'bigfloat/float'
+require 'flt'
+require 'flt/float'
 require 'float-formats/bytes'
 
 module FltPnt

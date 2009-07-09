@@ -12,7 +12,7 @@
     methods; some refactoring is in order
 * define small DSL to define formats
 * Substitute BigDecimal by Decimal,BinFloat
-* rename min_normalized_value to minimum_normal, etc. (following BigFloat style):
+* rename min_normalized_value to minimum_normal, etc. (following Flt style):
       min_normalized_value -> minimum_normal
       max_value            -> maximum_finite
       min_value            -> minimum_nonzero

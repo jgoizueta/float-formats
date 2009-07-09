@@ -9,8 +9,6 @@ class TestArithmetic < Test::Unit::TestCase
   end  
 
   def test_precision
-    [BigDecimal,Rational].each do |at|
-      FormatBase.arithmetic_type = at
       @all_types.each do |t|
         one = t.new('1')
         three = t.new('3')
@@ -25,17 +23,13 @@ class TestArithmetic < Test::Unit::TestCase
         assert x==check, "#{t}: 1-(4/3-1)*3 = +/-#{t.radix}^#{1-t.significand_digits}"
         
       end
-    end
   end
     
   def test_epsilon      
-    [BigDecimal,Rational].each do |at|
-      FormatBase.arithmetic_type = at
       @all_types.each do |t|      
         one = t.number(1)
         assert((one + t.epsilon)==one.next, "#{t}: 1+epsilon=1.next")
       end    
-    end
   end  
     
 end
