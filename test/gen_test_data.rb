@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../lib/float-formats'
 require 'yaml'
 
-include FltPnt
+include Flt
 include Nio
 
 

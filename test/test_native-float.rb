@@ -4,7 +4,7 @@ require 'yaml'
 
 require 'test/unit'
 
-include FltPnt
+include Flt
 
 class TestNativeFloat < Test::Unit::TestCase
     def test_nextprev

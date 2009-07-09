@@ -9,7 +9,7 @@ require 'enumerator'
 require 'float-formats/classes.rb'
 
 
-module FltPnt
+module Flt
 
 
 # Floating Point Format Definitions ==========================================
@@ -22,7 +22,7 @@ module IEEE
   def self.binary(name, parameters)
     significand_bits = parameters[:significand]
     exponent_bits = parameters[:exponent]
-    FltPnt.define(name,{
+    Flt.define(name,{
       :base=>BinaryFormat,
       :fields=>[:significand,significand_bits,:exponent,exponent_bits,:sign,1], 
       :bias=>2**(exponent_bits-1)-1, :bias_mode=>:normalized_significand,
@@ -45,12 +45,13 @@ module IEEE
   def self.decimal(name,parameters)
     significand_continuation_bits = parameters[:significand]
     exponent_continuation_bits = parameters[:exponent]
-    FltPnt.define(name,{    
+    Flt.define(name,{    
       :base=>DPDFormat,
       :fields=>[:significand_continuation,significand_continuation_bits,:exponent_continuation,exponent_continuation_bits,:combination,5,:sign,1],
       :normalized=>false,
       :endianness=>:big_endian,
-      :gradual_underflow=>true, :infinity=>true, :nan=>true
+      :gradual_underflow=>true, :infinity=>true, :nan=>true,
+      :round=>:half_even
     }.merge(parameters))
   end
 
@@ -100,7 +101,8 @@ IEEE_SINGLE = IEEE_binary32
 IEEE_DOUBLE = IEEE_binary64
 IEEE_EXTENDED = IEEE_binary80
 IEEE_QUAD = IEEE_binary128
-IEEE_128 = IEEE_binary128IEEE_H_BE = IEEE_binary16_BE
+IEEE_128 = IEEE_binary128
+IEEE_H_BE = IEEE_binary16_BE
 IEEE_S_BE = IEEE_binary32_BE
 IEEE_D_BE = IEEE_binary64_BE
 IEEE_X_BE = IEEE_binary80_BE
@@ -128,7 +130,7 @@ IEEE_DEC128 = IEEE_decimal128
 
 # Excess 128 used by Microsoft Basic in 8-bit micros, Spectrum, ...
 
-FltPnt.define BinaryFormat, :XS128,
+Flt.define BinaryFormat, :XS128,
   :fields=>[:significand,31,:sign,1,:exponent,8],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
@@ -138,14 +140,14 @@ FltPnt.define BinaryFormat, :XS128,
                         
 # HP-3000 excess 256 format, HP-Tandem...                        
                
-FltPnt.define BinaryFormat, :XS256,
+Flt.define BinaryFormat, :XS256,
   :fields=>[:significand,22,:exponent,9,:sign,1],
   :bias=>256, :bias_mode=>:normalized_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
   :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
-FltPnt.define :XS256_DOUBLE, BinaryFormat,
+Flt.define :XS256_DOUBLE, BinaryFormat,
   :fields=>[:significand,54,:exponent,9,:sign,1],
   :bias=>256, :bias_mode=>:normalized_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
@@ -154,7 +156,7 @@ FltPnt.define :XS256_DOUBLE, BinaryFormat,
                        
 # Borland Pascal 48 bits "Real" Format                      
                        
-FltPnt.define :BORLAND48, BinaryFormat,
+Flt.define :BORLAND48, BinaryFormat,
   :fields=>[:exponent,8,:significand,39,:sign,1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
@@ -163,14 +165,14 @@ FltPnt.define :BORLAND48, BinaryFormat,
      
 # Microsoft Binary Floating-point (Quickbasic)  
      
-FltPnt.define :MBF_SINGLE, BinaryFormat,
+Flt.define :MBF_SINGLE, BinaryFormat,
   :fields=>[:significand,23,:sign,1,:exponent,8],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
   :endianness=>:little_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
-FltPnt.define :MBF_DOUBLE, BinaryFormat,
+Flt.define :MBF_DOUBLE, BinaryFormat,
   :fields=>[:significand,55,:sign,1,:exponent,8],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
@@ -179,28 +181,28 @@ FltPnt.define :MBF_DOUBLE, BinaryFormat,
      
 # DEC formats (VAX)
   
-FltPnt.define :VAX_F, BinaryFormat,
+Flt.define :VAX_F, BinaryFormat,
   :fields=>[:significand, 23, :exponent, 8, :sign, 1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
   :endianness=>:little_big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
   
-FltPnt.define :VAX_D, BinaryFormat,
+Flt.define :VAX_D, BinaryFormat,
   :fields=>[:significand, 55, :exponent, 8, :sign, 1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
   :endianness=>:little_big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
-FltPnt.define :VAX_G, BinaryFormat,
+Flt.define :VAX_G, BinaryFormat,
   :fields=>[:significand, 52, :exponent, 11, :sign, 1],
   :bias=>1024, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
   :endianness=>:little_big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
-FltPnt.define :VAX_H, BinaryFormat,
+Flt.define :VAX_H, BinaryFormat,
   :fields=>[:significand, 112, :exponent, 15, :sign, 1],
   :bias=>16384, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
@@ -209,14 +211,14 @@ FltPnt.define :VAX_H, BinaryFormat,
 
 # DEC PDP 11 variants (minimum exponent used for normalized values other than zero)
 
-FltPnt.define :PDP11_F, BinaryFormat,
+Flt.define :PDP11_F, BinaryFormat,
   :fields=>[:significand, 23, :exponent, 8, :sign, 1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
   :endianness=>:little_big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
-FltPnt.define :PDP11_D, BinaryFormat,
+Flt.define :PDP11_D, BinaryFormat,
   :fields=>[:significand, 55, :exponent, 8, :sign, 1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
@@ -227,14 +229,14 @@ FltPnt.define :PDP11_D, BinaryFormat,
 # Format used in HP Saturn-based RPL calculators (HP48,HP49,HP50, also HP32s, HP42s --which use RPL internally)
 # (these formats are not used in the HP-71B which is a Saturn, non-RPL machine)
           
-FltPnt.define :SATURN, BCDFormat,
+Flt.define :SATURN, BCDFormat,
   :fields=>[:prolog,5,:exponent,3,:significand,12,:sign,1],
   :fields_handler=>lambda{|fields| fields[0]=2933},
   :exponent_mode=>:radix_complement,
   :endianness=>:little_endian, :round=>:half_even,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
-FltPnt.define :SATURN_X, BCDFormat,
+Flt.define :SATURN_X, BCDFormat,
   :fields=>[:prolog,5,:exponent,5,:significand,15,:sign,1],
   :fields_handler=>lambda{|fields| fields[0]=2955},
   :exponent_mode=>:radix_complement,
@@ -248,7 +250,7 @@ RPL_X = SATURN_X
 # SATURN HP-71B (IEEE, NON-RPL) formats
 
 # HP-71B REAL format (12-form) which is stored in a single register
-FltPnt.define :HP71B, BCDFormat,
+Flt.define :HP71B, BCDFormat,
   :fields=>[:exponent,3,:significand,12,:sign,1],
   :exponent_mode=>:radix_complement,
   :endianness=>:little_endian, :round=>:half_even,
@@ -260,7 +262,7 @@ FltPnt.define :HP71B, BCDFormat,
 # HP-71B internal 15-digit format (15-form), stored in a pair of registers
 # we use here a little-endian order for the registers, otherwise the
 # definition would be [:significand,15,:unused1,1,:exponent,5,:unused2,10,:sign,1]
-FltPnt.define :HP71B_X, BCDFormat,
+Flt.define :HP71B_X, BCDFormat,
   :fields=>[:exponent,5,:unused2,10,:sign,1, :significand,15,:unused1,1],
   :exponent_mode=>:radix_complement,
   :endianness=>:little_endian, :round=>:half_even,
@@ -272,7 +274,7 @@ FltPnt.define :HP71B_X, BCDFormat,
 # Endianness is indeterminate, since these machines have named registers that
 # hold a floating-point value in a single 56-bit word.
 # (But intra-word field/nibble addressing is little-endian)
-FltPnt.define :HP_CLASSIC, BCDFormat,
+Flt.define :HP_CLASSIC, BCDFormat,
   :fields=>[:exponent,3,:significand,10,:sign,1],
   :exponent_mode=>:radix_complement,
   :min_exp=>-99, :max_exp=>99, # the most significant nibble of exponent if for sign only
@@ -283,19 +285,19 @@ FltPnt.define :HP_CLASSIC, BCDFormat,
 # IBM Floating Point Architecture (IBM 360,370, DG Eclipse, ...)
                             
 # short                            
-FltPnt.define :IBM32, HexadecimalFormat,
+Flt.define :IBM32, HexadecimalFormat,
   :fields=>[:significand,24,:exponent,7,:sign,1], 
   :bias=>64, :bias_mode=>:fractional_significand,
   :endianness=>:big_endian
  
 # long
-FltPnt.define :IBM64, HexadecimalFormat,
+Flt.define :IBM64, HexadecimalFormat,
   :fields=>[:significand,56,:exponent,7,:sign,1], 
   :bias=>64, :bias_mode=>:fractional_significand,
   :endianness=>:big_endian
                               
 # extended: two long values pasted together                              
-FltPnt.define :IBM128, HexadecimalFormat,
+Flt.define :IBM128, HexadecimalFormat,
   :fields=>[:significand,14*4,:lo_exponent,7,:lo_sign,1,:significand,14*4,:exponent,7,:sign,1],
   :fields_handler=>lambda{|fields| fields[1]=(fields[4]>=14&&fields[4]<127) ? fields[4]-14 : fields[4];fields[2]=fields[5] },
   :bias=>64, :bias_mode=>:fractional_significand,
@@ -303,14 +305,14 @@ FltPnt.define :IBM128, HexadecimalFormat,
   :endianness=>:big_endian
 
 # It think this has never been used:
-FltPnt.define :IBMX, HexadecimalFormat,
+Flt.define :IBMX, HexadecimalFormat,
   :fields=>[:significand,14*4,:exponent,7,:unused_sign,1,:significand,14*4,:exponent,7,:sign,1],
   :fields_handler=>lambda{|fields| fields[2]=0},
   :bias=>8192, :bias_mode=>:fractional_significand,
   :endianness=>:big_endian
                               
 # Cray-1
-FltPnt.define :CRAY, BinaryFormat,
+Flt.define :CRAY, BinaryFormat,
   :fields=>[:significand,48,:exponent,15,:sign,1],
   :bias=>16384, :bias_mode=>:fractional_significand,
   :hidden_bit=>false, 
@@ -343,7 +345,7 @@ class CDCFormat < BinaryFormat # :nodoc:
   end  
 end
 
-FltPnt.define :CDC_SINGLE, CDCFormat,
+Flt.define :CDC_SINGLE, CDCFormat,
   :fields=>[:significand,48, :exponent,11, :sign,1],
   :bias=>1024, :bias_mode=>:integral_significand,
   :min_exp=>-1023,
@@ -364,7 +366,7 @@ FltPnt.define :CDC_SINGLE, CDCFormat,
 # when its exponent would be out of range
 # Note that when computing the low order exponent with the fields handler we must take into account the sign 
 # because for negative numbers all the fields are one-complemented.
-FltPnt.define :CDC_DOUBLE, CDCFormat,
+Flt.define :CDC_DOUBLE, CDCFormat,
   :fields=>[:significand,48,:lo_exponent,11,:lo_sign,1,:significand,48,:exponent,11,:sign,1],
   :fields_handler=>lambda{|fields| 
         fields[1]=(fields[4]>0&&fields[4]<2047) ? fields[4]-((-1)**fields[5])*48 : fields[4]
@@ -381,7 +383,7 @@ FltPnt.define :CDC_DOUBLE, CDCFormat,
 # Univac 1100
 # Byte endianness is arbitrary, since these machines were word-addressable, in 36-bit words,
 # but the two words used in double precision numbers are in big endian order
-FltPnt.define :UNIVAC_SINGLE, BinaryFormat,
+Flt.define :UNIVAC_SINGLE, BinaryFormat,
   :fields=>[:significand,27, :exponent,8, :sign,1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :neg_mode=>:diminished_radix_complement,
@@ -389,7 +391,7 @@ FltPnt.define :UNIVAC_SINGLE, BinaryFormat,
   :endianess=>:big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
                                  
-FltPnt.define :UNIVAC_DOUBLE, BinaryFormat,
+Flt.define :UNIVAC_DOUBLE, BinaryFormat,
   :fields=>[:significand,60, :exponent,11, :sign,1],
   :bias=>1024, :bias_mode=>:fractional_significand,
   :neg_mode=>:diminished_radix_complement,
@@ -399,7 +401,7 @@ FltPnt.define :UNIVAC_DOUBLE, BinaryFormat,
                                                                                                                         
 
 # :stopdoc: # the next definition is not handled correctly by RDoc
-FltPnt.define(:APPLE_INSANE,BinaryFormat,
+Flt.define(:APPLE_INSANE,BinaryFormat,
   :fields=>[:significand,23,:sign,1,:exponent,8],
   :bias=>128, :bias_mode=>:normalized_significand,
   :hidden_bit=>false, :min_encoded_exp=>0,
@@ -438,7 +440,7 @@ FltPnt.define(:APPLE_INSANE,BinaryFormat,
 APPLE = APPLE_INSANE
 
 # Wang 2200 Basic Decimal floating point
-FltPnt.define(:WANG2200,BCDFormat,
+Flt.define(:WANG2200,BCDFormat,
   :fields=>[:significand,13,:exponent,2,:signs,1],
   :endiannes=>:big_endian,
   :bias_mode=>:normalized_significand,
@@ -603,19 +605,19 @@ class C51BCDFormat < BCDFormat # :nodoc:
   end
 end
 
-FltPnt.define :C51_BCD_FLOAT, C51BCDFormat,
+Flt.define :C51_BCD_FLOAT, C51BCDFormat,
   :fields=>[:exponent_sign, 2, :significand,6],
   :endiannes=>:big_endian,
   :bias=>64, :bias_mode=>:fractional_significand,
   :zero_encoded_exp=>0, :min_encoded_exp=>0,:max_encoded_exp=>127
 
-FltPnt.define :C51_BCD_DOUBLE,C51BCDFormat,
+Flt.define :C51_BCD_DOUBLE,C51BCDFormat,
   :fields=>[:exponent_sign, 2, :significand,10],
   :endiannes=>:big_endian,
   :bias=>64, :bias_mode=>:fractional_significand,
   :zero_encoded_exp=>0, :min_encoded_exp=>0,:max_encoded_exp=>127
 
-FltPnt.define :C51_BCD_LONG_DOUBLE, C51BCDFormat,
+Flt.define :C51_BCD_LONG_DOUBLE, C51BCDFormat,
   :fields=>[:exponent_sign, 2, :significand,12],
   :endiannes=>:big_endian,
   :bias=>64, :bias_mode=>:fractional_significand,
@@ -623,7 +625,7 @@ FltPnt.define :C51_BCD_LONG_DOUBLE, C51BCDFormat,
 
 
 # double-double format as used in the PowerPC
-FltPnt.define :IEEE_DOUBLE_DOUBLE, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
+Flt.define :IEEE_DOUBLE_DOUBLE, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
 
  
 

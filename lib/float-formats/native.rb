@@ -6,7 +6,7 @@ require 'flt'
 require 'flt/float'
 require 'float-formats/bytes'
 
-module FltPnt
+module Flt
 
 module_function
 

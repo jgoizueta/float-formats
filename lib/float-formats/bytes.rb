@@ -7,7 +7,7 @@ require 'nio/sugar'
 require 'enumerator'
 require 'delegate'
 
-module FltPnt
+module Flt
 
 class Bits
   # Define a bit string given the number of bits and

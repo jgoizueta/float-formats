@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
 require 'yaml'
 
-include FltPnt
+include Flt
 
 class TestFloatFormats < Test::Unit::TestCase
 

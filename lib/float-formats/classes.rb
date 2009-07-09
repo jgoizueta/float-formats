@@ -41,12 +41,12 @@ require 'flt'
 require 'enumerator'
 require 'float-formats/bytes.rb'
 
-module FltPnt
+module Flt
 
 # General Floating Point Format Base class
 class FormatBase
-  include FltPnt # make FltPnt module functions available to instance methods
-  extend FltPnt  # make FltPnt module functions available to class methods
+  include Flt # make Flt module functions available to instance methods
+  extend Flt  # make Flt module functions available to class methods
 
   def initialize(*args)
     if args.size == 3 || args.size==4 # && args.first.kind_of?(Integer) && args[1].kind_of?(Integer) && args.last.kind_of?(Integer)
@@ -152,6 +152,8 @@ class FormatBase
       split
     elsif Symbol===number_class
       send "as_#{number_class}"
+    elsif number_class.is_a?(Flt::Num)  && number_class.radix == fptype.radix
+      self.as_num
     else # assume number_class.ancestors.include?(Numeric)
         fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
         v = nio_write(fmt)
@@ -298,14 +300,19 @@ class FormatBase
       if this_normal && other_normal
         return this_exponent <=> other_exponent
       else
+        min_exp = fptype.radix_min_exp(:integral_significand)
+        max_exp = fptype.radix_max_exp(:integral_significand)
+
         while this_significand<mns && this_exponent>min_exp
           this_exponent -= 1
-          this_significand *= radix
+          this_significand *= fptype.radix
         end
+
         while other_significand<mns && other_exponent>min_exp
           other_exponent -= 1
-          other_significand *= radix
+          other_significand *= fptype.radix
         end
+
         if this_exponent==other_exponent
           return this_significand <=> other_significand
         else
@@ -555,6 +562,27 @@ class FormatBase
     end
   end
 
+  def self.num_class
+    Num[self.radix]
+  end
+
+  def self.context
+    num_class::Context.new(
+      :precision=>significand_digits,
+      :emin=>radix_min_exp(:normalized_significand),
+      :emax=>radix_max_exp(:normalized_significand),
+      :rounding=>@round || :half_even
+    )
+  end
+
+  def as_num
+    fptype.num_class.Num(*split)
+  end
+
+  def self.num(x)
+    new *x.split
+  end
+
   # Endianness of the format (:little_endian, :big_endian or :little_big_endian)
   def self.endianness
     @endianness
@@ -708,6 +736,7 @@ class FormatBase
       return min_value
     end
     return_value sign,m,e
+
   end
 
   # This is the maximum relative error corresponding to 1/2 ulp:
@@ -776,8 +805,7 @@ class FormatBase
        if neutral.base==radix
          s = +1
        else
-         # TODO : generate a context compatible with this format
-         s,f,e = Flt::Support::Clinger.algM(context, f,e,rounding,neutral.base).split
+         s,f,e = Flt::Support::Clinger.algM(context, f, e, rounding, neutral.base).first.split
        end
        if neutral.sign=='-'
          s = -s
@@ -792,8 +820,12 @@ class FormatBase
     bytes Bytes.from_hex(hex)
   end
   def self.number(v, mode=:approx)
-    fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
-    nio_read(v.nio_write(fmt),fmt)
+    if v.is_a?(Flt::Num) && v.num_class.radix==self.radix
+      self.num(v)
+    else
+      fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
+      nio_read(v.nio_write(fmt),fmt)
+    end
   end
   def self.text(txt, fmt=Nio::Fmt.default) # ?
     nio_read(txt,fmt)
@@ -1666,24 +1698,14 @@ end
   class FormatBase
     # Type used internally for arithmetic operations.
     def self.arithmetic_type
-      case radix
-      when 10
-        Flt::DecNum
-      when 2
-        Flt::BinNum
-      else
-        Rational
-      end
+      num_class
+      # Rational
     end
     # Set up the arithmetic environment; the arithmetic type is passed to the block.
     def self.arithmetic
-      case at=arithmetic_type
-      when Flt::Num
-        at.context(:precision=>prec) do |context|
-          context.precision = significand_digits
-          context.rounding = @round || :half_even
-          context.emax = radix_max_exp(:normalized_significand)
-          context.emin = radix_min_exp(:normalized_significand)
+      at = arithmetic_type
+      if at.ancestors.include?(Flt::Num)
+        at.context(self.context) do
           yield at
         end
       else
@@ -1703,7 +1725,7 @@ end
 # by adjusting the sign of the second number. This is enabled by the
 # :extra_prec option.
 # For example, the "double double" format used in PowerPC is this
-#   FltPnt.define :DoubleDouble, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
+#   Flt.define :DoubleDouble, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
 # Although this has a fixed 107 bits precision, the format as used in
 # the PowerPC can have greater precision for specific values (by having
 # greater separation between the exponents of both halves)
@@ -1882,7 +1904,7 @@ end
 module_function
 
 def define(*arguments)
-  raise "Invalid number of arguments for FltPnt definitions." if arguments.size<2 || arguments.size>3
+  raise "Invalid number of arguments for Flt definitions." if arguments.size<2 || arguments.size>3
   if arguments.first.kind_of?(Class)
     base,name,parameters = arguments
   elsif arguments[1].kind_of?(Class)
@@ -1891,11 +1913,11 @@ def define(*arguments)
     name,parameters = arguments
     base = parameters[:base] || FormatBase
   end
-  FltPnt.const_set name, cls=Class.new(base)
+  Flt.const_set name, cls=Class.new(base)
   cls.define parameters
   constructor = lambda { |*args| cls.new(*args) }
-  FltPnt.send :define_method,name,constructor
-  FltPnt.send :module_function, name
+  Flt.send :define_method,name,constructor
+  Flt.send :module_function, name
   yield cls if block_given?
 end
 

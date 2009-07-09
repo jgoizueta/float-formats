@@ -153,6 +153,6 @@ require 'rubygems'
 
 require File.dirname(__FILE__) + '/lib/float-formats'
 require File.dirname(__FILE__) + '/lib/float-formats/native.rb'
-include FltPnt
+include Flt
 
 puts expand_text(File.read(ARGV.shift),"[")

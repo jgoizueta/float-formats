@@ -31,7 +31,7 @@ The latest version of Float-Formats and its source code can be downloaded from
 
 =Predefined formats
 
-A number of common formats are defined as constants in the FltPnt module:
+A number of common formats are defined as constants in the Flt module:
 
 ==IEEE 754r
 <b>binary</b> floating point representations in little endian order:
@@ -85,7 +85,7 @@ and classic HP 10 digit calculators: (HP_CLASSIC).
 
   require 'rubygems'
   require 'float-formats'
-  include FltPnt
+  include Flt
 
 The properties of the floating point formats can be queried (which can be
 used for tables or reports comparing different formats):
@@ -168,7 +168,7 @@ is somewhat intrusive; it adds methods to Float)
 that useful to explore or manipulate the native Float format.
   
   require 'float-formats/native'
-  include FltPnt
+  include Flt
 
   puts float_shortest_dec(1.0.next)                  -> 1.0000000000000002
   puts float_dec(1.0.prev)                           -> 0.99999999999999988897769753748434595763683319091796875
@@ -194,7 +194,7 @@ For example, here we define a binary floating point 32-bits format with
 We'll use excess notation with bias 127 for the exponent, interpreting
 the significand bits as a fractional number with the radix point after
 the first bit, which will be hidden:
-  FltPnt.define(:MY_FP, BinaryFormat,
+  Flt.define(:MY_FP, BinaryFormat,
     :fields=>[:significand,22,:exponent,9,:sign,1],
     :bias=>127, :bias_mode=>:normalized_significand,
     :hidden_bit=>true)

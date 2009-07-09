@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
 require 'yaml'
 
-include FltPnt
+include Flt
 
 def test_bits
   assert_equal 11, Bits.new(11).size
