@@ -149,9 +149,9 @@ class TestFloatFormats < Test::Unit::TestCase
   def test_half
     assert_equal "3c00", IEEE_binary16_BE.text('1').as_hex.downcase
     assert_equal "7bff", IEEE_binary16_BE.max_value.as_hex.downcase
-    assert_equal '65504', IEEE_binary16_BE.max_value.as_text
+    assert_equal '65504', IEEE_binary16_BE.max_value.as_text(Nio::Fmt.approx_mode(:exact))
     assert_equal "0400", IEEE_binary16_BE.min_normalized_value.as_hex.downcase
-    assert_equal "6.103515625E-5", IEEE_binary16_BE.min_normalized_value.as_text
+    assert_equal "6.103515625E-5", IEEE_binary16_BE.min_normalized_value.as_text(Nio::Fmt.approx_mode(:exact))
     assert_equal "0001", IEEE_binary16_BE.min_value.as_hex.downcase
     assert_equal "5.9604644775390625E-8", IEEE_binary16_BE.min_value.as_text(Nio::Fmt.approx_mode(:exact))
     assert_equal "0000", IEEE_binary16_BE.text('0').as_hex.downcase
@@ -179,7 +179,7 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal(-307, IEEE_DOUBLE_DOUBLE.decimal_min_exp)
     assert_equal 1023, IEEE_DOUBLE_DOUBLE.radix_max_exp
     assert_equal(-1022, IEEE_DOUBLE_DOUBLE.radix_min_exp)
-    fmt = Nio::Fmt.prec(2)
+    fmt = Nio::Fmt.prec(2).approx_mode(:exact).approx_mode(:exact)
     assert_equal '1.8E308', IEEE_DOUBLE_DOUBLE.max_value.as_text(fmt)
     assert_equal '2.2E-308', IEEE_DOUBLE_DOUBLE.min_normalized_value.as_text(fmt)
     assert_equal '4.9E-324', IEEE_DOUBLE_DOUBLE.half.min_value.as_text(fmt)
