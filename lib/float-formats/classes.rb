@@ -802,13 +802,10 @@ class FormatBase
        when :truncate
          rounding = :down
        end
-       if neutral.base==radix
-         s = +1
-       else
-         s,f,e = Flt::Support::Clinger.algM(context, f, e, rounding, neutral.base).first.split
-       end
-       if neutral.sign=='-'
-         s = -s
+       s = (neutral.sign=='-') ? -1 : +1
+       if neutral.base!=radix
+         reader = Flt::Support::Reader.new
+         s,f,e = reader.read(context, rounding, s, f, e, neutral.base).split
        end
        return_value s,f,e
 

@@ -1,6 +1,5 @@
 # Float-Formats
 # Support for binary data representations
-
 require 'nio'
 require 'nio/sugar'
 

@@ -153,7 +153,7 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal "0400", IEEE_binary16_BE.min_normalized_value.as_hex.downcase
     assert_equal "6.103515625E-5", IEEE_binary16_BE.min_normalized_value.as_text
     assert_equal "0001", IEEE_binary16_BE.min_value.as_hex.downcase
-    assert_equal "5.9604644775390625E-8", IEEE_binary16_BE.min_value.as_text
+    assert_equal "5.9604644775390625E-8", IEEE_binary16_BE.min_value.as_text(Nio::Fmt.approx_mode(:exact))
     assert_equal "0000", IEEE_binary16_BE.text('0').as_hex.downcase
     assert_equal "8000", IEEE_binary16_BE.text('-0').as_hex.downcase
     assert_equal "7c00".tr(' ',''), IEEE_binary16_BE.infinity.as_hex.downcase
