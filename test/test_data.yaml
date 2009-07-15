@@ -1003,7 +1003,7 @@ IEEE_DEC128:
   - min_normalized_value: 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - max_value: 77 FF CF F3 FC FF 3F CF F3 FC FF 3F CF F3 FC FF
   - epsilon: 25 F7 80 00 00 00 00 00 00 00 00 00 00 00 00 00
-  - strict_epsilon: 25 F7 80 00 00 00 00 00 00 00 00 00 00 00 00 00
+  - strict_epsilon: 35 F7 40 00 00 00 00 00 00 00 00 00 00 00 00 01
   numerals: 
   - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -1297,7 +1297,7 @@ IEEE_DEC64:
   - min_normalized_value: 04 00 00 00 00 00 00 00
   - max_value: 77 FC FF 3F CF F3 FC FF
   - epsilon: 25 C0 00 00 00 00 00 00
-  - strict_epsilon: 25 C0 00 00 00 00 00 00
+  - strict_epsilon: 35 BC 00 00 00 00 00 01
   numerals: 
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00
@@ -1395,7 +1395,7 @@ IEEE_DEC32:
   - min_normalized_value: 04 00 00 00
   - max_value: 77 F3 FC FF
   - epsilon: 25 90 00 00
-  - strict_epsilon: 25 90 00 00
+  - strict_epsilon: 35 80 00 01
   numerals: 
   - "+0": 00 00 00 00
   - "-0": 80 00 00 00
