@@ -576,7 +576,9 @@ class FormatBase
   end
 
   def as_num
-    fptype.num_class.Num(*split)
+    s,c,e = split
+    e = 0 if e == :zero
+    fptype.num_class.Num(s,c,e)
   end
 
   def self.num(x)
