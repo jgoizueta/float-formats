@@ -167,6 +167,7 @@ class Bytes < DelegateClass(String)
   # Reverse the order of the bits in each byte.
   def reverse_byte_bits!
     @bytes = @bytes.unpack('b*').pack("B*")[0]
+    __setobj__ @bytes
     self
   end
   def reverse_byte_bits
@@ -181,6 +182,7 @@ class Bytes < DelegateClass(String)
       w << ((b >> 4)|((b&0xF)<<4))
     end
     @bytes = w
+    __setobj__ @bytes
     self
   end
   def reverse_byte_nibbles
@@ -195,6 +197,7 @@ class Bytes < DelegateClass(String)
         w << @bytes[i]
       end
       @bytes = w  
+      __setobj__ @bytes
       self
   end
   def reverse_byte_pairs
