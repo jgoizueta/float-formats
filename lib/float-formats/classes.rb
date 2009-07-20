@@ -806,7 +806,7 @@ class FormatBase
        end
        s = (neutral.sign=='-') ? -1 : +1
        if neutral.base!=radix
-         reader = Flt::Support::Reader.new
+         reader = Flt::Support::Reader.new(:mode=>:fixed)
          s,f,e = reader.read(context, rounding, s, f, e, neutral.base).split
        end
        return_value s,f,e
