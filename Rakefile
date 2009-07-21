@@ -15,6 +15,8 @@ require 'float-formats/version'
 
 task :default => 'spec:run'
 
+depend_on 'flt', '1.0.0'
+depend_on 'nio', '0.2.4'
 
 PROJ.name = 'float-formats'
 PROJ.description = "Floating-Point Formats"
