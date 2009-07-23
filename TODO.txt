@@ -1,15 +1,23 @@
 * refactoring: adapt documentation
-* next_after method,
+* next_after method
 * research if the double rounding that's happening in nio_read_neutral may be a real problem
   (the neutral is first rounded to decimal_digits_necessary, then to a FP datum)
 * rename :denormal to :subnormal ? etc.
 * rename as_ methods removing the as_; rename "as" to "to"; consider better names for number (numeric?), text, splitted/split
-* classes.rb :
-  - there's too many similar     to_integral_sign_significand_exponent/from_integral_sign_significand_exponent
-    methods; some refactoring is in order
 * define small DSL to define formats
 * rename min_normalized_value to minimum_normal, etc. (following Flt style):
-      min_normalized_value -> minimum_normal
-      max_value            -> maximum_finite
-      min_value            -> minimum_nonzero
-* rename next, prev to next_plus, next_minus?
+* Consider unifying the Format / Num nomenclature:
+    next vs. next_plus
+    prev vs. next_minus
+    neg vs. minus
+    min_normalized_value vs. minimum_normal
+    max_value vs. maximum_finite
+    min_value vs. minimum_nonzero
+    radix_min_exp(:scientific_significand) vs. emin
+    radix_max_exp(:scientific_significand) vs. emax
+    radix_min_exp(:integral_significand) vs. etiny
+    radix_max_exp(:integral_significand) vs. etop
+    significand vs. coeffient
+    minimum_normalized_integral_significand vs. minimum_normalized_coefficient
+    maximum_integral_significand vs. maximum_coefficient 
+    radix_power -- int_radix_power
