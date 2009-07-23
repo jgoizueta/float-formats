@@ -129,10 +129,10 @@ name which can build a floating-point value from a variety of parameters:
     puts IEEE_binary80(+1,123,-2).as_hex(true)       -> 00 00 00 00 00 00 00 F6 03 40
     puts IEEE_decimal32('1.234').as_hex(true)        -> 22 20 05 34
 
-A floating-point encoded value can be converted to useful formats with the as_ methods:
-* <tt>to_integral_sign_significand_exponent</tt>
-* <tt>to_fmt</tt>
-* <tt>to_number</tt>
+A floating-point encoded value can be converted to useful formats with the as_ and similar methods:
+* <tt>split</tt> (split as integral sign, significand, exponent)
+* <tt>as_text</tt>
+* <tt>as(num_class)</tt>
  
     v = IEEE_binary80.bytes(File.read('binary_file.dat'))
     puts v.as(Rational)                              -> 14757395258967641293/147573952589676412928
