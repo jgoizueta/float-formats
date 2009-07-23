@@ -2,9 +2,9 @@
 
 *  New redefined interface
 
-*  to/from_integral_sign_significand_exponent methods now
-   have the sign as an integer +1,-1 rather than as the
-   internal representation 0,1,etc.
+*  The sign in splitted form (sign, significand, exponent) now
+   have the sign as an integer +1,-1 rather than using the
+   internal representation (0,1,etc.)
 
 *  Arithmetic is possible on FP values
 
