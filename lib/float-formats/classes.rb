@@ -22,7 +22,7 @@
 #     (and so this is also used by Ruby's Math.frexp and the constants defined in Float)
 #   - Don Knuth's The Art of Computer Programming, Vol.2
 #   - BigDecimal#split
-# * normalized significand: the radix point is after the first digit (after the hidden bit if present)
+# * scientific significand: the radix point is after the first digit (after the hidden bit if present)
 #   the value v of a normalized significand is 1<=v<r
 #   Examples:
 #   - IEEE 754 definitions
@@ -338,7 +338,7 @@ class FormatBase
   # [<tt>:bias_mode</tt>] This defines how the significand is interpreted:
   # * <tt>:fractional_significand</tt> The radix point is before the most significant
   #   digit of the significand (including a hidden bit if there's one).
-  # * <tt>:normalized_significand</tt> The radix point is after the most significant
+  # * <tt>:scientific_significand</tt> The radix point is after the most significant
   #   digit of the significand (including a hidden bit if there's one).
   # * <tt>:integral_significand</tt> The significand is assumed to be an integer, i.e.
   #   the radix point is after the least significant digit.
@@ -408,29 +408,29 @@ class FormatBase
 
     if @exponent_mode==:excess
       @bias = params[:bias] || (@exponent_radix**(@fields[:exponent]-1)-1)
-      @bias_mode = params[:bias_mode] || :normalized_significand
+      @bias_mode = params[:bias_mode] || :scientific_significand
       @min_exp = params[:min_exp]
       @max_exp = params[:max_exp]
       case @bias_mode
         when :integral_significand
           @integral_bias = @bias
           @fractional_bias = @integral_bias-@significand_digits
-          @normalized_bias = @fractional_bias+1
+          @scientific_bias = @fractional_bias+1
         when :fractional_significand
           @fractional_bias = @bias
           @integral_bias = @fractional_bias+@significand_digits
-          @normalized_bias = @fractional_bias+1
+          @scientific_bias = @fractional_bias+1
           @min_exp -= @significand_digits if @min_exp
           @max_exp -= @significand_digits if @max_exp
-        when :normalized_significand
-          @normalized_bias = @bias
-          @fractional_bias = @normalized_bias-1
+        when :scientific_significand
+          @scientific_bias = @bias
+          @fractional_bias = @scientific_bias-1
           @integral_bias = @fractional_bias+@significand_digits
           @min_exp -= @significand_digits-1 if @min_exp
           @max_exp -= @significand_digits-1 if @max_exp
       end
     else
-      #@bias_mode = :normalized_significand
+      #@bias_mode = :scientific_significand
       @min_exp = params[:min_exp] || (-(@exponent_radix**@exponent_digits)/2 + 1)
       @max_exp = params[:max_exp] || ((@exponent_radix**@exponent_digits)/2 - 1)
     end
@@ -444,15 +444,15 @@ class FormatBase
       @integral_min_exp = @min_exp
       @fractional_max_exp = @max_exp+@significand_digits
       @fractional_min_exp = @min_exp+@significand_digits
-      @normalized_max_exp = @max_exp+@significand_digits-1
-      @normalized_min_exp = @min_exp+@significand_digits-1
+      @scientific_max_exp = @max_exp+@significand_digits-1
+      @scientific_min_exp = @min_exp+@significand_digits-1
     else
       @integral_max_exp = @max_exp - (@significand_digits-1)
       @integral_min_exp = @min_exp - (@significand_digits-1)
       @fractional_max_exp = @max_exp+1
       @fractional_min_exp = @min_exp+1
-      @normalized_max_exp = @max_exp
-      @normalized_min_exp = @min_exp
+      @scientific_max_exp = @max_exp
+      @scientific_min_exp = @min_exp
     end
 
     @round = params[:round] # || :half_even
@@ -540,25 +540,25 @@ class FormatBase
   end
 
   # Maximum exponent
-  def self.radix_max_exp(significand_mode=:normalized_significand)
+  def self.radix_max_exp(significand_mode = :scientific_significand)
     case significand_mode
       when :integral_significand
         @integral_max_exp
       when :fractional_significand
         @fractional_max_exp
-      when :normalized_significand
-        @normalized_max_exp
+      when :scientific_significand
+        @scientific_max_exp
     end
   end
   # Mminimum exponent
-  def self.radix_min_exp(significand_mode=:normalized_significand)
+  def self.radix_min_exp(significand_mode = :scientific_significand)
     case significand_mode
       when :integral_significand
         @integral_min_exp
       when :fractional_significand
         @fractional_min_exp
-      when :normalized_significand
-        @normalized_min_exp
+      when :scientific_significand
+        @scientific_min_exp
     end
   end
 
@@ -569,8 +569,8 @@ class FormatBase
   def self.context
     num_class::Context.new(
       :precision=>significand_digits,
-      :emin=>radix_min_exp(:normalized_significand),
-      :emax=>radix_max_exp(:normalized_significand),
+      :emin=>radix_min_exp(:scientific_significand),
+      :emax=>radix_max_exp(:scientific_significand),
       :rounding=>@round || :half_even
     )
   end
@@ -598,14 +598,14 @@ class FormatBase
   # Exponent bias for excess notation exponent encoding
   # The argument defines the interpretation of the significand and so
   # determines the actual bias value.
-  def self.bias(significand_mode=:normalized_significand)
+  def self.bias(significand_mode = :scientific_significand)
     case significand_mode
       when :integral_significand
         @integral_bias
       when :fractional_significand
         @fractional_bias
-      when :normalized_significand
-        @normalized_bias
+      when :scientific_significand
+        @scientific_bias
     end
   end
 
@@ -1004,8 +1004,8 @@ class FormatBase
           e -= @integral_bias
         when :fractional_significand
           e -= @fractional_bias
-        when :normalized_significand
-          e -= @normalized_bias
+        when :scientific_significand
+          e -= @scientific_bias
         end
     when :radix_complement
         n = @fields[:exponent]
@@ -1016,7 +1016,7 @@ class FormatBase
           e -= (significand_digits-1)
         when :fractional_significand
           e += 1
-        when :normalized_significand
+        when :scientific_significand
         end
     end
     e
@@ -1029,8 +1029,8 @@ class FormatBase
         e += @integral_bias
       when :fractional_significand
         e += @fractional_bias
-      when :normalized_significand
-        e += @normalized_bias
+      when :scientific_significand
+        e += @scientific_bias
       end
     when :radix_complement
       case mode
@@ -1038,7 +1038,7 @@ class FormatBase
         e += (significand_digits-1)
       when :fractional_significand
         e -= 1
-      when :normalized_significand
+      when :scientific_significand
       end
       n = @fields[:exponent]
       v = radix_power(n)
@@ -1076,10 +1076,10 @@ class DecimalFormatBase < FormatBase
     significand_digits
   end
   def self.decimal_max_exp
-    radix_max_exp(:normalized_significand)
+    radix_max_exp(:scientific_significand)
   end
   def self.decimal_min_exp
-    radix_min_exp(:normalized_significand)
+    radix_min_exp(:scientific_significand)
   end
   # :startdoc:
 end
@@ -1246,7 +1246,7 @@ class DPDFormat < DecimalFormatBase
 
     if params[:bias].nil?
 
-      params[:bias_mode] = :normalized_significand
+      params[:bias_mode] = :scientific_significand
 
       @exp_limit = 3*(2**@internal_fields[:exponent_continuation])-1
 

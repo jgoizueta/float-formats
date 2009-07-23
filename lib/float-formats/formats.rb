@@ -25,7 +25,7 @@ module IEEE
     Flt.define(name,{
       :base=>BinaryFormat,
       :fields=>[:significand,significand_bits,:exponent,exponent_bits,:sign,1], 
-      :bias=>2**(exponent_bits-1)-1, :bias_mode=>:normalized_significand,
+      :bias=>2**(exponent_bits-1)-1, :bias_mode=>:scientific_significand,
       :hidden_bit=>true,
       :endianness=>:little_endian, :round=>:half_even,
       :gradual_underflow=>true, :infinity=>true, :nan=>true
@@ -142,14 +142,14 @@ Flt.define BinaryFormat, :XS128,
                
 Flt.define BinaryFormat, :XS256,
   :fields=>[:significand,22,:exponent,9,:sign,1],
-  :bias=>256, :bias_mode=>:normalized_significand,
+  :bias=>256, :bias_mode=>:scientific_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
   :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
 Flt.define :XS256_DOUBLE, BinaryFormat,
   :fields=>[:significand,54,:exponent,9,:sign,1],
-  :bias=>256, :bias_mode=>:normalized_significand,
+  :bias=>256, :bias_mode=>:scientific_significand,
   :hidden_bit=>true, :min_encoded_exp=>0,
   :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
@@ -403,7 +403,7 @@ Flt.define :UNIVAC_DOUBLE, BinaryFormat,
 # :stopdoc: # the next definition is not handled correctly by RDoc
 Flt.define(:APPLE_INSANE,BinaryFormat,
   :fields=>[:significand,23,:sign,1,:exponent,8],
-  :bias=>128, :bias_mode=>:normalized_significand,
+  :bias=>128, :bias_mode=>:scientific_significand,
   :hidden_bit=>false, :min_encoded_exp=>0,
   :neg_mode=>:radix_complement_significand,
   :endianness=>:big_endian,
@@ -443,7 +443,7 @@ APPLE = APPLE_INSANE
 Flt.define(:WANG2200,BCDFormat,
   :fields=>[:significand,13,:exponent,2,:signs,1],
   :endiannes=>:big_endian,
-  :bias_mode=>:normalized_significand,
+  :bias_mode=>:scientific_significand,
   :min_exp=>-99, :max_exp=>99,
   :zero_encoded_exp=>0, :min_encoded_exp=>0
 ) { |wang2200|
