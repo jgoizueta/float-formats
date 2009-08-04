@@ -32,20 +32,20 @@ end
 
 # decompose a float into a signed integer significand and exponent (base Float::RADIX)
 def float_to_integral_significand_exponent(x)
-  x.to_int_scale
+  Flt.Num(x).to_int_scale
 end
 
 # compose float from significand and exponent
 def float_from_integral_significand_exponent(s,e)
-  Float.Num(s,e)
+  Flt.NumClass(Float).Num(s,e)
 end
 
 def float_to_integral_sign_significand_exponent(x)
-  x.split
+  Flt.Num(x).split
 end
 
 def float_from_integral_sign_significand_exponent(sgn,s,e)
-  Float.Num(sgn,s,e)
+  Flt.NumClass(Float).Num(sgn,s,e)
 end
 
 # convert a float to C99's hexadecimal notation
