@@ -154,7 +154,7 @@ class FormatBase
       send "as_#{number_class}"
     elsif number_class.is_a?(Flt::Num)  && number_class.radix == fptype.radix
       self.as_num
-    else # assume number_class.ancestors.include?(Numeric)
+    else # assume number_class.ancestors.include?(Numeric) (number_class < Numeric)
         fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
         v = nio_write(fmt)
         number_class.nio_read(v,fmt)
