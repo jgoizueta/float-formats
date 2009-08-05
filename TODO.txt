@@ -3,7 +3,7 @@
 * research if the double rounding that's happening in nio_read_neutral may be a real problem
   (the neutral is first rounded to decimal_digits_necessary, then to a FP datum)
 * rename :denormal to :subnormal ? etc.
-* rename as_ methods removing the as_; rename "as" to "to"; consider better names for number (numeric?), text, splitted/split
+* rename as_ methods; consider better names for number (numeric?), text, splitted/split
 * define small DSL to define formats
 * rename min_normalized_value to minimum_normal, etc. (following Flt style):
 * Consider unifying the Format / Num nomenclature:

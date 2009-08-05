@@ -122,26 +122,26 @@ name which can build a floating-point value from a variety of parameters:
 * From a number : converts a numerical value
   to a floating point representation.
   
-    File.open('binary_file.dat','wb'){|f| f.write IEEE_binary80('0.1').as_bytes}
+    File.open('binary_file.dat','wb'){|f| f.write IEEE_binary80('0.1').to_bytes}
     
-    puts IEEE_binary80('0.1').as_hex(true)           -> CD CC CC CC CC CC CC CC FB 3F
-    puts IEEE_binary80(0.1).as_hex(true)             -> CD CC CC CC CC CC CC CC FB 3F
-    puts IEEE_binary80(+1,123,-2).as_hex(true)       -> 00 00 00 00 00 00 00 F6 03 40
-    puts IEEE_decimal32('1.234').as_hex(true)        -> 22 20 05 34
+    puts IEEE_binary80('0.1').to_hex(true)           -> CD CC CC CC CC CC CC CC FB 3F
+    puts IEEE_binary80(0.1).to_hex(true)             -> CD CC CC CC CC CC CC CC FB 3F
+    puts IEEE_binary80(+1,123,-2).to_hex(true)       -> 00 00 00 00 00 00 00 F6 03 40
+    puts IEEE_decimal32('1.234').to_hex(true)        -> 22 20 05 34
 
-A floating-point encoded value can be converted to useful formats with the as_ and similar methods:
+A floating-point encoded value can be converted to useful formats with the to_ and similar methods:
 * <tt>split</tt> (split as integral sign, significand, exponent)
-* <tt>as_text</tt>
-* <tt>as(num_class)</tt>
+* <tt>to_text</tt>
+* <tt>to(num_class)</tt>
  
     v = IEEE_binary80.bytes(File.read('binary_file.dat'))
-    puts v.as(Rational)                              -> 14757395258967641293/147573952589676412928
+    puts v.to(Rational)                              -> 14757395258967641293/147573952589676412928
     puts v.split.inspect                             -> [1, 14757395258967641293, -67]
-    puts v.as_text                                   -> 0.1000000000000000000013552527156068805425093160010874271392822265625
-    puts v.as(Float)                                 -> 0.1
-    puts v.as_hex                                    -> CDCCCCCCCCCCCCCCFB3F
-    puts v.as_bits                                   -> 302153978578547713559757
-    puts v.as_bits_text(16)                          -> 3ffbcccccccccccccccd
+    puts v.to_text                                   -> 0.1000000000000000000013552527156068805425093160010874271392822265625
+    puts v.to(Float)                                 -> 0.1
+    puts v.to_hex                                    -> CDCCCCCCCCCCCCCCFB3F
+    puts v.to_bits                                   -> 302153978578547713559757
+    puts v.to_bits_text(16)                          -> 3ffbcccccccccccccccd
     
 ==Special values:  
 
@@ -150,10 +150,10 @@ Let's show the decimal expression of some interesting values using
 
   fmt = Nio::Fmt.mode(:gen,3)  
 
-  puts IEEE_SINGLE.min_value.as_text(fmt)             -> 1.4E-45
-  puts IEEE_SINGLE.min_normalized_value.as_text(fmt)  -> 1.18E-38
-  puts IEEE_SINGLE.max_value.as_text(fmt)             -> 3.4E38
-  puts IEEE_SINGLE.epsilon.as_text(fmt)               -> 1.19E-7
+  puts IEEE_SINGLE.min_value.to_text(fmt)             -> 1.4E-45
+  puts IEEE_SINGLE.min_normalized_value.to_text(fmt)  -> 1.18E-38
+  puts IEEE_SINGLE.max_value.to_text(fmt)             -> 3.4E38
+  puts IEEE_SINGLE.epsilon.to_text(fmt)               -> 1.19E-7
 
 ==Convert between formats
 
@@ -201,8 +201,8 @@ the first bit, which will be hidden:
 Now we can encode values in this format, decode values, convet to other
 formats, query it's range, etc:
 
-     puts MY_FP('0.1').as_bits_text(16)              -> 1ee66666
-     puts MY_FP.max_value.as_text(Nio::Fmt.prec(3))   -> 7.88E115
+     puts MY_FP('0.1').to_bits_text(16)              -> 1ee66666
+     puts MY_FP.max_value.to_text(Nio::Fmt.prec(3))   -> 7.88E115
   
 You can look at float-formats/formats.rb to see how the built-in formats
 are defined.

@@ -127,48 +127,48 @@ class FormatBase
     end
     v.nio_write_neutral(fmt)
   end
-  def as_text(fmt=Nio::Fmt.default)
+  def to_text(fmt=Nio::Fmt.default)
     nio_write(fmt)
   end
-  def as_bytes
+  def to_bytes
     fptype.pack(@sign,@significand,@exponent)
   end
-  def as_hex(sep_bytes=false)
+  def to_hex(sep_bytes=false)
     if (fptype.total_bits % 8)==0
-      as_bytes.to_hex(sep_bytes)
+      to_bytes.to_hex(sep_bytes)
     else
-      as_bits.to_hex
+      to_bits.to_hex
     end
   end
-  def as(number_class, mode=:approx)
+  def to(number_class, mode=:approx)
     if number_class==Bytes
-      as_bytes
+      to_bytes
     elsif number_class==String
       mode = Nio::Fmt.default if mode==:approx
-      as_text(mode)
+      to_text(mode)
     elsif Nio::Fmt===number_class
-      as_text(number_class)
+      to_text(number_class)
     elsif number_class==Array
       split
     elsif Symbol===number_class
-      send "as_#{number_class}"
+      send "to_#{number_class}"
     elsif number_class.is_a?(Flt::Num)  && number_class.radix == fptype.radix
-      self.as_num
+      self.to_num
     else # assume number_class.ancestors.include?(Numeric) (number_class < Numeric)
         fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
         v = nio_write(fmt)
         number_class.nio_read(v,fmt)
     end
   end
-  def as_bits
-    as_bytes.to_bits(fptype.endianness,false,fptype.total_bits)
+  def to_bits
+    to_bytes.to_bits(fptype.endianness,false,fptype.total_bits)
   end
   # Returns the encoded integral value of a floating point number
   # as a text representation in a given base.
   # Accepts either a Value or a byte String.
-  def as_bits_text(base)
-    as_bits.to_s(base)
-    #i = as_bits
+  def to_bits_text(base)
+    to_bits.to_s(base)
+    #i = to_bits
     #fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
     #if [2,4,8,16].include?(base)
     #  n = (Math.log(base)/Math.log(2)).round.to_i
@@ -575,7 +575,7 @@ class FormatBase
     )
   end
 
-  def as_num
+  def to_num
     s,c,e = split
     e = 0 if e == :zero
     fptype.num_class.Num(s,c,e)
@@ -659,7 +659,7 @@ class FormatBase
   def self.input_bytes(v)
     if v.kind_of?(FormatBase)
       raise "Invalid f.p. format" if v.fp_format!=self
-      v = v.as_bytes
+      v = v.to_bytes
     elsif !v.kind_of?(Bytes)
       v = Bytes.new(v)
     end
@@ -1653,7 +1653,7 @@ end
     # TODO: coercion
     if v.fptype==fptype
       fptype.arithmetic do |t|
-        x = as(t,:exact) + v.as(t,:exact)
+        x = to(t,:exact) + v.to(t,:exact)
         fptype.number(x,:exact)
       end
     else
@@ -1664,7 +1664,7 @@ end
     # TODO: coercion
     if v.fptype==fptype
       fptype.arithmetic do |t|
-        x = as(t,:exact) / v.as(t,:exact)
+        x = to(t,:exact) / v.to(t,:exact)
         fptype.number(x,:exact)
       end
     else
@@ -1675,7 +1675,7 @@ end
     # TODO: coercion
     if v.fptype==fptype
       fptype.arithmetic do |t|
-        x = as(t,:exact) - v.as(t,:exact)
+        x = to(t,:exact) - v.to(t,:exact)
         fptype.number(x,:exact)
       end
     else
@@ -1686,7 +1686,7 @@ end
     # TODO: coercion
     if v.fptype==fptype
       fptype.arithmetic do |t|
-        x = as(t,:exact) * v.as(t,:exact)
+        x = to(t,:exact) * v.to(t,:exact)
         fptype.number(x,:exact)
       end
     else
@@ -1795,7 +1795,7 @@ class DoubleFormat < FormatBase
   end
 
   def split_halfs
-    b = as_bytes
+    b = to_bytes
     sz = fptype.half.total_bytes
     b1 = b[0...sz]
     b2 = b[sz..-1]
@@ -1803,7 +1803,7 @@ class DoubleFormat < FormatBase
   end
 
   def self.join_halfs(h1,h2)
-    self.bytes(h1.as_bytes+h2.as_bytes)
+    self.bytes(h1.to_bytes+h2.to_bytes)
   end
 
   def self.total_nibbles
