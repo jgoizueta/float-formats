@@ -417,7 +417,7 @@ Flt.define(:APPLE_INSANE,BinaryFormat,
     #puts "before: #{s} #{f.to_s(16)}"
     f,e = super
     s = (s+1)%2
-    #print "neg #{f.to_s(16)}"
+    #print "minus #{f.to_s(16)}"
     if e>@zero_encoded_exp && f==0
       f = 1<<(significand_digits-1)
       e += 1

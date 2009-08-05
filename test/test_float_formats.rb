@@ -42,8 +42,8 @@ class TestFloatFormats < Test::Unit::TestCase
         t = eval(tn)
         u = t.from_text('1')
         mu = t.from_text('-1')
-        assert u.next_plus.neg == mu.next_minus,"#{tn}: -nxt 1 == prv -1"
-        assert mu.next_plus == u.next_minus.neg,"#{tn}: nxt -1 == -prv 1"
+        assert u.next_plus.minus == mu.next_minus,"#{tn}: -nxt 1 == prv -1"
+        assert mu.next_plus == u.next_minus.minus,"#{tn}: nxt -1 == -prv 1"
          
       end        
         
@@ -132,7 +132,7 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal 'NAN', HP71B.nan.to_text.upcase
     assert_equal '0000000000000F00', HP71B.infinity.to_bits_text(16).upcase
     assert_equal '+INFINITY', HP71B.infinity.to_text.upcase
-    assert_equal '9000000000000F00', HP71B.infinity.neg.to_bits_text(16).upcase
+    assert_equal '9000000000000F00', HP71B.infinity.minus.to_bits_text(16).upcase
   end
   def test_quad
     assert_equal "3fff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.from_text('1').to_hex.downcase

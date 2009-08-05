@@ -4,7 +4,6 @@
 * define small DSL to define formats
 * Consider unifying the Format / Num nomenclature:
     denormal vs. subnormal
-    neg vs. minus
     min_normalized_value vs. minimum_normal
     max_value vs. maximum_finite
     min_value vs. minimum_nonzero

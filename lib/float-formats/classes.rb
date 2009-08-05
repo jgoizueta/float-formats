@@ -192,8 +192,8 @@ class FormatBase
     #i.to_i.nio_write(fmt)
   end
 
-  # Computes the negation of a floating point value
-  def neg
+  # Computes the negation of a floating point value (unary minus)
+  def minus
     form_class.new(-@sign,@significand,@exponent)
   end
 
@@ -209,7 +209,7 @@ class FormatBase
   # TODO: use Flt
   def next_plus
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
-    return neg.next_minus.neg if s<0 && e!=:zero
+    return minus.next_minus.minus if s<0 && e!=:zero
     s = -s if e==:zero && s<0
 
     if e!=:nan && e!=:infinity
@@ -245,8 +245,8 @@ class FormatBase
   # Returns a Value.
   def next_minus
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
-    return neg.next_plus.neg if s<0
-    return self.next_plus.neg if e==:zero
+    return minus.next_plus.minus if s<0
+    return self.next_plus.minus if e==:zero
     if e!=:nan
       if e == :infinity
         f = form_class.maximum_integral_significand
@@ -1664,7 +1664,7 @@ end
 
 
   def -@
-    neg
+    minus
   end
   def +(v)
     # TODO: coercion
