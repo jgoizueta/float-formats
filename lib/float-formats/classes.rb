@@ -62,31 +62,31 @@ class FormatBase
       end      
       @sign,@significand,@exponent = self.class.canonicalized(sign,significand,exponent,normalize)
     else
-      v = fptype.nan
+      v = form_class.nan
       case args.first
-        when fptype
+        when form_class
           v = args.first
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when Array
           v = args.first
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when FormatBase
-          v = args.first.convert_to(fptype)
+          v = args.first.convert_to(form_class)
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when String
-          v = fptype.from_text(*args)
+          v = form_class.from_text(*args)
         when Bytes
-          v = fptype.from_bytes(*args)
+          v = form_class.from_bytes(*args)
         when Bits
-          v = fptype.from_bits(*args)
+          v = form_class.from_bits(*args)
         when Numeric
-          v = fptype.from_number(args.first)
+          v = form_class.from_number(args.first)
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when Symbol
           if args.first.to_s[0..3]!='from'
             args = ["from_#{args.first}".to_sym] + args[1..-1] 
           end
-          v = fptype.send(*args)
+          v = form_class.send(*args)
       end
       @sign,@significand,@exponent = v.to_a
     end
@@ -130,13 +130,13 @@ class FormatBase
       when :nan
         v = 0.0/0.0
       else
-        case fptype.radix
+        case form_class.radix
         when 10
           v = Flt.DecNum(@sign, @significand, @exponent)
         when 2
           v = Flt.BinNum(@sign, @significand, @exponent)
         else
-          v = @significand*fptype.radix_power(@exponent)*@sign
+          v = @significand*form_class.radix_power(@exponent)*@sign
         end
     end
     v.nio_write_neutral(fmt)
@@ -145,10 +145,10 @@ class FormatBase
     nio_write(fmt)
   end
   def to_bytes
-    fptype.pack(@sign,@significand,@exponent)
+    form_class.pack(@sign,@significand,@exponent)
   end
   def to_hex(sep_bytes=false)
-    if (fptype.total_bits % 8)==0
+    if (form_class.total_bits % 8)==0
       to_bytes.to_hex(sep_bytes)
     else
       to_bits.to_hex
@@ -166,7 +166,7 @@ class FormatBase
       split
     elsif Symbol===number_class
       send "to_#{number_class}"
-    elsif number_class.is_a?(Flt::Num)  && number_class.radix == fptype.radix
+    elsif number_class.is_a?(Flt::Num)  && number_class.radix == form_class.radix
       self.to_num
     else # assume number_class.ancestors.include?(Numeric) (number_class < Numeric)
         fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
@@ -175,7 +175,7 @@ class FormatBase
     end
   end
   def to_bits
-    to_bytes.to_bits(fptype.endianness,false,fptype.total_bits)
+    to_bytes.to_bits(form_class.endianness,false,form_class.total_bits)
   end
   # Returns the encoded integral value of a floating point number
   # as a text representation in a given base.
@@ -186,7 +186,7 @@ class FormatBase
     #fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
     #if [2,4,8,16].include?(base)
     #  n = (Math.log(base)/Math.log(2)).round.to_i
-    #  digits = (fptype.total_bits+n-1)/n
+    #  digits = (form_class.total_bits+n-1)/n
     #  fmt.pad0s!(digits)
     #end
     #i.to_i.nio_write(fmt)
@@ -194,7 +194,7 @@ class FormatBase
 
   # Computes the negation of a floating point value
   def neg
-    fptype.new(-@sign,@significand,@exponent)
+    form_class.new(-@sign,@significand,@exponent)
   end
 
   # Converts a floating point value to another format
@@ -214,29 +214,29 @@ class FormatBase
 
     if e!=:nan && e!=:infinity
       if f==0
-        if fptype.gradual_underflow?
-          e = fptype.radix_min_exp(:integral_significand)
+        if form_class.gradual_underflow?
+          e = form_class.radix_min_exp(:integral_significand)
           f = 1
         else
-          e = fptype.radix_min_exp(:integral_significand)
-          f = fptype.minimum_normalized_integral_significand
+          e = form_class.radix_min_exp(:integral_significand)
+          f = form_class.minimum_normalized_integral_significand
         end
       else
         f += 1
       end
-      if f>=fptype.radix_power(fptype.significand_digits)
-        f /= fptype.radix
+      if f>=form_class.radix_power(form_class.significand_digits)
+        f /= form_class.radix
         if e==:denormal
-          e = fptype.radix_min_exp(:integral_significand)
+          e = form_class.radix_min_exp(:integral_significand)
         else
           e += 1
         end
-        if e>fptype.radix_max_exp(:integral_significand)
+        if e>form_class.radix_max_exp(:integral_significand)
           e = :infinity
           f = 0
         end
       end
-      fptype.new s, f, e
+      form_class.new s, f, e
     end
   end
 
@@ -249,16 +249,16 @@ class FormatBase
     return self.next.neg if e==:zero
     if e!=:nan
       if e == :infinity
-        f = fptype.maximum_integral_significand
-        e = fptype.radix_max_exp(:integral_significand)
+        f = form_class.maximum_integral_significand
+        e = form_class.radix_max_exp(:integral_significand)
       else
         f -= 1
-        if f<fptype.minimum_normalized_integral_significand
-          if e!=:denormal && e>fptype.radix_min_exp(:integral_significand)
+        if f<form_class.minimum_normalized_integral_significand
+          if e!=:denormal && e>form_class.radix_min_exp(:integral_significand)
             e -= 1
-            f *= fptype.radix
+            f *= form_class.radix
           else
-            if fptype.gradual_underflow?
+            if form_class.gradual_underflow?
               e = :denormal
             else
               e = :zero
@@ -267,7 +267,7 @@ class FormatBase
         end
       end
     end
-    fptype.new s, f, e
+    form_class.new s, f, e
   end
 
   # ulp (unit in the last place) according to the definition proposed by J.M. Muller in
@@ -275,20 +275,20 @@ class FormatBase
   def ulp
     sign,sig,exp = @sign,@significand,@exponent
 
-    mnexp = fptype.radix_min_exp(:integral_significand)
-    mxexp = fptype.radix_max_exp(:integral_significand)
-    prec = fptype.significand_digits
+    mnexp = form_class.radix_min_exp(:integral_significand)
+    mxexp = form_class.radix_max_exp(:integral_significand)
+    prec = form_class.significand_digits
 
     if exp==:nan
     elsif exp==:infinity
       sign,sig,exp = 1,1,mxexp
     elsif exp==:zero || exp <= mnexp
-      return fptype.min_value
+      return form_class.min_value
     else
-      exp -= 1 if sig==fptype.minimum_normalized_integral_significand
+      exp -= 1 if sig==form_class.minimum_normalized_integral_significand
       sign,sig,exp = 1,1,exp
     end
-    fptype.new sign, sig, exp
+    form_class.new sign, sig, exp
   end
 
   def <=>(other)
@@ -308,23 +308,23 @@ class FormatBase
     if this_exponent==other_exponent
       return this_significand <=> other_significand
     else
-      mns = fptype.minimum_normalized_integral_significand
+      mns = form_class.minimum_normalized_integral_significand
       this_normal = this_significand >= mns
       other_normal = other_significand >= mns
       if this_normal && other_normal
         return this_exponent <=> other_exponent
       else
-        min_exp = fptype.radix_min_exp(:integral_significand)
-        max_exp = fptype.radix_max_exp(:integral_significand)
+        min_exp = form_class.radix_min_exp(:integral_significand)
+        max_exp = form_class.radix_max_exp(:integral_significand)
 
         while this_significand<mns && this_exponent>min_exp
           this_exponent -= 1
-          this_significand *= fptype.radix
+          this_significand *= form_class.radix
         end
 
         while other_significand<mns && other_exponent>min_exp
           other_exponent -= 1
-          other_significand *= fptype.radix
+          other_significand *= form_class.radix
         end
 
         if this_exponent==other_exponent
@@ -341,9 +341,9 @@ class FormatBase
 
 
   def fp_format
-    fptype
+    form_class
   end
-  def fptype
+  def form_class
     self.class
   end
 
@@ -592,7 +592,7 @@ class FormatBase
   def to_num
     s,c,e = split
     e = 0 if e == :zero
-    fptype.num_class.Num(s,c,e)
+    form_class.num_class.Num(s,c,e)
   end
 
   def self.num(x)
@@ -1668,10 +1668,10 @@ end
   end
   def +(v)
     # TODO: coercion
-    if v.fptype==fptype
-      fptype.arithmetic do |t|
+    if v.form_class==form_class
+      form_class.arithmetic do |t|
         x = to(t,:exact) + v.to(t,:exact)
-        fptype.from_number(x,:exact)
+        form_class.from_number(x,:exact)
       end
     else
       # TODO
@@ -1679,10 +1679,10 @@ end
   end
   def /(v)
     # TODO: coercion
-    if v.fptype==fptype
-      fptype.arithmetic do |t|
+    if v.form_class==form_class
+      form_class.arithmetic do |t|
         x = to(t,:exact) / v.to(t,:exact)
-        fptype.from_number(x,:exact)
+        form_class.from_number(x,:exact)
       end
     else
       # TODO
@@ -1690,10 +1690,10 @@ end
   end
   def -(v)
     # TODO: coercion
-    if v.fptype==fptype
-      fptype.arithmetic do |t|
+    if v.form_class==form_class
+      form_class.arithmetic do |t|
         x = to(t,:exact) - v.to(t,:exact)
-        fptype.from_number(x,:exact)
+        form_class.from_number(x,:exact)
       end
     else
       # TODO
@@ -1701,10 +1701,10 @@ end
   end
   def *(v)
     # TODO: coercion
-    if v.fptype==fptype
-      fptype.arithmetic do |t|
+    if v.form_class==form_class
+      form_class.arithmetic do |t|
         x = to(t,:exact) * v.to(t,:exact)
-        fptype.from_number(x,:exact)
+        form_class.from_number(x,:exact)
       end
     else
       # TODO
@@ -1813,10 +1813,10 @@ class DoubleFormat < FormatBase
 
   def split_halfs
     b = to_bytes
-    sz = fptype.half.total_bytes
+    sz = form_class.half.total_bytes
     b1 = b[0...sz]
     b2 = b[sz..-1]
-    [fptype.half.from_bytes(b1), fptype.half.from_bytes(b2)]
+    [form_class.half.from_bytes(b1), form_class.half.from_bytes(b2)]
   end
 
   def self.join_halfs(h1,h2)
