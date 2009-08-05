@@ -28,8 +28,8 @@ class TestArithmetic < Test::Unit::TestCase
   def test_epsilon
       @all_types.each do |t|
         one = t.from_number(1)
-        assert((one + t.strict_epsilon)==one.next, "#{t}: 1+epsilon=1.next")
-        assert((one.next - one) == t.epsilon, "#{t}: 1.next-1=epsilon")
+        assert((one + t.strict_epsilon)==one.next_plus, "#{t}: 1+epsilon=1.next_plus")
+        assert((one.next_plus - one) == t.epsilon, "#{t}: 1.next_plus-1=epsilon")
       end
   end
 

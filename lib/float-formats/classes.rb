@@ -207,9 +207,9 @@ class FormatBase
   # Accepts either a Value or a byte String.
   # Returns a Value.
   # TODO: use Flt
-  def next
+  def next_plus
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
-    return neg.prev.neg if s<0 && e!=:zero
+    return neg.next_minus.neg if s<0 && e!=:zero
     s = -s if e==:zero && s<0
 
     if e!=:nan && e!=:infinity
@@ -243,10 +243,10 @@ class FormatBase
   # Computes the previous adjacent floating point value.
   # Accepts either a Value or a byte String.
   # Returns a Value.
-  def prev
+  def next_minus
     s,f,e = self.class.canonicalized(@sign,@significand,@exponent,true)
-    return neg.next.neg if s<0
-    return self.next.neg if e==:zero
+    return neg.next_plus.neg if s<0
+    return self.next_plus.neg if e==:zero
     if e!=:nan
       if e == :infinity
         f = form_class.maximum_integral_significand

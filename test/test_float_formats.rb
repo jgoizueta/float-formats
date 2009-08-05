@@ -12,15 +12,15 @@ class TestFloatFormats < Test::Unit::TestCase
       for tn in %w{IEEE_SINGLE IEEE_DOUBLE IEEE_EXTENDED IEEE_DEC32 IEEE_DEC64 IEEE_DEC128}
           t = eval(tn)
           z = t.from_text('0')
-          assert t.min_value.prev==z,"#{tn}: prv min == 0"
-          assert z.next==t.min_value,"#{tn}: nxt 0 == min"
+          assert t.min_value.next_minus==z,"#{tn}: prv min == 0"
+          assert z.next_plus==t.min_value,"#{tn}: nxt 0 == min"
 
           mz = t.from_text('-0')
-          assert t.min_value(-1).next==mz,"#{tn}: nxt -min == -0"
-          assert mz.prev==t.min_value(-1),"#{tn}: prv -0 == -min"
+          assert t.min_value(-1).next_plus==mz,"#{tn}: nxt -min == -0"
+          assert mz.next_minus==t.min_value(-1),"#{tn}: prv -0 == -min"
 
-          assert z.prev==t.min_value(-1),"#{tn}: prv 0 == -min"
-          assert mz.next==t.min_value,"#{tn}: nxt -0 == min"
+          assert z.next_minus==t.min_value(-1),"#{tn}: prv 0 == -min"
+          assert mz.next_plus==t.min_value,"#{tn}: nxt -0 == min"
       end
         
       for tn in %w{
@@ -42,8 +42,8 @@ class TestFloatFormats < Test::Unit::TestCase
         t = eval(tn)
         u = t.from_text('1')
         mu = t.from_text('-1')
-        assert u.next.neg == mu.prev,"#{tn}: -nxt 1 == prv -1"
-        assert mu.next == u.prev.neg,"#{tn}: nxt -1 == -prv 1"
+        assert u.next_plus.neg == mu.next_minus,"#{tn}: -nxt 1 == prv -1"
+        assert mu.next_plus == u.next_minus.neg,"#{tn}: nxt -1 == -prv 1"
          
       end        
         
@@ -144,7 +144,7 @@ class TestFloatFormats < Test::Unit::TestCase
     assert_equal "7fff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.infinity.to_hex.downcase
     assert_equal "ffff 0000 0000 0000 0000 0000 0000 0000".tr(' ',''), IEEE_binary128_BE.infinity(-1).to_hex.downcase
     assert_equal "3ffd 5555 5555 5555 5555 5555 5555 5555".tr(' ',''), IEEE_binary128_BE.from_number(Rational(1,3)).to_hex.downcase
-    assert_equal "3fff 0000 0000 0000 0000 0000 0000 0001".tr(' ',''), IEEE_binary128_BE.from_text('1').next.to_hex.downcase    
+    assert_equal "3fff 0000 0000 0000 0000 0000 0000 0001".tr(' ',''), IEEE_binary128_BE.from_text('1').next_plus.to_hex.downcase    
   end
   def test_half
     assert_equal "3c00", IEEE_binary16_BE.from_text('1').to_hex.downcase
@@ -186,14 +186,14 @@ class TestFloatFormats < Test::Unit::TestCase
         
     assert_equal "0.5", IEEE_DOUBLE_DOUBLE('0.5').to_text
     assert_equal "000000000000E03F0000000000000000", IEEE_DOUBLE_DOUBLE('0.5').to_hex
-    assert_equal "000000000000E03F0000000000004039", IEEE_DOUBLE_DOUBLE('0.5').next.to_hex
+    assert_equal "000000000000E03F0000000000004039", IEEE_DOUBLE_DOUBLE('0.5').next_plus.to_hex
     assert_equal "9A9999999999B93F9A999999999959BC", IEEE_DOUBLE_DOUBLE('0.1').to_hex
-    assert_equal "9A9999999999B93F99999999999959BC", IEEE_DOUBLE_DOUBLE('0.1').next.to_hex
+    assert_equal "9A9999999999B93F99999999999959BC", IEEE_DOUBLE_DOUBLE('0.1').next_plus.to_hex
     
     assert_equal IEEE_DOUBLE_DOUBLE('0.5'), IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.5').split_halfs)
-    assert_equal IEEE_DOUBLE_DOUBLE('0.5').next, IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.5').next.split_halfs)
+    assert_equal IEEE_DOUBLE_DOUBLE('0.5').next_plus, IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.5').next_plus.split_halfs)
     assert_equal IEEE_DOUBLE_DOUBLE('0.1'), IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.1').split_halfs)
-    assert_equal IEEE_DOUBLE_DOUBLE('0.1').next, IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.1').next.split_halfs)
+    assert_equal IEEE_DOUBLE_DOUBLE('0.1').next_plus, IEEE_DOUBLE_DOUBLE.join_halfs(*IEEE_DOUBLE_DOUBLE('0.1').next_plus.split_halfs)
         
     assert_equal "00000000000050390000000000000000", IEEE_DOUBLE_DOUBLE.epsilon.to_hex    
     assert_equal "000000000000F87F0000000000000000", IEEE_DOUBLE_DOUBLE.nan.to_hex
