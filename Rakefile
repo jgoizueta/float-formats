@@ -23,7 +23,7 @@ PROJ.description = "Floating-Point Formats"
 PROJ.authors = 'Javier Goizueta'
 PROJ.email = 'javier@goizueta.info'
 PROJ.version = Flt::FORMATS_VERSION::STRING
-PROJ.rubyforge.name = 'ruby-decimal'
+PROJ.rubyforge.name = 'float-formats'
 PROJ.url = "http://#{PROJ.rubyforge.name}.rubyforge.org"
 PROJ.rdoc.opts = [
   "--main", "README.txt",
@@ -33,5 +33,6 @@ PROJ.rdoc.opts = [
   "--inline-source"
   ]
 depend_on 'nio', '>=0.2.0'
+depend_on 'flt', '>=1.0.0'
 
 # EOF
