@@ -12,7 +12,7 @@ class MimickIRB < RubyLex
     set_input(StringIO.new)
   end
 
-  def run(str)
+  def run(str,line_no=nil)
     obj = nil
     @io << str
     @io.rewind
@@ -35,7 +35,8 @@ class MimickIRB < RubyLex
       obj = eval @line, TOPLEVEL_BINDING
     end
     @line = ''
-    @exp_line_no = @line_no
+    #@line_no = line_no if line_no
+    @exp_line_no = line_no || @line_no
 
     @indent = 0
     @indent_stack = []
@@ -56,31 +57,38 @@ class MimickIRB < RubyLex
 
 end
 
+# TO DO: output of blocks is gathered and shown at the end of the block
+# when lines in a block have ->, they should be rememberd, and when
+# output is generated when closing the block, each output line should
+# be appended to the in-block -> lines before showing lines after the block.
+
 
 class ExampleExpander
-  def initialize(sep=" -> ", align=52)
+  def initialize(sep="# -> ", align=51)
     @sep = sep
-    @align = align    
+    @align = align
     @irb = MimickIRB.new
     @output = ""
   end
-  def add_line(line)
+  def add_line(line,line_num=nil)
     line = line.chomp
     line = $1 if /(.+)#{@sep}.*/.match line
     $stdout = StringIO.new
     begin
-      out,obj = @irb.run line
+      out,obj = @irb.run(line, line_num)
       @output << line_output(line,out)
     rescue MimickIRB::Empty
       @output << line_output(line)
     rescue MimickIRB::Continue
       @output << line_output(line)
     rescue Object => e
-      msg = "#{e.class}: #{e.message}"
+      #msg = "Exception : #{e.message}"
+      msg = "Exception : #{e.class}"
+      # msg = "#{e.class}: #{e.message}"
       @output << line_output(line,msg)
       STDERR.puts "#{msg}\n"
     end
-    $stdout = STDOUT      
+    $stdout = STDOUT
   end
   def output
     @output
@@ -95,8 +103,14 @@ class ExampleExpander
       output = nil if output.strip.empty?
     end
     out = line.dup
-    out << " "*[0,(@align-line.size)].max + @sep + output if output
-    out << "\n"
+    if output
+      line_size = line.size
+      output.split("\n").each do |out_line|
+        out << " "*[0,(@align-line_size)].max + @sep + out_line
+        out << "\n"
+        line_size = 0
+      end
+    end
     out
   end
 end
@@ -105,24 +119,25 @@ end
 def expand_text(txt,non_code_block_prefix=nil) # text with indented blocks of code
   exex = ExampleExpander.new
   indent = nil
-  
+
   txt_out = ""
-  
+
   line_num = 0
   accum = ""
   skip_until_blank = false
-  txt.each do |line|
+  disabled = false
+  txt.split("\n").each do |line|
     line_num += 1
     code = false
     line.chomp!
-        
+
     if skip_until_blank
       if line.strip.empty?
         skip_until_blank = false
       end
     else
-    
-      unless line.strip.empty?
+
+      unless line.strip.empty? || disabled
         line_indent = /^\s*/.match(line)[0]
         indent ||= line_indent
         indent = line_indent if line_indent.size < indent.size
@@ -132,22 +147,24 @@ def expand_text(txt,non_code_block_prefix=nil) # text with indented blocks of co
         else
           if line_indent.size > indent.size
             code = true
-          end      
+          end
         end
       end
       if code
-        exex.add_line line
+        exex.add_line line, line_num
         line = exex.output.chomp
         exex.clear
       else
+        disabled = true if line[0,7]=="EXPAND-"
+        disabled = false if line[0,7]=="EXPAND+"
         skip_until_blank = true if line[0,1]==non_code_block_prefix
       end
     end
     txt_out << line + "\n"
   end
   txt_out
-  
-end  
+
+end
 
 require 'rubygems'
 

@@ -4,7 +4,6 @@
   (the neutral is first rounded to decimal_digits_necessary, then to a FP datum)
 * rename :denormal to :subnormal ? etc.
 * define small DSL to define formats
-* rename min_normalized_value to minimum_normal, etc. (following Flt style):
 * Consider unifying the Format / Num nomenclature:
     next vs. next_plus
     prev vs. next_minus

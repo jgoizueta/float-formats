@@ -17,23 +17,24 @@ The easiest way to install Nio is using gems:
 
 ==Requirements
 
-Nio[http://nio.rubyforge.org/] 0.2.0 or later is needed. This 
-can be installed as a gem and should be automatically
+Nio[http://nio.rubyforge.org/] 0.2.4 or later 
+and Flt[http://flt.rubyforge.org/] 1.0.0 or later are needed. These 
+can be installed as gems and should be automatically
 installed by the command shown above to install float-formats.
-
 
 ==Downloads
 
 The latest version of Float-Formats and its source code can be downloaded from
 * http://rubyforge.org/project/showfiles.php?group_id=4684
 
-
+You can find the code also in GitHub:
+* http://github.com/jgoizueta/float-formats/
 
 =Predefined formats
 
 A number of common formats are defined as constants in the Flt module:
 
-==IEEE 754r
+==IEEE 754-2008
 <b>binary</b> floating point representations in little endian order:
 IEEE_binary16 (half precision), 
 IEEE_binary32 (single precision),
@@ -48,7 +49,6 @@ IEEE_decimal32, IEEE_decimal64 and IEEE_decimal128.
 IEEE_binary256, IEEE_binary512, IEEE_binary1024, IEEE_decimal192, IEEE_decimal256.
 Others can be defined with IEEE.interchange_binary and IEEE.interchange_decimal
 (see the IEEE module).
-
 
 ==Legacy
 Formats of historical interest, some of which are found
@@ -91,25 +91,25 @@ The properties of the floating point formats can be queried (which can be
 used for tables or reports comparing different formats):
 
 Size in bits of the representations:
-  puts IEEE_binary32.total_bits                        -> 32
+  puts IEEE_binary32.total_bits                        # -> 32
 
 Numeric radix:
-  puts IEEE_binary32.radix                             -> 2
+  puts IEEE_binary32.radix                             # -> 2
 
 Digits of precision (radix-based)
-  puts IEEE_binary32.significand_digits                -> 24
+  puts IEEE_binary32.significand_digits                # -> 24
 
 Minimum and maximum values of the radix-based exponent:
-  puts IEEE_binary32.radix_min_exp                     -> -126
-  puts IEEE_binary32.radix_max_exp                     -> 127
+  puts IEEE_binary32.radix_min_exp                     # -> -126
+  puts IEEE_binary32.radix_max_exp                     # -> 127
 
 Decimal precision
-  puts IEEE_binary32.decimal_digits_stored             -> 6
-  puts IEEE_binary32.decimal_digits_necessary          -> 9
+  puts IEEE_binary32.decimal_digits_stored             # -> 6
+  puts IEEE_binary32.decimal_digits_necessary          # -> 9
 
 Minimum and maximum decimal exponents:
-  puts IEEE_binary32.decimal_min_exp                   -> -37
-  puts IEEE_binary32.decimal_max_exp                   -> 38
+  puts IEEE_binary32.decimal_min_exp                   # -> -37
+  puts IEEE_binary32.decimal_max_exp                   # -> 38
 
 ==Encode and decode numbers
 
@@ -124,10 +124,10 @@ name which can build a floating-point value from a variety of parameters:
   
     File.open('binary_file.dat','wb'){|f| f.write IEEE_binary80('0.1').to_bytes}
     
-    puts IEEE_binary80('0.1').to_hex(true)           -> CD CC CC CC CC CC CC CC FB 3F
-    puts IEEE_binary80(0.1).to_hex(true)             -> CD CC CC CC CC CC CC CC FB 3F
-    puts IEEE_binary80(+1,123,-2).to_hex(true)       -> 00 00 00 00 00 00 00 F6 03 40
-    puts IEEE_decimal32('1.234').to_hex(true)        -> 22 20 05 34
+    puts IEEE_binary80('0.1').to_hex(true)           # -> CD CC CC CC CC CC CC CC FB 3F
+    puts IEEE_binary80(0.1).to_hex(true)             # -> CD CC CC CC CC CC CC CC FB 3F
+    puts IEEE_binary80(+1,123,-2).to_hex(true)       # -> 00 00 00 00 00 00 00 F6 03 40
+    puts IEEE_decimal32('1.234').to_hex(true)        # -> 22 20 05 34
 
 A floating-point encoded value can be converted to useful formats with the to_ and similar methods:
 * <tt>split</tt> (split as integral sign, significand, exponent)
@@ -135,13 +135,13 @@ A floating-point encoded value can be converted to useful formats with the to_ a
 * <tt>to(num_class)</tt>
  
     v = IEEE_binary80.from_bytes(File.read('binary_file.dat'))
-    puts v.to(Rational)                              -> 14757395258967641293/147573952589676412928
-    puts v.split.inspect                             -> [1, 14757395258967641293, -67]
-    puts v.to_text                                   -> 0.1000000000000000000013552527156068805425093160010874271392822265625
-    puts v.to(Float)                                 -> 0.1
-    puts v.to_hex                                    -> CDCCCCCCCCCCCCCCFB3F
-    puts v.to_bits                                   -> 302153978578547713559757
-    puts v.to_bits_text(16)                          -> 3ffbcccccccccccccccd
+    puts v.to(Rational)                              # -> 1/10
+    puts v.split.inspect                             # -> [1, 14757395258967641293, -67]
+    puts v.to_text                                   # -> 0.1
+    puts v.to(Float)                                 # -> 0.1
+    puts v.to_hex                                    # -> CDCCCCCCCCCCCCCCFB3F
+    puts v.to_bits                                   # -> 00111111111110111100110011001100110011001100110011001100110011001100110011001101
+    puts v.to_bits_text(16)                          # -> 3ffbcccccccccccccccd
     
 ==Special values:  
 
@@ -150,10 +150,10 @@ Let's show the decimal expression of some interesting values using
 
   fmt = Nio::Fmt.mode(:gen,3)  
 
-  puts IEEE_SINGLE.min_value.to_text(fmt)             -> 1.4E-45
-  puts IEEE_SINGLE.min_normalized_value.to_text(fmt)  -> 1.18E-38
-  puts IEEE_SINGLE.max_value.to_text(fmt)             -> 3.4E38
-  puts IEEE_SINGLE.epsilon.to_text(fmt)               -> 1.19E-7
+  puts IEEE_SINGLE.min_value.to_text(fmt)             # -> 2E-45
+  puts IEEE_SINGLE.min_normalized_value.to_text(fmt)  # -> 1.18E-38
+  puts IEEE_SINGLE.max_value.to_text(fmt)             # -> 3.4E38
+  puts IEEE_SINGLE.epsilon.to_text(fmt)               # -> 1.19E-7
 
 ==Convert between formats
 
@@ -163,25 +163,35 @@ Let's show the decimal expression of some interesting values using
   
   
 =Tools for the native floating point format
-This is an optional module (must be loaded explicitely because
-is somewhat intrusive; it adds methods to Float)
-that useful to explore or manipulate the native Float format.
+This is an optional module to perform conversions and manipulate the native Float format.
   
   require 'float-formats/native'
   include Flt
 
-  puts float_shortest_dec(1.0.next)                  -> 1.0000000000000002
-  puts float_dec(1.0.prev)                           -> 0.99999999999999988897769753748434595763683319091796875
-  puts float_dec(1.0.next)                           -> 1.0000000000000002220446049250313080847263336181640625
-  puts float_dec(1.0.prev)                           -> 0.99999999999999988897769753748434595763683319091796875
-  puts float_bin(1.0.next)                           -> 1.0000000000000000000000000000000000000000000000000001E0
-  puts 1.0.next-1 == Float::EPSILON                  -> true
-  puts float_significant_dec(Float::MIN_D)           -> 5E-324
-  puts float_significant_dec(Float::MIN_D.next)      -> 1.0E-323
-  puts float_significant_dec(Float::MAX_D.prev)      -> 2.2250738585072004E-308
-  puts float_significant_dec(Float::MAX_D)           -> 2.2250738585072009E-308
-  puts float_significant_dec(Float::MIN_N)           -> 2.2250738585072014E-308
+  puts float_shortest_dec(0.1)                     # -> 0.1
+  puts float_significant_dec(0.1)                  # -> 0.10000000000000001
+  puts float_dec(0.1)                              # -> 0.1000000000000000055511151231257827021181583404541015625
+  puts float_bin(0.1)                              # -> 1.100110011001100110011001100110011001100110011001101E-4
+  puts hex_from_float(0.1)                         # -> 0x1999999999999ap-56
+
+  puts float_significant_dec(Float::MIN_D)           # -> 5E-324
+  puts float_significant_dec(Float::MAX_D)           # -> 2.2250738585072009E-308
+  puts float_significant_dec(Float::MIN_N)           # -> 2.2250738585072014E-308
+
   
+Together with flt/sugar (from Flt) can be use to explore or work with Floats:  
+
+  require 'flt/sugar'
+    
+  puts 1.0.next_plus-1 == Float::EPSILON              # -> true
+  puts float_shortest_dec(1.0.next_plus)              # -> 1.0000000000000002
+  puts float_dec(1.0.next_minus)                      # -> 0.99999999999999988897769753748434595763683319091796875
+  puts float_dec(1.0.next_plus)                       # -> 1.0000000000000002220446049250313080847263336181640625
+  puts float_bin(1.0.next_plus)                       # -> 1.0000000000000000000000000000000000000000000000000001E0
+  puts float_bin(1.0.next_minus)                      # -> 1.1111111111111111111111111111111111111111111111111111E-1
+
+  puts float_significant_dec(Float::MIN_D.next_plus)  # -> 1.0E-323
+  puts float_significant_dec(Float::MAX_D.next_minus) # -> 2.2250738585072004E-308
 
 =Defining new formats
 
@@ -201,8 +211,8 @@ the first bit, which will be hidden:
 Now we can encode values in this format, decode values, convet to other
 formats, query it's range, etc:
 
-     puts MY_FP('0.1').to_bits_text(16)              -> 1ee66666
-     puts MY_FP.max_value.to_text(Nio::Fmt.prec(3))   -> 7.88E115
+     puts MY_FP('0.1').to_bits_text(16)              # -> 1ee66666
+     puts MY_FP.max_value.to_text(Nio::Fmt.prec(3))  # -> 7.88E115
   
 You can look at float-formats/formats.rb to see how the built-in formats
 are defined.
@@ -210,12 +220,6 @@ are defined.
 =License
 
 This code is free to use under the terms of the GNU GENERAL PUBLIC LICENSE.
-
-=Contact
-
-Nio has been developed by Javier Goizueta (mailto:javier@goizueta.info).
-
-You can contact me through Rubyforge:http://rubyforge.org/sendmessage.php?touser=25432
 
 =References
 
