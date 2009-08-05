@@ -161,7 +161,7 @@ class FormatBase
     end
   end
   def as_bits
-    as_bytes.bits(fptype.endianness,false,fptype.total_bits)
+    as_bytes.to_bits(fptype.endianness,false,fptype.total_bits)
   end
   # Returns the encoded integral value of a floating point number
   # as a text representation in a given base.
@@ -1821,7 +1821,7 @@ class DoubleFormat < FormatBase
     n = @half.significand_digits
     if @half.radix==2
       if @extra_prec
-        if (m & (1<<n))==0 # m.bits[n] == 0
+        if (m & (1<<n))==0 # m.to_bits[n] == 0
           m1 = m >> (n+1) # m/2**(n+1)
           e1 = e + n + 1
           s1 = s

@@ -178,10 +178,10 @@ class Bytes < DelegateClass(String)
     __setobj__ @bytes
     self
   end
+  
   def reverse_byte_bits
     dup.reverse_byte_bits!
   end
-
 
   # Reverse the order of the nibbles in each byte.
   def reverse_byte_nibbles!
@@ -304,13 +304,13 @@ class Bytes < DelegateClass(String)
     from_i i,(bits+7)/8,byte_endianness, bits_little_endian
   end
 
-  def bits(byte_endianness=:little_endian, bits_little_endian=false,nbits=nil)
+  def to_bits(byte_endianness=:little_endian, bits_little_endian=false,nbits=nil)
     i = to_i(byte_endianness, bits_little_endian)
     nbits ||= 8*size
     Bits.from_i(i,nbits)
   end
 
-  def Bytes.bits(bits,byte_endianness=:little_endian, bits_little_endian=false,nbits=nil)
+  def Bytes.from_bits(bits,byte_endianness=:little_endian, bits_little_endian=false,nbits=nil)
     nbits ||= (bits.size+7)/8
     from_i bits.to_i, nbits, byte_endianness, bits_little_endian
   end

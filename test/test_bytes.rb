@@ -34,10 +34,10 @@ end
 def test_bytes
   b = Bytes.from_hex("AF237B93")
   assert_equal "AF237B93", b.to_hex
-  assert_equal 0xAF237B93, b.bits.to_i
+  assert_equal 0xAF237B93, b.to_bits.to_i
   assert_equal 0xAF237B93, b.to_i
-  b = Bytes.bits(Bits.from_i(0xAF237B93))
+  b = Bytes.from_bits(Bits.from_i(0xAF237B93))
   assert_equal "AF237B93", b.to_hex
-  assert_equal 0xAF237B93, b.bits.to_i
+  assert_equal 0xAF237B93, b.to_bits.to_i
   assert_equal 0xAF237B93, b.to_i    
 end
