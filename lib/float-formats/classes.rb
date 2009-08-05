@@ -49,8 +49,17 @@ class FormatBase
   extend Flt  # make Flt module functions available to class methods
 
   def initialize(*args)
-    if args.size == 3 || args.size==4 # && args.first.kind_of?(Integer) && args[1].kind_of?(Integer) && args.last.kind_of?(Integer)
+    if (args.size == 3 || args.size==4 || args.size==2) &&
+       (args.first.kind_of?(Integer) && args[1].kind_of?(Integer))
       sign,significand,exponent,normalize = args
+      if normalize.nil?
+        if [nil,true,false].include?(exponent)        
+          normalize = exponent
+          exponent = significand
+          significand = sign.abs
+          sign = sign<0 ? -1 : +1          
+        end
+      end      
       @sign,@significand,@exponent = self.class.canonicalized(sign,significand,exponent,normalize)
     else
       v = fptype.nan
@@ -65,13 +74,18 @@ class FormatBase
           v = args.first.convert_to(fptype)
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when String
-          v = fptype.text(*args)
+          v = fptype.from_text(*args)
         when Bytes
-          v = fptype.bytes(*args)
+          v = fptype.from_bytes(*args)
+        when Bits
+          v = fptype.from_bits(*args)
         when Numeric
-          v = fptype.number(args.first)
+          v = fptype.from_number(args.first)
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when Symbol
+          if args.first.to_s[0..3]!='from'
+            args = ["from_#{args.first}".to_sym] + args[1..-1] 
+          end
           v = fptype.send(*args)
       end
       @sign,@significand,@exponent = v.to_a
@@ -81,7 +95,7 @@ class FormatBase
   def to_a
     split
   end
-  def split # to_a parts ?
+  def split
     return [@sign,@significand,@exponent]
   end
 
@@ -582,7 +596,7 @@ class FormatBase
   end
 
   def self.num(x)
-    new *x.split
+    new(*x.split)
   end
 
   # Endianness of the format (:little_endian, :big_endian or :little_big_endian)
@@ -812,13 +826,20 @@ class FormatBase
        return_value s,f,e
 
   end
-  def self.bytes(b)
+  
+  def self.from(*args)
+    new(*args)
+  end
+  
+  def self.from_bytes(b)
     return_value(*unpack(b))
   end
-  def self.hex(hex)
-    bytes Bytes.from_hex(hex)
+  
+  def self.from_hex(hex)
+    from_bytes Bytes.from_hex(hex)
   end
-  def self.number(v, mode=:approx)
+  
+  def self.from_number(v, mode=:approx)
     if v.is_a?(Flt::Num) && v.num_class.radix==self.radix
       self.num(v)
     else
@@ -826,15 +847,17 @@ class FormatBase
       nio_read(v.nio_write(fmt),fmt)
     end
   end
-  def self.text(txt, fmt=Nio::Fmt.default) # ?
+  
+  def self.from_text(txt, fmt=Nio::Fmt.default) # ?
     nio_read(txt,fmt)
   end
-  def self.splitted(sign,significand,exponent) # from_a parts join ?
+  
+  def self.join(sign,significand,exponent)
     self.new sign,significand,exponent
   end
 
   # Defines a floating-point number from the encoded integral value.
-  def self.bits(i)
+  def self.from_bits(i)
     v = Bytes.from_i(i)
     if v.size<total_bytes
       fill = (0.chr*(total_bytes-v.size))
@@ -846,22 +869,18 @@ class FormatBase
     elsif v.size>total_bytes
       raise "Invalid floating point value"
     end
-    bytes v
+    from_bytes v
   end
+  
   # Defines a floating-point number from a text representation of the
   # encoded integral value in a given base.
   # Returns a Value.
-  def self.bits_text(txt,base)
+  def self.from_bits_text(txt,base)
     i = Integer.nio_read(txt,Nio::Fmt.base(base))
-    bits i
+    from_bits i
   end
 
-
-
-
-
-
-  # Converts an ancoded floating point number to hash containing
+  # Converts en ancoded floating point number to hash containing
   # the internal fields that define the number.
   # Accepts either a Value or a byte String.
   def self.unpack_fields_hash(v)
@@ -890,6 +909,7 @@ class FormatBase
     end
     h
   end
+  
   # Produce an encoded floating point value using hash of the internal field values.
   # Returns a Value.
   def self.pack_fields_hash(h)
@@ -913,9 +933,6 @@ class FormatBase
       pack_fields flds
     end
   end
-
-
-
 
   # :stopdoc:
   protected
@@ -1654,7 +1671,7 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = to(t,:exact) + v.to(t,:exact)
-        fptype.number(x,:exact)
+        fptype.from_number(x,:exact)
       end
     else
       # TODO
@@ -1665,7 +1682,7 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = to(t,:exact) / v.to(t,:exact)
-        fptype.number(x,:exact)
+        fptype.from_number(x,:exact)
       end
     else
       # TODO
@@ -1676,7 +1693,7 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = to(t,:exact) - v.to(t,:exact)
-        fptype.number(x,:exact)
+        fptype.from_number(x,:exact)
       end
     else
       # TODO
@@ -1687,7 +1704,7 @@ end
     if v.fptype==fptype
       fptype.arithmetic do |t|
         x = to(t,:exact) * v.to(t,:exact)
-        fptype.number(x,:exact)
+        fptype.from_number(x,:exact)
       end
     else
       # TODO
@@ -1799,11 +1816,11 @@ class DoubleFormat < FormatBase
     sz = fptype.half.total_bytes
     b1 = b[0...sz]
     b2 = b[sz..-1]
-    [fptype.half.bytes(b1), fptype.half.bytes(b2)]
+    [fptype.half.from_bytes(b1), fptype.half.from_bytes(b2)]
   end
 
   def self.join_halfs(h1,h2)
-    self.bytes(h1.to_bytes+h2.to_bytes)
+    self.from_bytes(h1.to_bytes+h2.to_bytes)
   end
 
   def self.total_nibbles
@@ -1923,7 +1940,7 @@ end
 
 
 def convert_bytes(bytes,from_format,to_format)
-  from_format.bytes(bytes).convert_to(to_format)
+  from_format.from_bytes(bytes).convert_to(to_format)
 end
 
 

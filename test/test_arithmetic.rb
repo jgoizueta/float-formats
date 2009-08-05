@@ -18,7 +18,7 @@ class TestArithmetic < Test::Unit::TestCase
 
         x = one - (four/three - one)*three
 
-        check = t.splitted(x.sign,1,1-t.significand_digits)
+        check = t.join(x.sign,1,1-t.significand_digits)
 
         assert x==check, "#{t}: 1-(4/3-1)*3 = +/-#{t.radix}^#{1-t.significand_digits}"
 
@@ -27,7 +27,7 @@ class TestArithmetic < Test::Unit::TestCase
 
   def test_epsilon
       @all_types.each do |t|
-        one = t.number(1)
+        one = t.from_number(1)
         assert((one + t.strict_epsilon)==one.next, "#{t}: 1+epsilon=1.next")
         assert((one.next - one) == t.epsilon, "#{t}: 1.next-1=epsilon")
       end

@@ -134,7 +134,7 @@ A floating-point encoded value can be converted to useful formats with the to_ a
 * <tt>to_text</tt>
 * <tt>to(num_class)</tt>
  
-    v = IEEE_binary80.bytes(File.read('binary_file.dat'))
+    v = IEEE_binary80.from_bytes(File.read('binary_file.dat'))
     puts v.to(Rational)                              -> 14757395258967641293/147573952589676412928
     puts v.split.inspect                             -> [1, 14757395258967641293, -67]
     puts v.to_text                                   -> 0.1000000000000000000013552527156068805425093160010874271392822265625
@@ -157,7 +157,7 @@ Let's show the decimal expression of some interesting values using
 
 ==Convert between formats
 
-  v = IEEE_EXTENDED.text('1.1')
+  v = IEEE_EXTENDED.from_text('1.1')
   v = v.convert_to(IEEE_SINGLE)
   v = v.convert_to(IEEE_DEC64)
   
