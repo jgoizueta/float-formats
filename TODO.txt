@@ -11,7 +11,7 @@
     radix_max_exp(:scientific_significand) vs. emax
     radix_min_exp(:integral_significand) vs. etiny
     radix_max_exp(:integral_significand) vs. etop
-    significand vs. coeffient
+    significand vs. coefficient
     minimum_normalized_integral_significand vs. minimum_normalized_coefficient
     maximum_integral_significand vs. maximum_coefficient 
     radix_power -- int_radix_power

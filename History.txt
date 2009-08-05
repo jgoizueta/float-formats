@@ -1,4 +1,4 @@
-== 0.2.0 2009-07-...
+== 0.2.0 2009-08-06
 
 *  New redefined interface
 *  The sign in splitted form (sign, significand, exponent) now
