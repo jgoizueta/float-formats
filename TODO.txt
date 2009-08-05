@@ -1,10 +1,9 @@
-* refactoring: adapt documentation
 * next_after method
 * research if the double rounding that's happening in nio_read_neutral may be a real problem
   (the neutral is first rounded to decimal_digits_necessary, then to a FP datum)
-* rename :denormal to :subnormal ? etc.
 * define small DSL to define formats
 * Consider unifying the Format / Num nomenclature:
+    denormal vs. subnormal
     next vs. next_plus
     prev vs. next_minus
     neg vs. minus
