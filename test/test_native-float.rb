@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper.rb'
+require File.expand_path(File.join(File.dirname(__FILE__),'test_helper.rb'))
 require File.dirname(__FILE__) + '/../lib/float-formats/native.rb'
 require 'yaml'
 
