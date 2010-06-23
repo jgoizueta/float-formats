@@ -1,38 +1,58 @@
-# Look in the tasks/setup.rb file for the various options that can be
-# configured in this Rakefile. The .rake files in the tasks directory
-# are where the options are used.
+require 'rubygems'
+require 'rake'
 
 begin
-  require 'bones'
-  Bones.setup
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = 'float-formats'
+    gem.summary = "Floating-Point Formats"
+    gem.description = "Floating-Point Formats"
+    gem.email = "jgoizueta@gmail.com"
+    gem.homepage = "http://github.com/jgoizueta/flt"
+    gem.authors = ["Javier Goizueta"]
+    gem.add_dependency 'flt', '>=1.1.2'
+    gem.add_dependency 'nio', '>=0.2.4'
+    gem.add_development_dependency "shoulda"
+    gem.rubyforge_project = 'float-formats'
+    
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
-  load 'tasks/setup.rb'
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-ensure_in_path 'lib'
-#require 'float-formats'
-require 'float-formats/version'
+require 'rake/testtask'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
+end
 
-task :default => 'spec:run'
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |test|
+    test.libs << 'test'
+    test.pattern = 'test/**/test_*.rb'
+    test.verbose = true
+  end
+rescue LoadError
+  task :rcov do
+    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
+  end
+end
 
-depend_on 'flt', '1.0.0'
-depend_on 'nio', '0.2.4'
+task :test => :check_dependencies
 
-PROJ.name = 'float-formats'
-PROJ.description = "Floating-Point Formats"
-PROJ.authors = 'Javier Goizueta'
-PROJ.email = 'javier@goizueta.info'
-PROJ.version = Flt::FORMATS_VERSION::STRING
-PROJ.rubyforge.name = 'float-formats'
-PROJ.url = "http://#{PROJ.rubyforge.name}.rubyforge.org"
-PROJ.rdoc.opts = [
-  "--main", "README.txt",
-  '--title', 'Float-Formats Documentation',
-  "--opname", "index.html",
-  "--line-numbers",
-  "--inline-source"
-  ]
-depend_on 'nio', '>=0.2.0'
-depend_on 'flt', '>=1.0.0'
+task :default => :test
 
-# EOF
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  version = File.exist?('VERSION') ? File.read('VERSION') : ""
+
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "Float-Formats #{version}"
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.main = 'README.txt'
+end
