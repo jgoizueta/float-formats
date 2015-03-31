@@ -1,3 +1,4 @@
+* replace Nio by Numerals
 * next_after method
 * research if the double rounding that's happening in nio_read_neutral may be a real problem
   (the neutral is first rounded to decimal_digits_necessary, then to a FP datum)
@@ -13,5 +14,5 @@
     radix_max_exp(:integral_significand) vs. etop
     significand vs. coefficient
     minimum_normalized_integral_significand vs. minimum_normalized_coefficient
-    maximum_integral_significand vs. maximum_coefficient 
+    maximum_integral_significand vs. maximum_coefficient
     radix_power -- int_radix_power
