@@ -5,7 +5,13 @@ include Flt
 class TestArithmetic < Test::Unit::TestCase
 
   def setup
-    @all_types = Flt.constants.map{|c| Flt.class_eval(c.to_s)}.select{|c| (c < Flt::FormatBase)&& !(c.to_s.downcase.include?('format'))}
+    @all_types = Flt.constants.map { |constant|
+      Flt.const_get(constant)
+    }.select{ |cls|
+      cls.class == Class &&
+      cls < Flt::FormatBase &&
+      !cls.to_s.downcase.include?('format')
+    }
   end
 
   def test_precision

@@ -53,13 +53,13 @@ class FormatBase
        (args.first.kind_of?(Integer) && args[1].kind_of?(Integer))
       sign,significand,exponent,normalize = args
       if normalize.nil?
-        if [nil,true,false].include?(exponent)        
+        if [nil,true,false].include?(exponent)
           normalize = exponent
           exponent = significand
           significand = sign.abs
-          sign = sign<0 ? -1 : +1          
+          sign = sign<0 ? -1 : +1
         end
-      end      
+      end
       @sign,@significand,@exponent = self.class.canonicalized(sign,significand,exponent,normalize)
     else
       v = form_class.nan
@@ -84,7 +84,7 @@ class FormatBase
           raise "Too many arguments for FormatBase constructor" if args.size>1
         when Symbol
           if args.first.to_s[0..3]!='from'
-            args = ["from_#{args.first}".to_sym] + args[1..-1] 
+            args = ["from_#{args.first}".to_sym] + args[1..-1]
           end
           v = form_class.send(*args)
       end
@@ -826,19 +826,19 @@ class FormatBase
        return_value s,f,e
 
   end
-  
+
   def self.from(*args)
     new(*args)
   end
-  
+
   def self.from_bytes(b)
     return_value(*unpack(b))
   end
-  
+
   def self.from_hex(hex)
     from_bytes Bytes.from_hex(hex)
   end
-  
+
   def self.from_number(v, mode=:approx)
     if v.is_a?(Flt::Num) && v.num_class.radix==self.radix
       self.num(v)
@@ -847,11 +847,11 @@ class FormatBase
       nio_read(v.nio_write(fmt),fmt)
     end
   end
-  
+
   def self.from_text(txt, fmt=Nio::Fmt.default) # ?
     nio_read(txt,fmt)
   end
-  
+
   def self.join(sign,significand,exponent)
     self.new sign,significand,exponent
   end
@@ -871,7 +871,7 @@ class FormatBase
     end
     from_bytes v
   end
-  
+
   # Defines a floating-point number from a text representation of the
   # encoded integral value in a given base.
   # Returns a Value.
@@ -909,7 +909,7 @@ class FormatBase
     end
     h
   end
-  
+
   # Produce an encoded floating point value using hash of the internal field values.
   # Returns a Value.
   def self.pack_fields_hash(h)
@@ -1947,4 +1947,3 @@ end
 
 
 end
-

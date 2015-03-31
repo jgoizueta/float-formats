@@ -112,6 +112,7 @@ class Bytes < DelegateClass(String)
         @bytes = bytes.pack("C*")
       else
         @bytes = bytes.to_str
+        @bytes.force_encoding("BINARY") if @bytes.respond_to?(:force_encoding)
     end
     @bytes.force_encoding(Encoding::BINARY) if RUBY_VERSION>="1.9.0"
     super @bytes
@@ -178,7 +179,7 @@ class Bytes < DelegateClass(String)
     __setobj__ @bytes
     self
   end
-  
+
   def reverse_byte_bits
     dup.reverse_byte_bits!
   end
@@ -186,6 +187,7 @@ class Bytes < DelegateClass(String)
   # Reverse the order of the nibbles in each byte.
   def reverse_byte_nibbles!
     w = ""
+    w.force_encoding("BINARY") if w.respond_to?(:force_encoding)
     @bytes.each_byte do |b|
       w << ((b >> 4)|((b&0xF)<<4))
     end
@@ -200,6 +202,7 @@ class Bytes < DelegateClass(String)
   # reverse the order of bytes in 16-bit words
   def reverse_byte_pairs!
       w = ""
+      w.force_encoding("BINARY") if w.respond_to?(:force_encoding)
       (0...@bytes.size).step(2) do |i|
         w << @bytes[i+1]
         w << @bytes[i]
