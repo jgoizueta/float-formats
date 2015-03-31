@@ -1,0 +1,22 @@
+PATH
+  remote: .
+  specs:
+    float-formats (0.2.0)
+      flt (>= 1.1.2)
+      nio (>= 0.2.4)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    flt (1.4.6)
+    nio (0.2.5)
+      flt (>= 1.0.0)
+    rake (10.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.6)
+  float-formats!
+  rake

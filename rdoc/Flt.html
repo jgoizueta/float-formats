@@ -1,0 +1,1591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Module: Flt</title>
+
+	<link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="module">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="./lib/float-formats/bytes_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/float-formats/bytes.rb">lib/float-formats/bytes.rb</a></li>
+					
+						<li><a href="./lib/float-formats/classes_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/float-formats/classes.rb">lib/float-formats/classes.rb</a></li>
+					
+						<li><a href="./lib/float-formats/formats_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/float-formats/formats.rb">lib/float-formats/formats.rb</a></li>
+					
+						<li><a href="./lib/float-formats/native_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/float-formats/native.rb">lib/float-formats/native.rb</a></li>
+					
+						<li><a href="./lib/float-formats/version_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/float-formats/version.rb">lib/float-formats/version.rb</a></li>
+					
+						<li><a href="./lib/float-formats_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/float-formats.rb">lib/float-formats.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+
+			<!-- Namespace Contents -->
+			
+			<div id="namespace-list-section" class="section">
+				<h3 class="section-header">Namespace</h3>
+				<ul class="link-list">
+					
+					<li><span class="type">MODULE</span> <a href="Flt/FORMATS_VERSION.html">Flt::FORMATS_VERSION</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Flt/IEEE.html">Flt::IEEE</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/BCDFormat.html">Flt::BCDFormat</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/BinaryFormat.html">Flt::BinaryFormat</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/Bits.html">Flt::Bits</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/Bytes.html">Flt::Bytes</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/C51BCDFormat.html">Flt::C51BCDFormat</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/CDCFormat.html">Flt::CDCFormat</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/DPDFormat.html">Flt::DPDFormat</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/DecimalFormatBase.html">Flt::DecimalFormatBase</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/DoubleFormat.html">Flt::DoubleFormat</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/FieldsInBitsFormatBase.html">Flt::FieldsInBitsFormatBase</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/FormatBase.html">Flt::FormatBase</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Flt/HexadecimalFormat.html">Flt::HexadecimalFormat</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-i-%2A">#*</a></li>
+					
+					<li><a href="#method-i-%2B">#+</a></li>
+					
+					<li><a href="#method-i--">#-</a></li>
+					
+					<li><a href="#method-i--%40">#-@</a></li>
+					
+					<li><a href="#method-i-%2F">#/</a></li>
+					
+					<li><a href="#method-i-bcd2dpd">#bcd2dpd</a></li>
+					
+					<li><a href="#method-i-bitnot">#bitnot</a></li>
+					
+					<li><a href="#method-i-convert_bytes">#convert_bytes</a></li>
+					
+					<li><a href="#method-i-dbl_from_float">#dbl_from_float</a></li>
+					
+					<li><a href="#method-i-dbl_from_text">#dbl_from_text</a></li>
+					
+					<li><a href="#method-i-dbl_to_float">#dbl_to_float</a></li>
+					
+					<li><a href="#method-i-define">#define</a></li>
+					
+					<li><a href="#method-i-dpd2bcd">#dpd2bcd</a></li>
+					
+					<li><a href="#method-i-dpd_to_hexbcd">#dpd_to_hexbcd</a></li>
+					
+					<li><a href="#method-i-float_bin">#float_bin</a></li>
+					
+					<li><a href="#method-i-float_dec">#float_dec</a></li>
+					
+					<li><a href="#method-i-float_from_integral_sign_significand_exponent">#float_from_integral_sign_significand_exponent</a></li>
+					
+					<li><a href="#method-i-float_from_integral_significand_exponent">#float_from_integral_significand_exponent</a></li>
+					
+					<li><a href="#method-i-float_shortest_dec">#float_shortest_dec</a></li>
+					
+					<li><a href="#method-i-float_significant_dec">#float_significant_dec</a></li>
+					
+					<li><a href="#method-i-float_to_integral_sign_significand_exponent">#float_to_integral_sign_significand_exponent</a></li>
+					
+					<li><a href="#method-i-float_to_integral_significand_exponent">#float_to_integral_significand_exponent</a></li>
+					
+					<li><a href="#method-i-hex_from_float">#hex_from_float</a></li>
+					
+					<li><a href="#method-i-hex_to_float">#hex_to_float</a></li>
+					
+					<li><a href="#method-i-hexbcd_to_dpd">#hexbcd_to_dpd</a></li>
+					
+					<li><a href="#method-i-sgl_from_float">#sgl_from_float</a></li>
+					
+					<li><a href="#method-i-sgl_from_text">#sgl_from_text</a></li>
+					
+					<li><a href="#method-i-sgl_to_float">#sgl_to_float</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="./README_txt.html">README.txt</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./Flt.html">Flt</a></li>
+				
+					<li><a href="./Flt/BCDFormat.html">Flt::BCDFormat</a></li>
+				
+					<li><a href="./Flt/BinaryFormat.html">Flt::BinaryFormat</a></li>
+				
+					<li><a href="./Flt/Bits.html">Flt::Bits</a></li>
+				
+					<li><a href="./Flt/Bytes.html">Flt::Bytes</a></li>
+				
+					<li><a href="./Flt/DPDFormat.html">Flt::DPDFormat</a></li>
+				
+					<li><a href="./Flt/DecimalFormatBase.html">Flt::DecimalFormatBase</a></li>
+				
+					<li><a href="./Flt/DoubleFormat.html">Flt::DoubleFormat</a></li>
+				
+					<li><a href="./Flt/FieldsInBitsFormatBase.html">Flt::FieldsInBitsFormatBase</a></li>
+				
+					<li><a href="./Flt/HexadecimalFormat.html">Flt::HexadecimalFormat</a></li>
+				
+					<li><a href="./Flt/IEEE.html">Flt::IEEE</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="module">Flt</h1>
+
+		<div id="description">
+			<p>
+<a href="Flt.html">Flt</a> contains constants for common floating point
+formats.
+</p>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="IEEE_binaryx">IEEE_binaryx</a></dt>
+				
+				<dd class="description"><p>
+old names
+</p></dd>
+				
+			
+				<dt><a name="IEEE_HALF">IEEE_HALF</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_SINGLE">IEEE_SINGLE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_DOUBLE">IEEE_DOUBLE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_EXTENDED">IEEE_EXTENDED</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_QUAD">IEEE_QUAD</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_128">IEEE_128</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_H_BE">IEEE_H_BE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_S_BE">IEEE_S_BE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_D_BE">IEEE_D_BE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_X_BE">IEEE_X_BE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_128_BE">IEEE_128_BE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_Q_BE">IEEE_Q_BE</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_DEC32">IEEE_DEC32</a></dt>
+				
+				<dd class="description"><p>
+old names
+</p></dd>
+				
+			
+				<dt><a name="IEEE_DEC64">IEEE_DEC64</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="IEEE_DEC128">IEEE_DEC128</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="RPL">RPL</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="RPL_X">RPL_X</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="APPLE">APPLE</a></dt>
+				
+				<dd class="description"><p>
+Sofware floating point implementatin for the Apple II (6502) the
+significand &amp; sign are a single field in two&#8217;s commplement
+</p></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="method-i-%2A"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">*</span><span
+						class="method-args">(v)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/float-formats/classes.rb, line 1702</span>
+1702:   <span class="ruby-keyword kw">def</span> *(<span class="ruby-identifier">v</span>)
+1703:     <span class="ruby-comment cmt"># TODO: coercion</span>
+1704:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">form_class</span><span class="ruby-operator">==</span><span class="ruby-identifier">form_class</span>
+1705:       <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">arithmetic</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+1706:         <span class="ruby-identifier">x</span> = <span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>) * <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>)
+1707:         <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">from_number</span>(<span class="ruby-identifier">x</span>,<span class="ruby-value">:exact</span>)
+1708:       <span class="ruby-keyword kw">end</span>
+1709:     <span class="ruby-keyword kw">else</span>
+1710:       <span class="ruby-comment cmt"># TODO</span>
+1711:     <span class="ruby-keyword kw">end</span>
+1712:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="method-i-%2B"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">+</span><span
+						class="method-args">(v)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/float-formats/classes.rb, line 1669</span>
+1669:   <span class="ruby-keyword kw">def</span> <span class="ruby-operator">+</span>(<span class="ruby-identifier">v</span>)
+1670:     <span class="ruby-comment cmt"># TODO: coercion</span>
+1671:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">form_class</span><span class="ruby-operator">==</span><span class="ruby-identifier">form_class</span>
+1672:       <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">arithmetic</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+1673:         <span class="ruby-identifier">x</span> = <span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>)
+1674:         <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">from_number</span>(<span class="ruby-identifier">x</span>,<span class="ruby-value">:exact</span>)
+1675:       <span class="ruby-keyword kw">end</span>
+1676:     <span class="ruby-keyword kw">else</span>
+1677:       <span class="ruby-comment cmt"># TODO</span>
+1678:     <span class="ruby-keyword kw">end</span>
+1679:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="method-i--"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">-</span><span
+						class="method-args">(v)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/float-formats/classes.rb, line 1691</span>
+1691:   <span class="ruby-keyword kw">def</span> <span class="ruby-operator">-</span>(<span class="ruby-identifier">v</span>)
+1692:     <span class="ruby-comment cmt"># TODO: coercion</span>
+1693:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">form_class</span><span class="ruby-operator">==</span><span class="ruby-identifier">form_class</span>
+1694:       <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">arithmetic</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+1695:         <span class="ruby-identifier">x</span> = <span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>) <span class="ruby-operator">-</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>)
+1696:         <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">from_number</span>(<span class="ruby-identifier">x</span>,<span class="ruby-value">:exact</span>)
+1697:       <span class="ruby-keyword kw">end</span>
+1698:     <span class="ruby-keyword kw">else</span>
+1699:       <span class="ruby-comment cmt"># TODO</span>
+1700:     <span class="ruby-keyword kw">end</span>
+1701:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="method-i--%40"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">-@</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/float-formats/classes.rb, line 1666</span>
+1666:   <span class="ruby-keyword kw">def</span> <span class="ruby-operator">-@</span>
+1667:     <span class="ruby-identifier">minus</span>
+1668:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="method-i-%2F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">/</span><span
+						class="method-args">(v)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/float-formats/classes.rb, line 1680</span>
+1680:   <span class="ruby-keyword kw">def</span> <span class="ruby-operator">/</span>(<span class="ruby-identifier">v</span>)
+1681:     <span class="ruby-comment cmt"># TODO: coercion</span>
+1682:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">form_class</span><span class="ruby-operator">==</span><span class="ruby-identifier">form_class</span>
+1683:       <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">arithmetic</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span>
+1684:         <span class="ruby-identifier">x</span> = <span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">to</span>(<span class="ruby-identifier">t</span>,<span class="ruby-value">:exact</span>)
+1685:         <span class="ruby-identifier">form_class</span>.<span class="ruby-identifier">from_number</span>(<span class="ruby-identifier">x</span>,<span class="ruby-value">:exact</span>)
+1686:       <span class="ruby-keyword kw">end</span>
+1687:     <span class="ruby-keyword kw">else</span>
+1688:       <span class="ruby-comment cmt"># TODO</span>
+1689:     <span class="ruby-keyword kw">end</span>
+1690:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="bcd-dpd-method" class="method-detail ">
+				<a name="method-i-bcd2dpd"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">bcd2dpd</span><span
+						class="method-args">(arg)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Compress BCD to Densely Packed Decimal
+</p>
+<p>
+adapted from Mike Cowlishaw&#8217;s Rexx program:
+</p>
+<pre>
+  http://www2.hursley.ibm.com/decimal/DPDecimal.html</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="bcd-dpd-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/bytes.rb, line 338</span>
+338: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">bcd2dpd</span>(<span class="ruby-identifier">arg</span>)
+339:   <span class="ruby-comment cmt"># assign each bit to a variable, named as in the description</span>
+340:   <span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span>,<span class="ruby-identifier">c</span>,<span class="ruby-identifier">d</span>,<span class="ruby-identifier">e</span>,<span class="ruby-identifier">f</span>,<span class="ruby-identifier">g</span>,<span class="ruby-identifier">h</span>,<span class="ruby-identifier">i</span>,<span class="ruby-identifier">j</span>,<span class="ruby-identifier">k</span>,<span class="ruby-identifier">m</span> = (<span class="ruby-value str">&quot;%012B&quot;</span><span class="ruby-operator">%</span><span class="ruby-identifier">arg</span>).<span class="ruby-identifier">split</span>(<span class="ruby-value str">''</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">bit</span><span class="ruby-operator">|</span> <span class="ruby-identifier">bit</span>.<span class="ruby-identifier">to_i</span>}
+341: 
+342:   <span class="ruby-comment cmt"># derive the result bits, using boolean expressions only</span>
+343:   <span class="ruby-comment cmt">#-- [the operators are: '&amp;'=AND, '|'=OR, '\'=NOT.]</span>
+344:   <span class="ruby-identifier">p</span>=<span class="ruby-identifier">b</span> <span class="ruby-operator">|</span> (<span class="ruby-identifier">a</span> &amp; <span class="ruby-identifier">j</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">a</span> &amp; <span class="ruby-identifier">f</span> &amp; <span class="ruby-identifier">i</span>)
+345:   <span class="ruby-identifier">q</span>=<span class="ruby-identifier">c</span> <span class="ruby-operator">|</span> (<span class="ruby-identifier">a</span> &amp; <span class="ruby-identifier">k</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">a</span> &amp; <span class="ruby-identifier">g</span> &amp; <span class="ruby-identifier">i</span>)
+346:   <span class="ruby-identifier">r</span>=<span class="ruby-identifier">d</span>
+347:   <span class="ruby-identifier">s</span>=(<span class="ruby-identifier">f</span> &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">a</span>) <span class="ruby-operator">|</span> <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">i</span>))) <span class="ruby-operator">|</span> (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">a</span>) &amp; <span class="ruby-identifier">e</span> &amp; <span class="ruby-identifier">j</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">e</span> &amp; <span class="ruby-identifier">i</span>)
+348:   <span class="ruby-identifier">t</span>=<span class="ruby-identifier">g</span>  <span class="ruby-operator">|</span> (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">a</span>) &amp; <span class="ruby-identifier">e</span> &amp;<span class="ruby-identifier">k</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">a</span> &amp; <span class="ruby-identifier">i</span>)
+349:   <span class="ruby-identifier">u</span>=<span class="ruby-identifier">h</span>
+350:   <span class="ruby-identifier">v</span>=<span class="ruby-identifier">a</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">i</span>
+351:   <span class="ruby-identifier">w</span>=<span class="ruby-identifier">a</span> <span class="ruby-operator">|</span> (<span class="ruby-identifier">e</span> &amp; <span class="ruby-identifier">i</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">e</span>) &amp; <span class="ruby-identifier">j</span>)
+352:   <span class="ruby-identifier">x</span>=<span class="ruby-identifier">e</span> <span class="ruby-operator">|</span> (<span class="ruby-identifier">a</span> &amp; <span class="ruby-identifier">i</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">a</span>) &amp; <span class="ruby-identifier">k</span>)
+353:   <span class="ruby-identifier">y</span>=<span class="ruby-identifier">m</span>
+354: 
+355:   <span class="ruby-comment cmt"># concatenate the bits and return</span>
+356:     <span class="ruby-comment cmt"># result = [p,q,r,s,t,u,v,w,x,y].collect{|bit| bit.to_s}.inject{|aa,bb|aa+bb}.to_i(2)</span>
+357:     <span class="ruby-identifier">result</span> = <span class="ruby-value">0</span>
+358:     [<span class="ruby-identifier">p</span>,<span class="ruby-identifier">q</span>,<span class="ruby-identifier">r</span>,<span class="ruby-identifier">s</span>,<span class="ruby-identifier">t</span>,<span class="ruby-identifier">u</span>,<span class="ruby-identifier">v</span>,<span class="ruby-identifier">w</span>,<span class="ruby-identifier">x</span>,<span class="ruby-identifier">y</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">bit</span><span class="ruby-operator">|</span>
+359:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;=</span> <span class="ruby-value">1</span>
+360:       <span class="ruby-identifier">result</span> <span class="ruby-operator">|=</span> <span class="ruby-identifier">bit</span>
+361:     <span class="ruby-keyword kw">end</span>
+362:   <span class="ruby-identifier">result</span>
+363: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="bitnot-method" class="method-detail ">
+				<a name="method-i-bitnot"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">bitnot</span><span
+						class="method-args">(b)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Negate a bit. Auxiliar method for DPD conversions
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="bitnot-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/bytes.rb, line 330</span>
+330: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">b</span>)
+331:   (<span class="ruby-operator">~</span><span class="ruby-identifier">b</span>)&amp;<span class="ruby-value">1</span>
+332: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="convert-bytes-method" class="method-detail ">
+				<a name="method-i-convert_bytes"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">convert_bytes</span><span
+						class="method-args">(bytes,from_format,to_format)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="convert-bytes-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/float-formats/classes.rb, line 1942</span>
+1942: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">convert_bytes</span>(<span class="ruby-identifier">bytes</span>,<span class="ruby-identifier">from_format</span>,<span class="ruby-identifier">to_format</span>)
+1943:   <span class="ruby-identifier">from_format</span>.<span class="ruby-identifier">from_bytes</span>(<span class="ruby-identifier">bytes</span>).<span class="ruby-identifier">convert_to</span>(<span class="ruby-identifier">to_format</span>)
+1944: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dbl-from-float-method" class="method-detail ">
+				<a name="method-i-dbl_from_float"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dbl_from_float</span><span
+						class="method-args">(val, little_endian=true)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+generate a DBL value stored in a byte string given a Float value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dbl-from-float-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 134</span>
+134: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dbl_from_float</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">little_endian</span>=<span class="ruby-keyword kw">true</span>)
+135:   <span class="ruby-identifier">code</span> = <span class="ruby-identifier">little_endian</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'E'</span><span class="ruby-operator">:</span><span class="ruby-value str">'G'</span>
+136:   [<span class="ruby-identifier">val</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-identifier">code</span>)
+137: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dbl-from-text-method" class="method-detail ">
+				<a name="method-i-dbl_from_text"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dbl_from_text</span><span
+						class="method-args">(txt, little_endian=true)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+generate a DBL value stored in a byte string given a decimal value
+formatted as text
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dbl-from-text-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 128</span>
+128: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dbl_from_text</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">little_endian</span>=<span class="ruby-keyword kw">true</span>)
+129:   <span class="ruby-identifier">code</span> = <span class="ruby-identifier">little_endian</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'E'</span><span class="ruby-operator">:</span><span class="ruby-value str">'G'</span>
+130:   [<span class="ruby-identifier">txt</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-identifier">code</span>)
+131: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dbl-to-float-method" class="method-detail ">
+				<a name="method-i-dbl_to_float"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dbl_to_float</span><span
+						class="method-args">(sgl, little_endian=true)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+convert a DBL value stored in a byte string to a Float value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dbl-to-float-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 140</span>
+140: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dbl_to_float</span>(<span class="ruby-identifier">sgl</span>, <span class="ruby-identifier">little_endian</span>=<span class="ruby-keyword kw">true</span>)
+141:   <span class="ruby-identifier">code</span> = <span class="ruby-identifier">little_endian</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'E'</span><span class="ruby-operator">:</span><span class="ruby-value str">'G'</span>
+142:   <span class="ruby-identifier">sgl</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-identifier">code</span>)[<span class="ruby-value">0</span>]
+143: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="define-method" class="method-detail ">
+				<a name="method-i-define"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">define</span><span
+						class="method-args">(*arguments)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="define-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/float-formats/classes.rb, line 1922</span>
+1922: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">define</span>(*<span class="ruby-identifier">arguments</span>)
+1923:   <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Invalid number of arguments for Flt definitions.&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">arguments</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&lt;</span><span class="ruby-value">2</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">arguments</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&gt;</span><span class="ruby-value">3</span>
+1924:   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">arguments</span>.<span class="ruby-identifier">first</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Class</span>)
+1925:     <span class="ruby-identifier">base</span>,<span class="ruby-identifier">name</span>,<span class="ruby-identifier">parameters</span> = <span class="ruby-identifier">arguments</span>
+1926:   <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">arguments</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Class</span>)
+1927:     <span class="ruby-identifier">name</span>,<span class="ruby-identifier">base</span>,<span class="ruby-identifier">parameters</span> = <span class="ruby-identifier">arguments</span>
+1928:   <span class="ruby-keyword kw">else</span>
+1929:     <span class="ruby-identifier">name</span>,<span class="ruby-identifier">parameters</span> = <span class="ruby-identifier">arguments</span>
+1930:     <span class="ruby-identifier">base</span> = <span class="ruby-identifier">parameters</span>[<span class="ruby-value">:base</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">FormatBase</span>
+1931:   <span class="ruby-keyword kw">end</span>
+1932:   <span class="ruby-constant">Flt</span>.<span class="ruby-identifier">const_set</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">cls</span>=<span class="ruby-constant">Class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">base</span>)
+1933:   <span class="ruby-identifier">cls</span>.<span class="ruby-identifier">define</span> <span class="ruby-identifier">parameters</span>
+1934:   <span class="ruby-identifier">constructor</span> = <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span>*<span class="ruby-identifier">args</span><span class="ruby-operator">|</span> <span class="ruby-identifier">cls</span>.<span class="ruby-identifier">new</span>(*<span class="ruby-identifier">args</span>) }
+1935:   <span class="ruby-constant">Flt</span>.<span class="ruby-identifier">send</span> <span class="ruby-value">:define_method</span>,<span class="ruby-identifier">name</span>,<span class="ruby-identifier">constructor</span>
+1936:   <span class="ruby-constant">Flt</span>.<span class="ruby-identifier">send</span> <span class="ruby-value">:module_function</span>, <span class="ruby-identifier">name</span>
+1937:   <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">cls</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+1938: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dpd-bcd-method" class="method-detail ">
+				<a name="method-i-dpd2bcd"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dpd2bcd</span><span
+						class="method-args">(arg)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Expand Densely Packed Decimal to BCD
+</p>
+<p>
+adapted from Mike Cowlishaw&#8217;s Rexx program:
+</p>
+<pre>
+  http://www2.hursley.ibm.com/decimal/DPDecimal.html</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="dpd-bcd-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/bytes.rb, line 369</span>
+369: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dpd2bcd</span>(<span class="ruby-identifier">arg</span>)
+370: 
+371:   <span class="ruby-comment cmt"># assign each bit to a variable, named as in the description</span>
+372:   <span class="ruby-identifier">p</span>,<span class="ruby-identifier">q</span>,<span class="ruby-identifier">r</span>,<span class="ruby-identifier">s</span>,<span class="ruby-identifier">t</span>,<span class="ruby-identifier">u</span>,<span class="ruby-identifier">v</span>,<span class="ruby-identifier">w</span>,<span class="ruby-identifier">x</span>,<span class="ruby-identifier">y</span> = (<span class="ruby-value str">&quot;%010B&quot;</span><span class="ruby-operator">%</span><span class="ruby-identifier">arg</span>).<span class="ruby-identifier">split</span>(<span class="ruby-value str">''</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">bit</span><span class="ruby-operator">|</span> <span class="ruby-identifier">bit</span>.<span class="ruby-identifier">to_i</span>}
+373: 
+374:   <span class="ruby-comment cmt"># derive the result bits, using boolean expressions only</span>
+375:   <span class="ruby-identifier">a</span>= (<span class="ruby-identifier">v</span> &amp; <span class="ruby-identifier">w</span>) &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">s</span>) <span class="ruby-operator">|</span> <span class="ruby-identifier">t</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">x</span>))
+376:   <span class="ruby-identifier">b</span>=<span class="ruby-identifier">p</span> &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">v</span>) <span class="ruby-operator">|</span> <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">w</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">s</span> &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">t</span>) &amp; <span class="ruby-identifier">x</span>))
+377:   <span class="ruby-identifier">c</span>=<span class="ruby-identifier">q</span> &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">v</span>) <span class="ruby-operator">|</span> <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">w</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">s</span> &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">t</span>) &amp; <span class="ruby-identifier">x</span>))
+378:   <span class="ruby-identifier">d</span>=<span class="ruby-identifier">r</span>
+379:   <span class="ruby-identifier">e</span>=<span class="ruby-identifier">v</span> &amp; ((<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">w</span>) &amp; <span class="ruby-identifier">x</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">t</span>) &amp; <span class="ruby-identifier">x</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">s</span> &amp; <span class="ruby-identifier">x</span>))
+380:   <span class="ruby-identifier">f</span>=(<span class="ruby-identifier">s</span> &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">v</span>) <span class="ruby-operator">|</span> <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">x</span>))) <span class="ruby-operator">|</span> (<span class="ruby-identifier">p</span> &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">s</span>) &amp; <span class="ruby-identifier">t</span> &amp; <span class="ruby-identifier">v</span> &amp; <span class="ruby-identifier">w</span> &amp; <span class="ruby-identifier">x</span>)
+381:   <span class="ruby-identifier">g</span>=(<span class="ruby-identifier">t</span> &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">v</span>) <span class="ruby-operator">|</span> <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">x</span>))) <span class="ruby-operator">|</span> (<span class="ruby-identifier">q</span> &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">s</span>) &amp; <span class="ruby-identifier">t</span> &amp; <span class="ruby-identifier">w</span>)
+382:   <span class="ruby-identifier">h</span>=<span class="ruby-identifier">u</span>
+383:   <span class="ruby-identifier">i</span>=<span class="ruby-identifier">v</span> &amp; ((<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">w</span>) &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">x</span>)) <span class="ruby-operator">|</span> (<span class="ruby-identifier">w</span> &amp; <span class="ruby-identifier">x</span> &amp; (<span class="ruby-identifier">s</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">t</span>)))
+384:   <span class="ruby-identifier">j</span>=(<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">v</span>) &amp; <span class="ruby-identifier">w</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">s</span> &amp; <span class="ruby-identifier">v</span> &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">w</span>) &amp; <span class="ruby-identifier">x</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">p</span> &amp; <span class="ruby-identifier">w</span> &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">x</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">s</span>) &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">t</span>))))
+385:   <span class="ruby-identifier">k</span>=(<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">v</span>) &amp; <span class="ruby-identifier">x</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">t</span> &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">w</span>) &amp; <span class="ruby-identifier">x</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">q</span> &amp; <span class="ruby-identifier">v</span> &amp; <span class="ruby-identifier">w</span> &amp; (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">x</span>) <span class="ruby-operator">|</span> (<span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">s</span>) &amp; <span class="ruby-identifier">bitnot</span>(<span class="ruby-identifier">t</span>))))
+386:   <span class="ruby-identifier">m</span>=<span class="ruby-identifier">y</span>
+387:   <span class="ruby-comment cmt"># concatenate the bits and return</span>
+388:   <span class="ruby-comment cmt"># result = [a,b,c,d,e,f,g,h,i,j,k,m].collect{|bit| bit.to_s}.inject{|aa,bb|aa+bb}.to_i(2)</span>
+389:     <span class="ruby-identifier">result</span> = <span class="ruby-value">0</span>
+390:     [<span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span>,<span class="ruby-identifier">c</span>,<span class="ruby-identifier">d</span>,<span class="ruby-identifier">e</span>,<span class="ruby-identifier">f</span>,<span class="ruby-identifier">g</span>,<span class="ruby-identifier">h</span>,<span class="ruby-identifier">i</span>,<span class="ruby-identifier">j</span>,<span class="ruby-identifier">k</span>,<span class="ruby-identifier">m</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">bit</span><span class="ruby-operator">|</span>
+391:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;=</span> <span class="ruby-value">1</span>
+392:       <span class="ruby-identifier">result</span> <span class="ruby-operator">|=</span> <span class="ruby-identifier">bit</span>
+393:     <span class="ruby-keyword kw">end</span>
+394:   <span class="ruby-identifier">result</span>
+395: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dpd-to-hexbcd-method" class="method-detail ">
+				<a name="method-i-dpd_to_hexbcd"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dpd_to_hexbcd</span><span
+						class="method-args">(dpd, dpd_bits, endianness=:big_endian)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Unpack DPD digits
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dpd-to-hexbcd-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/bytes.rb, line 430</span>
+430: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dpd_to_hexbcd</span>(<span class="ruby-identifier">dpd</span>, <span class="ruby-identifier">dpd_bits</span>, <span class="ruby-identifier">endianness</span>=<span class="ruby-value">:big_endian</span>)
+431: 
+432:   <span class="ruby-identifier">bcd</span> = <span class="ruby-value str">&quot;&quot;</span>
+433: 
+434:   <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">dpd_bits</span><span class="ruby-operator">&gt;=</span><span class="ruby-value">10</span>
+435:     <span class="ruby-identifier">v</span> = <span class="ruby-identifier">dpd2bcd</span>(<span class="ruby-identifier">dpd</span> &amp; <span class="ruby-value">0x3FF</span>)
+436:     <span class="ruby-identifier">dpd</span> <span class="ruby-operator">&gt;&gt;=</span> <span class="ruby-value">10</span>
+437:     <span class="ruby-identifier">dpd_bits</span> <span class="ruby-operator">-=</span> <span class="ruby-value">10</span>
+438:     <span class="ruby-identifier">bcd</span> = (<span class="ruby-value str">&quot;%03X&quot;</span><span class="ruby-operator">%</span><span class="ruby-identifier">v</span>)<span class="ruby-operator">+</span><span class="ruby-identifier">bcd</span>
+439:   <span class="ruby-keyword kw">end</span>
+440: 
+441:   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">dpd_bits</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span>
+442:     <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">dpd_bits</span>
+443:       <span class="ruby-keyword kw">when</span> <span class="ruby-value">4</span>
+444:         <span class="ruby-identifier">v</span> = <span class="ruby-identifier">dpd</span> &amp; <span class="ruby-value">0xF</span>
+445:         <span class="ruby-identifier">n</span> = <span class="ruby-value">1</span>
+446:       <span class="ruby-keyword kw">when</span> <span class="ruby-value">7</span>
+447:         <span class="ruby-identifier">v</span> = <span class="ruby-identifier">dpd</span> &amp; <span class="ruby-value">0x7F</span>
+448:         <span class="ruby-identifier">n</span> = <span class="ruby-value">2</span>
+449:       <span class="ruby-keyword kw">else</span>
+450:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Invalid DPD data&quot;</span>
+451:     <span class="ruby-keyword kw">end</span>
+452:     <span class="ruby-identifier">v</span> = <span class="ruby-identifier">dpd2bcd</span>(<span class="ruby-identifier">v</span>,<span class="ruby-keyword kw">true</span>)
+453:     <span class="ruby-identifier">bcd</span> = (<span class="ruby-node">&quot;%0#{n}X&quot;</span><span class="ruby-operator">%</span><span class="ruby-identifier">v</span>)<span class="ruby-operator">+</span><span class="ruby-identifier">bcd</span>
+454:   <span class="ruby-keyword kw">end</span>
+455: 
+456:   <span class="ruby-identifier">bcd</span> = <span class="ruby-identifier">bcd</span>.<span class="ruby-identifier">reverse</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">endianness</span><span class="ruby-operator">==</span><span class="ruby-value">:little_endian</span>
+457: 
+458:   <span class="ruby-identifier">bcd</span>
+459: 
+460: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-bin-method" class="method-detail ">
+				<a name="method-i-float_bin"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_bin</span><span
+						class="method-args">(x)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+binary representation
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="float-bin-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 29</span>
+29: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_bin</span>(<span class="ruby-identifier">x</span>)
+30:   <span class="ruby-identifier">x</span>.<span class="ruby-identifier">nio_write</span>(<span class="ruby-constant">Nio</span><span class="ruby-operator">::</span><span class="ruby-constant">Fmt</span>.<span class="ruby-identifier">mode</span>(<span class="ruby-value">:sci</span>,<span class="ruby-value">:exact</span>).<span class="ruby-identifier">base</span>(<span class="ruby-value">2</span>))
+31: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-dec-method" class="method-detail ">
+				<a name="method-i-float_dec"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_dec</span><span
+						class="method-args">(x)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+complete exact decimal representation
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="float-dec-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 24</span>
+24: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_dec</span>(<span class="ruby-identifier">x</span>)
+25:   <span class="ruby-identifier">x</span>.<span class="ruby-identifier">nio_write</span>(<span class="ruby-constant">Nio</span><span class="ruby-operator">::</span><span class="ruby-constant">Fmt</span>.<span class="ruby-identifier">prec</span>(<span class="ruby-value">:exact</span>).<span class="ruby-identifier">approx_mode</span>(<span class="ruby-value">:exact</span>))
+26: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-from-integral-sign-significand-exponent-method" class="method-detail ">
+				<a name="method-i-float_from_integral_sign_significand_exponent"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_from_integral_sign_significand_exponent</span><span
+						class="method-args">(sgn,s,e)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="float-from-integral-sign-significand-exponent-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 47</span>
+47: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_from_integral_sign_significand_exponent</span>(<span class="ruby-identifier">sgn</span>,<span class="ruby-identifier">s</span>,<span class="ruby-identifier">e</span>)
+48:   <span class="ruby-constant">Float</span>.<span class="ruby-identifier">context</span>.<span class="ruby-constant">Num</span>(<span class="ruby-identifier">sgn</span>,<span class="ruby-identifier">s</span>,<span class="ruby-identifier">e</span>)
+49: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-from-integral-significand-exponent-method" class="method-detail ">
+				<a name="method-i-float_from_integral_significand_exponent"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_from_integral_significand_exponent</span><span
+						class="method-args">(s,e)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+compose float from significand and exponent
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="float-from-integral-significand-exponent-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 39</span>
+39: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_from_integral_significand_exponent</span>(<span class="ruby-identifier">s</span>,<span class="ruby-identifier">e</span>)
+40:   <span class="ruby-constant">Float</span>.<span class="ruby-identifier">context</span>.<span class="ruby-constant">Num</span>(<span class="ruby-identifier">s</span>,<span class="ruby-identifier">e</span>)
+41: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-shortest-dec-method" class="method-detail ">
+				<a name="method-i-float_shortest_dec"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_shortest_dec</span><span
+						class="method-args">(x)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+shortest decimal unambiguous reprentation
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="float-shortest-dec-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 14</span>
+14: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_shortest_dec</span>(<span class="ruby-identifier">x</span>)
+15:   <span class="ruby-identifier">x</span>.<span class="ruby-identifier">nio_write</span>(<span class="ruby-constant">Nio</span><span class="ruby-operator">::</span><span class="ruby-constant">Fmt</span>.<span class="ruby-identifier">prec</span>(<span class="ruby-value">:exact</span>))
+16: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-significant-dec-method" class="method-detail ">
+				<a name="method-i-float_significant_dec"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_significant_dec</span><span
+						class="method-args">(x)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+decimal representation showing all significant digits
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="float-significant-dec-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 19</span>
+19: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_significant_dec</span>(<span class="ruby-identifier">x</span>)
+20:   <span class="ruby-identifier">x</span>.<span class="ruby-identifier">nio_write</span>(<span class="ruby-constant">Nio</span><span class="ruby-operator">::</span><span class="ruby-constant">Fmt</span>.<span class="ruby-identifier">prec</span>(<span class="ruby-value">:exact</span>).<span class="ruby-identifier">show_all_digits</span>(<span class="ruby-keyword kw">true</span>))
+21: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-to-integral-sign-significand-exponent-method" class="method-detail ">
+				<a name="method-i-float_to_integral_sign_significand_exponent"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_to_integral_sign_significand_exponent</span><span
+						class="method-args">(x)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="float-to-integral-sign-significand-exponent-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 43</span>
+43: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_to_integral_sign_significand_exponent</span>(<span class="ruby-identifier">x</span>)
+44:   <span class="ruby-constant">Float</span>.<span class="ruby-identifier">context</span>.<span class="ruby-identifier">split</span>(<span class="ruby-identifier">x</span>)
+45: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="float-to-integral-significand-exponent-method" class="method-detail ">
+				<a name="method-i-float_to_integral_significand_exponent"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">float_to_integral_significand_exponent</span><span
+						class="method-args">(x)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+decompose a float into a signed integer significand and exponent (base
+Float::RADIX)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="float-to-integral-significand-exponent-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 34</span>
+34: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">float_to_integral_significand_exponent</span>(<span class="ruby-identifier">x</span>)
+35:   <span class="ruby-constant">Float</span>.<span class="ruby-identifier">context</span>.<span class="ruby-identifier">to_int_scale</span>(<span class="ruby-identifier">x</span>)
+36: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="hex-from-float-method" class="method-detail ">
+				<a name="method-i-hex_from_float"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">hex_from_float</span><span
+						class="method-args">(v)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+convert a float to C99&#8217;s hexadecimal notation
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="hex-from-float-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 52</span>
+52: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hex_from_float</span>(<span class="ruby-identifier">v</span>)
+53:   <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Float</span><span class="ruby-operator">::</span><span class="ruby-constant">RADIX</span><span class="ruby-operator">==</span><span class="ruby-value">2</span>
+54:     <span class="ruby-identifier">sgn</span>,<span class="ruby-identifier">s</span>,<span class="ruby-identifier">e</span> = <span class="ruby-identifier">float_to_integral_sign_significand_exponent</span>(<span class="ruby-identifier">v</span>)
+55:   <span class="ruby-keyword kw">else</span>
+56:     <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">v</span>.<span class="ruby-identifier">nio_write</span>(<span class="ruby-constant">Fmt</span>.<span class="ruby-identifier">base</span>(<span class="ruby-value">2</span>).<span class="ruby-identifier">sep</span>(<span class="ruby-value str">'.'</span>)).<span class="ruby-identifier">upcase</span>
+57:     <span class="ruby-identifier">p</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">index</span>(<span class="ruby-value str">'E'</span>)
+58:     <span class="ruby-identifier">exp</span> = <span class="ruby-value">0</span>
+59:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">p</span>
+60:       <span class="ruby-identifier">exp</span> = <span class="ruby-identifier">rep</span>[<span class="ruby-identifier">p</span><span class="ruby-operator">+</span><span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>
+61:       <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">rep</span>[<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-identifier">p</span>]
+62:     <span class="ruby-keyword kw">end</span>
+63:     <span class="ruby-identifier">p</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">index</span>(<span class="ruby-value str">'.'</span>)
+64:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">p</span>
+65:       <span class="ruby-identifier">exp</span> <span class="ruby-operator">-=</span> (<span class="ruby-identifier">txt</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-identifier">p</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)
+66:       <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">'.'</span>,<span class="ruby-value str">''</span>)
+67:     <span class="ruby-keyword kw">end</span>
+68:     <span class="ruby-identifier">s</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">2</span>)
+69:     <span class="ruby-identifier">e</span> = <span class="ruby-identifier">exp</span>
+70:   <span class="ruby-keyword kw">end</span>
+71:   <span class="ruby-node">&quot;0x#{sgn&lt;0 ? '-' : ''}#{s.to_s(16)}p#{e}&quot;</span>
+72: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="hex-to-float-method" class="method-detail ">
+				<a name="method-i-hex_to_float"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">hex_to_float</span><span
+						class="method-args">(txt)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+convert a string formatted in C99&#8217;s hexadecimal notation to a float
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="hex-to-float-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 75</span>
+ 75: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hex_to_float</span>(<span class="ruby-identifier">txt</span>)
+ 76:   <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">upcase</span>
+ 77:   <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">txt</span>[<span class="ruby-value">2</span><span class="ruby-operator">..</span><span class="ruby-value">1</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">txt</span>[<span class="ruby-value">0</span>,<span class="ruby-value">2</span>]<span class="ruby-operator">==</span><span class="ruby-value str">'0X'</span>
+ 78:   <span class="ruby-identifier">p</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">index</span>(<span class="ruby-value str">'P'</span>)
+ 79:   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">p</span>
+ 80:     <span class="ruby-identifier">exp</span> = <span class="ruby-identifier">txt</span>[<span class="ruby-identifier">p</span><span class="ruby-operator">+</span><span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>
+ 81:     <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">txt</span>[<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-identifier">p</span>]
+ 82:   <span class="ruby-keyword kw">else</span>
+ 83:     <span class="ruby-identifier">exp</span> = <span class="ruby-value">0</span>
+ 84:   <span class="ruby-keyword kw">end</span>
+ 85:   <span class="ruby-identifier">p</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">index</span>(<span class="ruby-value str">'.'</span>)
+ 86:   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">p</span>
+ 87:     <span class="ruby-identifier">exp</span> <span class="ruby-operator">-=</span> (<span class="ruby-identifier">txt</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-identifier">p</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)*<span class="ruby-value">4</span>
+ 88:     <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">'.'</span>,<span class="ruby-value str">''</span>)
+ 89:   <span class="ruby-keyword kw">end</span>
+ 90:   <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Float</span><span class="ruby-operator">::</span><span class="ruby-constant">RADIX</span><span class="ruby-operator">==</span><span class="ruby-value">2</span>
+ 91:     <span class="ruby-identifier">v</span> = <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)
+ 92:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">v</span><span class="ruby-operator">==</span><span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">txt</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">'-'</span>)
+ 93:       <span class="ruby-identifier">sign</span> = <span class="ruby-value">1</span>
+ 94:     <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">v</span><span class="ruby-operator">&lt;</span><span class="ruby-value">0</span>
+ 95:       <span class="ruby-identifier">sign</span> = <span class="ruby-value">1</span>
+ 96:       <span class="ruby-identifier">v</span> = <span class="ruby-operator">-</span><span class="ruby-identifier">v</span>
+ 97:     <span class="ruby-keyword kw">else</span>
+ 98:       <span class="ruby-identifier">sign</span> = <span class="ruby-value">1</span>
+ 99:     <span class="ruby-keyword kw">end</span>
+100:     <span class="ruby-identifier">float_from_integral_sign_significand_exponent</span>(<span class="ruby-identifier">sign</span>,<span class="ruby-identifier">v</span>,<span class="ruby-identifier">exp</span>)
+101:   <span class="ruby-keyword kw">else</span>
+102:     (<span class="ruby-identifier">txt</span>.<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>)*(<span class="ruby-value">2</span><span class="ruby-operator">**</span><span class="ruby-identifier">exp</span>)).<span class="ruby-identifier">to_f</span>
+103:   <span class="ruby-keyword kw">end</span>
+104: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="hexbcd-to-dpd-method" class="method-detail ">
+				<a name="method-i-hexbcd_to_dpd"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">hexbcd_to_dpd</span><span
+						class="method-args">(bcd, endianness=:big_endian)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Pack a bcd digits string into DPD
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="hexbcd-to-dpd-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/bytes.rb, line 398</span>
+398: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hexbcd_to_dpd</span>(<span class="ruby-identifier">bcd</span>, <span class="ruby-identifier">endianness</span>=<span class="ruby-value">:big_endian</span>)
+399: 
+400:   <span class="ruby-identifier">n</span> = <span class="ruby-identifier">bcd</span>.<span class="ruby-identifier">size</span>
+401:   <span class="ruby-identifier">dpd</span> = <span class="ruby-value">0</span>
+402:   <span class="ruby-identifier">dpd_bits</span> = <span class="ruby-value">0</span>
+403: 
+404:   <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
+405:   <span class="ruby-identifier">m</span> = <span class="ruby-identifier">n</span><span class="ruby-operator">%</span><span class="ruby-value">3</span>
+406:   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">m</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span>
+407:     <span class="ruby-identifier">v</span> = <span class="ruby-identifier">bcd2dpd</span>(<span class="ruby-identifier">bcd</span>[<span class="ruby-value">0</span>,<span class="ruby-identifier">m</span>].<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>))
+408:     <span class="ruby-identifier">i</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">m</span>
+409:     <span class="ruby-identifier">n</span> <span class="ruby-operator">-=</span> <span class="ruby-identifier">m</span>
+410:     <span class="ruby-identifier">bits</span> = <span class="ruby-identifier">m</span><span class="ruby-operator">==</span><span class="ruby-value">1</span> <span class="ruby-operator">?</span> <span class="ruby-value">4</span> <span class="ruby-operator">:</span> <span class="ruby-value">7</span>
+411:     <span class="ruby-identifier">dpd_bits</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">bits</span>
+412:     <span class="ruby-identifier">dpd</span> <span class="ruby-operator">&lt;&lt;=</span> <span class="ruby-identifier">bits</span>
+413:     <span class="ruby-identifier">dpd</span> <span class="ruby-operator">|=</span> <span class="ruby-identifier">v</span>
+414:   <span class="ruby-keyword kw">end</span>
+415: 
+416:   <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">n</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span>
+417:     <span class="ruby-identifier">v</span> = <span class="ruby-identifier">bcd2dpd</span>(<span class="ruby-identifier">bcd</span>[<span class="ruby-identifier">i</span>,<span class="ruby-value">3</span>].<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>))
+418:     <span class="ruby-identifier">i</span> <span class="ruby-operator">+=</span> <span class="ruby-value">3</span>
+419:     <span class="ruby-identifier">n</span> <span class="ruby-operator">-=</span> <span class="ruby-value">3</span>
+420:     <span class="ruby-identifier">bits</span> = <span class="ruby-value">10</span>
+421:     <span class="ruby-identifier">dpd_bits</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">bits</span>
+422:     <span class="ruby-identifier">dpd</span> <span class="ruby-operator">&lt;&lt;=</span> <span class="ruby-identifier">bits</span>
+423:     <span class="ruby-identifier">dpd</span> <span class="ruby-operator">|=</span> <span class="ruby-identifier">v</span>
+424:   <span class="ruby-keyword kw">end</span>
+425: 
+426:   [<span class="ruby-identifier">dpd</span>, <span class="ruby-identifier">dpd_bits</span>]
+427: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sgl-from-float-method" class="method-detail ">
+				<a name="method-i-sgl_from_float"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sgl_from_float</span><span
+						class="method-args">(val, little_endian=true)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+generate a SGL value stored in a byte string given a Float value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="sgl-from-float-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 115</span>
+115: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sgl_from_float</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">little_endian</span>=<span class="ruby-keyword kw">true</span>)
+116:   <span class="ruby-identifier">code</span> = <span class="ruby-identifier">little_endian</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'e'</span><span class="ruby-operator">:</span><span class="ruby-value str">'g'</span>
+117:   [<span class="ruby-identifier">val</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-identifier">code</span>)
+118: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sgl-from-text-method" class="method-detail ">
+				<a name="method-i-sgl_from_text"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sgl_from_text</span><span
+						class="method-args">(txt, little_endian=true)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+generate a SGL value stored in a byte string given a decimal value
+formatted as text
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="sgl-from-text-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 109</span>
+109: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sgl_from_text</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">little_endian</span>=<span class="ruby-keyword kw">true</span>)
+110:   <span class="ruby-identifier">code</span> = <span class="ruby-identifier">little_endian</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'e'</span><span class="ruby-operator">:</span><span class="ruby-value str">'g'</span>
+111:   [<span class="ruby-identifier">txt</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-identifier">code</span>)
+112: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sgl-to-float-method" class="method-detail ">
+				<a name="method-i-sgl_to_float"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sgl_to_float</span><span
+						class="method-args">(sgl, littel_endian=true)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+convert a SGL value stored in a byte string to a Float value
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="sgl-to-float-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/float-formats/native.rb, line 121</span>
+121: <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sgl_to_float</span>(<span class="ruby-identifier">sgl</span>, <span class="ruby-identifier">littel_endian</span>=<span class="ruby-keyword kw">true</span>)
+122:   <span class="ruby-identifier">code</span> = <span class="ruby-identifier">little_endian</span> <span class="ruby-operator">?</span> <span class="ruby-value str">'e'</span><span class="ruby-operator">:</span><span class="ruby-value str">'g'</span>
+123:   <span class="ruby-identifier">sgl</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-identifier">code</span>)[<span class="ruby-value">0</span>]
+124: <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+
