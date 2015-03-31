@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    float-formats (0.2.0)
+    float-formats (0.2.1)
       flt (>= 1.1.2)
       nio (>= 0.2.4)
 

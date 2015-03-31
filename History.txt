@@ -1,3 +1,7 @@
+== 0.2.1 2015-03-31
+
+* Compatibility issues with Ruby 1.9/2
+
 == 0.2.0 2009-08-06
 
 *  New redefined interface
