@@ -1,9 +1,6 @@
 # Float-Formats
 # Definition of common floating-point formats
 
-require 'nio'
-require 'nio/sugar'
-
 require 'enumerator'
 
 require 'float-formats/classes.rb'
@@ -24,28 +21,28 @@ module IEEE
     exponent_bits = parameters[:exponent]
     Flt.define(name,{
       :base=>BinaryFormat,
-      :fields=>[:significand,significand_bits,:exponent,exponent_bits,:sign,1], 
+      :fields=>[:significand,significand_bits,:exponent,exponent_bits,:sign,1],
       :bias=>2**(exponent_bits-1)-1, :bias_mode=>:scientific_significand,
       :hidden_bit=>true,
       :endianness=>:little_endian, :round=>:half_even,
       :gradual_underflow=>true, :infinity=>true, :nan=>true
     }.merge(parameters))
   end
-  
+
   # Define an IEEE binary interchange format given its width in bits
   def self.interchange_binary(name,width_in_bits, options={})
     raise "Invalid IEEE binary interchange format definition: size (#{width_in_bits}) is not valid" unless (width_in_bits%32)==0 && (width_in_bits/32)>=4
     p = width_in_bits - (4*Math.log(width_in_bits)/Math.log(2)).round.to_i + 13
     binary(name,{:significand=>p-1, :exponent=>width_in_bits-p}.merge(options))
-  end    
-  
+  end
+
   # Define an IEEE decimal format by passing parameters in a hash;
   # :significand and :exponent are used to defined the fields,
   # optional parameters may follow.
   def self.decimal(name,parameters)
     significand_continuation_bits = parameters[:significand]
     exponent_continuation_bits = parameters[:exponent]
-    Flt.define(name,{    
+    Flt.define(name,{
       :base=>DPDFormat,
       :fields=>[:significand_continuation,significand_continuation_bits,:exponent_continuation,exponent_continuation_bits,:combination,5,:sign,1],
       :normalized=>false,
@@ -62,7 +59,7 @@ module IEEE
     t = (p-1)*10/3
     w = width_in_bits - t - 6
     decimal(name,{:significand=>t, :exponent=>w}.merge(options))
-  end    
+  end
 
 end
 
@@ -121,7 +118,7 @@ IEEE.decimal :IEEE_decimal128, :significand=>110, :exponent=>12
 IEEE.interchange_decimal :IEEE_decimal96, 96
 IEEE.interchange_decimal :IEEE_decimal192, 192
 IEEE.interchange_decimal :IEEE_decimal256, 256
-   
+
 # old names
 
 IEEE_DEC32 = IEEE_decimal32
@@ -137,9 +134,9 @@ Flt.define BinaryFormat, :XS128,
   :endianness=>:big_endian, :round=>:half_up,
   :endianness=>:big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-                        
-# HP-3000 excess 256 format, HP-Tandem...                        
-               
+
+# HP-3000 excess 256 format, HP-Tandem...
+
 Flt.define BinaryFormat, :XS256,
   :fields=>[:significand,22,:exponent,9,:sign,1],
   :bias=>256, :bias_mode=>:scientific_significand,
@@ -153,18 +150,18 @@ Flt.define :XS256_DOUBLE, BinaryFormat,
   :hidden_bit=>true, :min_encoded_exp=>0,
   :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-                       
-# Borland Pascal 48 bits "Real" Format                      
-                       
+
+# Borland Pascal 48 bits "Real" Format
+
 Flt.define :BORLAND48, BinaryFormat,
   :fields=>[:exponent,8,:significand,39,:sign,1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
   :endianness=>:little_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-     
-# Microsoft Binary Floating-point (Quickbasic)  
-     
+
+# Microsoft Binary Floating-point (Quickbasic)
+
 Flt.define :MBF_SINGLE, BinaryFormat,
   :fields=>[:significand,23,:sign,1,:exponent,8],
   :bias=>128, :bias_mode=>:fractional_significand,
@@ -178,16 +175,16 @@ Flt.define :MBF_DOUBLE, BinaryFormat,
   :hidden_bit=>true,
   :endianness=>:little_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-     
+
 # DEC formats (VAX)
-  
+
 Flt.define :VAX_F, BinaryFormat,
   :fields=>[:significand, 23, :exponent, 8, :sign, 1],
   :bias=>128, :bias_mode=>:fractional_significand,
   :hidden_bit=>true,
   :endianness=>:little_big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-  
+
 Flt.define :VAX_D, BinaryFormat,
   :fields=>[:significand, 55, :exponent, 8, :sign, 1],
   :bias=>128, :bias_mode=>:fractional_significand,
@@ -228,7 +225,7 @@ Flt.define :PDP11_D, BinaryFormat,
 
 # Format used in HP Saturn-based RPL calculators (HP48,HP49,HP50, also HP32s, HP42s --which use RPL internally)
 # (these formats are not used in the HP-71B which is a Saturn, non-RPL machine)
-          
+
 Flt.define :SATURN, BCDFormat,
   :fields=>[:prolog,5,:exponent,3,:significand,12,:sign,1],
   :fields_handler=>lambda{|fields| fields[0]=2933},
@@ -242,11 +239,11 @@ Flt.define :SATURN_X, BCDFormat,
   :exponent_mode=>:radix_complement,
   :endianness=>:little_endian, :round=>:half_even,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-         
-         
+
+
 RPL = SATURN
 RPL_X = SATURN_X
-         
+
 # SATURN HP-71B (IEEE, NON-RPL) formats
 
 # HP-71B REAL format (12-form) which is stored in a single register
@@ -281,22 +278,22 @@ Flt.define :HP_CLASSIC, BCDFormat,
   :endianness=>:big_endian, :round=>:half_up,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
 
-                       
+
 # IBM Floating Point Architecture (IBM 360,370, DG Eclipse, ...)
-                            
-# short                            
+
+# short
 Flt.define :IBM32, HexadecimalFormat,
-  :fields=>[:significand,24,:exponent,7,:sign,1], 
+  :fields=>[:significand,24,:exponent,7,:sign,1],
   :bias=>64, :bias_mode=>:fractional_significand,
   :endianness=>:big_endian
- 
+
 # long
 Flt.define :IBM64, HexadecimalFormat,
-  :fields=>[:significand,56,:exponent,7,:sign,1], 
+  :fields=>[:significand,56,:exponent,7,:sign,1],
   :bias=>64, :bias_mode=>:fractional_significand,
   :endianness=>:big_endian
-                              
-# extended: two long values pasted together                              
+
+# extended: two long values pasted together
 Flt.define :IBM128, HexadecimalFormat,
   :fields=>[:significand,14*4,:lo_exponent,7,:lo_sign,1,:significand,14*4,:exponent,7,:sign,1],
   :fields_handler=>lambda{|fields| fields[1]=(fields[4]>=14&&fields[4]<127) ? fields[4]-14 : fields[4];fields[2]=fields[5] },
@@ -310,12 +307,12 @@ Flt.define :IBMX, HexadecimalFormat,
   :fields_handler=>lambda{|fields| fields[2]=0},
   :bias=>8192, :bias_mode=>:fractional_significand,
   :endianness=>:big_endian
-                              
+
 # Cray-1
 Flt.define :CRAY, BinaryFormat,
   :fields=>[:significand,48,:exponent,15,:sign,1],
   :bias=>16384, :bias_mode=>:fractional_significand,
-  :hidden_bit=>false, 
+  :hidden_bit=>false,
   :min_encoded_exp=>8192, :max_encoded_exp=>24575, :zero_encoded_exp=>0,
   :endianness=>:big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
@@ -330,19 +327,19 @@ Flt.define :CRAY, BinaryFormat,
 #
 # The exponent needs special treatment, because instead of excess encoding, which is equivalent to two's complement followed
 # by sign bit reversal, one's complement followed by sign bit reversal is used, which is equivalent
-# to use a bias diminished by one for negative exponents. Note that the exponent encoded value that equals the bias is 
+# to use a bias diminished by one for negative exponents. Note that the exponent encoded value that equals the bias is
 # not used (is used as a NaN indicator)
 class CDCFormat < BinaryFormat # :nodoc:
   def self.encode_exponent(e,mode)
     ee = super
     ee -= 1 if e<0
     ee
-  end  
+  end
   def self.decode_exponent(ee,mode)
     e = super
     e += 1 if e<0
     e
-  end  
+  end
 end
 
 Flt.define :CDC_SINGLE, CDCFormat,
@@ -361,14 +358,14 @@ Flt.define :CDC_SINGLE, CDCFormat,
 # the exponent would refer to the whole significand, but it must refer only to the most significant half.
 # we substract the number of bits in the single to the bias and exponent because of this change,
 # and add 48 to the min_exponent to avoid the exponent of the low order single to be out of range
-# because the exponent of the low order single is adjusted to 
+# because the exponent of the low order single is adjusted to
 # the position of its digits by substracting 48 from the high order exponent
 # when its exponent would be out of range
-# Note that when computing the low order exponent with the fields handler we must take into account the sign 
+# Note that when computing the low order exponent with the fields handler we must take into account the sign
 # because for negative numbers all the fields are one-complemented.
 Flt.define :CDC_DOUBLE, CDCFormat,
   :fields=>[:significand,48,:lo_exponent,11,:lo_sign,1,:significand,48,:exponent,11,:sign,1],
-  :fields_handler=>lambda{|fields| 
+  :fields_handler=>lambda{|fields|
         fields[1]=(fields[4]>0&&fields[4]<2047) ? fields[4]-((-1)**fields[5])*48 : fields[4]
         fields[2]=fields[5]
   },
@@ -390,7 +387,7 @@ Flt.define :UNIVAC_SINGLE, BinaryFormat,
   :hidden_bit=>false,
   :endianess=>:big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-                                 
+
 Flt.define :UNIVAC_DOUBLE, BinaryFormat,
   :fields=>[:significand,60, :exponent,11, :sign,1],
   :bias=>1024, :bias_mode=>:fractional_significand,
@@ -398,7 +395,7 @@ Flt.define :UNIVAC_DOUBLE, BinaryFormat,
   :hidden_bit=>false,
   :endianess=>:big_endian,
   :gradual_underflow=>false, :infinity=>false, :nan=>false
-                                                                                                                        
+
 
 # :stopdoc: # the next definition is not handled correctly by RDoc
 Flt.define(:APPLE_INSANE,BinaryFormat,
@@ -463,7 +460,7 @@ Flt.define(:WANG2200,BCDFormat,
     elsif @infinite_encoded_exp && e==@infinite_encoded_exp && m==0
       # +-inifinity
       e = :infinity
-    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0 
+    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0
       # NaN
       e = :nan
     else
@@ -474,13 +471,13 @@ Flt.define(:WANG2200,BCDFormat,
       e -= (significand_digits-1)
     end
     s = sign_to_unit(s)
-    [s,m,e]    
+    [s,m,e]
   end
 
   def wang2200.pack(s,m,e)
     s = sign_from_unit(s)
     msb = radix_power(@significand_digits-1)
-    es = 0    
+    es = 0
     if e==:zero
       e = @zero_encoded_exp
       m = 0
@@ -492,17 +489,17 @@ Flt.define(:WANG2200,BCDFormat,
       s = minus_sign_value # ?
       m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
-      e = @denormal_encoded_exp      
+      e = @denormal_encoded_exp
     else
       # to do: try to adjust m to keep e in range if out of valid range
       # to do: reduce m and adjust e if m too big
-      
+
       min_exp = radix_min_exp(:integral_significand)
       if m>0
         while m<msb && e>min_exp
           e -= 1
           m *= radix
-        end      
+        end
       end
       if m<msb && @denormal_encoded_exp
         e = @denormal_encoded_exp
@@ -517,15 +514,15 @@ Flt.define(:WANG2200,BCDFormat,
           es = 0
         end
       end
-    end    
+    end
     ss = (s%2) + (es==0 ? 0 : 8)
     # reverse exponent nibbles
     e = ("%0#{exponent_digits}d"%e).reverse.to_i
     pack_fields_hash :signs=>ss, :significand=>m, :exponent=>e
   end
 }
-      
-      
+
+
 # C51 (C compiler for the Intel 8051) BCD Floating point formats
 class C51BCDFormat < BCDFormat # :nodoc:
   def self.exponent_radix
@@ -538,7 +535,7 @@ class C51BCDFormat < BCDFormat # :nodoc:
     1
   end
   def self.unpack(v)
-    f = to_fields_hash(v)
+    f = unpack_fields_hash(v)
     m = f[:significand]
     e_s = f[:exponent_sign]
     exp_bits = exponent_digits
@@ -550,7 +547,7 @@ class C51BCDFormat < BCDFormat # :nodoc:
     elsif @infinite_encoded_exp && e==@infinite_encoded_exp && m==0
       # +-inifinity
       e = :infinity
-    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0 
+    elsif @nan_encoded_exp && e==@nan_encoded_exp && m!=0
       # NaN
       e = :nan
     else
@@ -558,7 +555,7 @@ class C51BCDFormat < BCDFormat # :nodoc:
       e = decode_exponent(e, :integral_significand)
     end
     s = sign_to_unit(s)
-    [s,m,e]    
+    [s,m,e]
   end
   def self.bcd_field?(i)
     @field_meaning[i]==:significand
@@ -567,7 +564,7 @@ class C51BCDFormat < BCDFormat # :nodoc:
   def self.pack(s,m,e)
     s = sign_from_unit(s)
     msb = radix_power(@significand_digits-1)
-    es = 0    
+    es = 0
     if e==:zero
       e = @zero_encoded_exp
       m = 0
@@ -579,17 +576,17 @@ class C51BCDFormat < BCDFormat # :nodoc:
       s = minus_sign_value # ?
       m = radix_power(@significand_digits-2) if m==0
     elsif e==:denormal
-      e = @denormal_encoded_exp      
+      e = @denormal_encoded_exp
     else
       # to do: try to adjust m to keep e in range if out of valid range
       # to do: reduce m and adjust e if m too big
-      
+
       min_exp = radix_min_exp(:integral_significand)
       if m>0
         while m<msb && e>min_exp
           e -= 1
           m *= radix
-        end      
+        end
       end
       if m<msb && @denormal_encoded_exp
         e = @denormal_encoded_exp
@@ -598,7 +595,7 @@ class C51BCDFormat < BCDFormat # :nodoc:
       else
         e = encode_exponent(e, :integral_significand)
       end
-    end    
+    end
     exp_bits = exponent_digits
     e_s = e + (s << exp_bits)
     pack_fields_hash :significand=>m, :exponent_sign=>e_s
@@ -627,7 +624,6 @@ Flt.define :C51_BCD_LONG_DOUBLE, C51BCDFormat,
 # double-double format as used in the PowerPC
 Flt.define :IEEE_DOUBLE_DOUBLE, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
 
- 
+
 
 end
-

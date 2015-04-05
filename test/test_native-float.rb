@@ -29,7 +29,7 @@ class TestNativeFloat < Test::Unit::TestCase
     def test_hex
       if Float::RADIX==2 && Float::MANT_DIG==53
         assert_equal((1.0+Float::EPSILON),hex_to_float('0x1.0000000000001p0'))
-        assert_equal '0x10000000000001p-52', hex_from_float(1.0+Float::EPSILON)
+        assert_equal '0x1.0000000000001p0', hex_from_float(1.0+Float::EPSILON)
       end
       assert_equal 1.0, hex_to_float(hex_from_float(1.0))
       assert_equal(-1.0, hex_to_float(hex_from_float(-1.0)))

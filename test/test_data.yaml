@@ -1,6 +1,6 @@
---- 
-C51_BCD_FLOAT: 
-  parameters: 
+---
+C51_BCD_FLOAT:
+  parameters:
   - total_bits: 32
   - radix: 10
   - significand_digits: 6
@@ -10,21 +10,21 @@ C51_BCD_FLOAT:
   - decimal_digits_necessary: 6
   - decimal_min_exp: -65
   - decimal_max_exp: 62
-  values: 
+  values:
   - Rational(1, 3): 40 33 33 33
   - Rational(1, 10): 40 00 00 10
   - Rational(2, 3): 40 67 66 66
-  - Rational(1, 1024): 3C 25 56 76 09
+  - Rational(1, 1024): 3D 62 65 97
   - Rational(1, 1000): 3E 00 00 10
   - Rational(1024, 1): 44 00 24 10
   - Rational(1024, 1): 44 00 24 10
-  special: 
+  special:
   - min_value: 00 00 00 10
   - min_normalized_value: 00 00 00 10
   - max_value: 7F 99 99 99
   - epsilon: 3C 00 00 10
   - strict_epsilon: 3C 00 00 10
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 80 00 00 00
   - "+1": 41 00 00 10
@@ -48,8 +48,8 @@ C51_BCD_FLOAT:
   - 1E-5: 3C 00 00 10
   - 1E-5: 3C 00 00 10
   base: :bytes
-IBM64: 
-  parameters: 
+IBM64:
+  parameters:
   - total_bits: 64
   - radix: 16
   - significand_digits: 14
@@ -59,7 +59,7 @@ IBM64:
   - decimal_digits_necessary: 18
   - decimal_min_exp: -77
   - decimal_max_exp: 77
-  values: 
+  values:
   - Rational(1, 3): 40 55 55 55 55 55 55 55
   - Rational(1, 10): 40 19 99 99 99 99 99 9A
   - Rational(2, 3): 40 AA AA AA AA AA AA AB
@@ -67,13 +67,13 @@ IBM64:
   - Rational(1, 1000): 3E 41 89 37 4B C6 A7 F0
   - Rational(1024, 1): 43 40 00 00 00 00 00 00
   - Rational(1024, 1): 43 40 00 00 00 00 00 00
-  special: 
+  special:
   - min_value: 00 10 00 00 00 00 00 00
   - min_normalized_value: 00 10 00 00 00 00 00 00
   - max_value: 7F FF FF FF FF FF FF FF
   - epsilon: 34 10 00 00 00 00 00 00
   - strict_epsilon: 34 10 00 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00
   - "+1": 41 10 00 00 00 00 00 00
@@ -97,8 +97,8 @@ IBM64:
   - "2.22044604925031308E-16": 34 10 00 00 00 00 00 00
   - "2.22044604925031308E-16": 34 10 00 00 00 00 00 00
   base: :bytes
-VAX_D: 
-  parameters: 
+VAX_D:
+  parameters:
   - total_bits: 64
   - radix: 2
   - significand_digits: 56
@@ -108,7 +108,7 @@ VAX_D:
   - decimal_digits_necessary: 18
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): AA 3F AA AA AA AA AB AA
   - Rational(1, 10): CC 3E CC CC CC CC CD CC
   - Rational(2, 3): 2A 40 AA AA AA AA AB AA
@@ -116,13 +116,13 @@ VAX_D:
   - Rational(1, 1000): 83 3B 6E 12 8D 97 DF 4F
   - Rational(1024, 1): 80 45 00 00 00 00 00 00
   - Rational(1024, 1): 80 45 00 00 00 00 00 00
-  special: 
+  special:
   - min_value: 80 00 00 00 00 00 00 00
   - min_normalized_value: 80 00 00 00 00 00 00 00
   - max_value: FF 7F FF FF FF FF FF FF
   - epsilon: 00 25 00 00 00 00 00 00
   - strict_epsilon: 00 25 00 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 00 80 00 00 00 00 00 00
   - "+1": 80 40 00 00 00 00 00 00
@@ -146,8 +146,8 @@ VAX_D:
   - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
   - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
   base: :bytes
-IEEE_SINGLE: 
-  parameters: 
+IEEE_SINGLE:
+  parameters:
   - total_bits: 32
   - radix: 2
   - significand_digits: 24
@@ -157,7 +157,7 @@ IEEE_SINGLE:
   - decimal_digits_necessary: 9
   - decimal_min_exp: -37
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): AB AA AA 3E
   - Rational(1, 10): CD CC CC 3D
   - Rational(2, 3): AB AA 2A 3F
@@ -165,13 +165,13 @@ IEEE_SINGLE:
   - Rational(1, 1000): 6F 12 83 3A
   - Rational(1024, 1): 00 00 80 44
   - Rational(1024, 1): 00 00 80 44
-  special: 
+  special:
   - min_value: 01 00 00 00
   - min_normalized_value: 00 00 80 00
   - max_value: FF FF 7F 7F
   - epsilon: 00 00 00 34
   - strict_epsilon: 01 00 80 33
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 00 00 00 80
   - "+1": 00 00 80 3F
@@ -195,8 +195,8 @@ IEEE_SINGLE:
   - "1.1920929E-7": 00 00 00 34
   - "5.96046519E-8": 01 00 80 33
   base: :bytes
-UNIVAC_DOUBLE: 
-  parameters: 
+UNIVAC_DOUBLE:
+  parameters:
   - total_bits: 72
   - radix: 2
   - significand_digits: 60
@@ -206,7 +206,7 @@ UNIVAC_DOUBLE:
   - decimal_digits_necessary: 20
   - decimal_min_exp: -308
   - decimal_max_exp: 308
-  values: 
+  values:
   - Rational(1, 3): 3FFAAAAAAAAAAAAAAB
   - Rational(1, 10): 3FDCCCCCCCCCCCCCCD
   - Rational(2, 3): 400AAAAAAAAAAAAAAB
@@ -214,13 +214,13 @@ UNIVAC_DOUBLE:
   - Rational(1, 1000): 3F783126E978D4FDF4
   - Rational(1024, 1): 40B800000000000000
   - Rational(1024, 1): 40B800000000000000
-  special: 
+  special:
   - min_value: 000800000000000000
   - min_normalized_value: 000800000000000000
   - max_value: 7FFFFFFFFFFFFFFFFF
   - epsilon: 3C6800000000000000
   - strict_epsilon: 3C6800000000000000
-  numerals: 
+  numerals:
   - "+0": "000000000000000000"
   - "-0": FFFFFFFFFFFFFFFFFF
   - "+1": "401800000000000000"
@@ -244,8 +244,8 @@ UNIVAC_DOUBLE:
   - "1.7347234759768070944E-18": 3C6800000000000000
   - "1.7347234759768070944E-18": 3C6800000000000000
   base: 16
-IBM32: 
-  parameters: 
+IBM32:
+  parameters:
   - total_bits: 32
   - radix: 16
   - significand_digits: 6
@@ -255,7 +255,7 @@ IBM32:
   - decimal_digits_necessary: 9
   - decimal_min_exp: -77
   - decimal_max_exp: 77
-  values: 
+  values:
   - Rational(1, 3): 40 55 55 55
   - Rational(1, 10): 40 19 99 9A
   - Rational(2, 3): 40 AA AA AB
@@ -263,13 +263,13 @@ IBM32:
   - Rational(1, 1000): 3E 41 89 37
   - Rational(1024, 1): 43 40 00 00
   - Rational(1024, 1): 43 40 00 00
-  special: 
+  special:
   - min_value: 00 10 00 00
   - min_normalized_value: 00 10 00 00
   - max_value: 7F FF FF FF
   - epsilon: 3C 10 00 00
   - strict_epsilon: 3C 10 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 80 00 00 00
   - "+1": 41 10 00 00
@@ -293,8 +293,8 @@ IBM32:
   - "9.53674316E-7": 3C 10 00 00
   - "9.53674316E-7": 3C 10 00 00
   base: :bytes
-PDP11_D: 
-  parameters: 
+PDP11_D:
+  parameters:
   - total_bits: 64
   - radix: 2
   - significand_digits: 56
@@ -304,7 +304,7 @@ PDP11_D:
   - decimal_digits_necessary: 18
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): AA 3F AA AA AA AA AB AA
   - Rational(1, 10): CC 3E CC CC CC CC CD CC
   - Rational(2, 3): 2A 40 AA AA AA AA AB AA
@@ -312,13 +312,13 @@ PDP11_D:
   - Rational(1, 1000): 83 3B 6E 12 8D 97 DF 4F
   - Rational(1024, 1): 80 45 00 00 00 00 00 00
   - Rational(1024, 1): 80 45 00 00 00 00 00 00
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 01 00
   - min_normalized_value: 00 00 00 00 00 00 01 00
   - max_value: FF 7F FF FF FF FF FF FF
   - epsilon: 00 25 00 00 00 00 00 00
   - strict_epsilon: 00 25 00 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 00 80 00 00 00 00 00 00
   - "+1": 80 40 00 00 00 00 00 00
@@ -342,8 +342,8 @@ PDP11_D:
   - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
   - "2.77555756156289135E-17": 00 25 00 00 00 00 00 00
   base: :bytes
-C51_BCD_DOUBLE: 
-  parameters: 
+C51_BCD_DOUBLE:
+  parameters:
   - total_bits: 48
   - radix: 10
   - significand_digits: 10
@@ -353,7 +353,7 @@ C51_BCD_DOUBLE:
   - decimal_digits_necessary: 10
   - decimal_min_exp: -65
   - decimal_max_exp: 62
-  values: 
+  values:
   - Rational(1, 3): 40 33 33 33 33 33
   - Rational(1, 10): 40 00 00 00 00 10
   - Rational(2, 3): 40 67 66 66 66 66
@@ -361,13 +361,13 @@ C51_BCD_DOUBLE:
   - Rational(1, 1000): 3E 00 00 00 00 10
   - Rational(1024, 1): 44 00 00 00 24 10
   - Rational(1024, 1): 44 00 00 00 24 10
-  special: 
+  special:
   - min_value: 00 00 00 00 00 10
   - min_normalized_value: 00 00 00 00 00 10
   - max_value: 7F 99 99 99 99 99
   - epsilon: 38 00 00 00 00 10
   - strict_epsilon: 38 00 00 00 00 10
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00
   - "+1": 41 00 00 00 00 10
@@ -391,8 +391,8 @@ C51_BCD_DOUBLE:
   - 1E-9: 38 00 00 00 00 10
   - 1E-9: 38 00 00 00 00 10
   base: :bytes
-VAX_F: 
-  parameters: 
+VAX_F:
+  parameters:
   - total_bits: 32
   - radix: 2
   - significand_digits: 24
@@ -402,7 +402,7 @@ VAX_F:
   - decimal_digits_necessary: 9
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): AA 3F AB AA
   - Rational(1, 10): CC 3E CD CC
   - Rational(2, 3): 2A 40 AB AA
@@ -410,13 +410,13 @@ VAX_F:
   - Rational(1, 1000): 83 3B 6F 12
   - Rational(1024, 1): 80 45 00 00
   - Rational(1024, 1): 80 45 00 00
-  special: 
+  special:
   - min_value: 80 00 00 00
   - min_normalized_value: 80 00 00 00
   - max_value: FF 7F FF FF
   - epsilon: 00 35 00 00
   - strict_epsilon: 00 35 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 00 80 00 00
   - "+1": 80 40 00 00
@@ -440,8 +440,8 @@ VAX_F:
   - "1.1920929E-7": 00 35 00 00
   - "1.1920929E-7": 00 35 00 00
   base: :bytes
-XS256_DOUBLE: 
-  parameters: 
+XS256_DOUBLE:
+  parameters:
   - total_bits: 64
   - radix: 2
   - significand_digits: 55
@@ -451,7 +451,7 @@ XS256_DOUBLE:
   - decimal_digits_necessary: 18
   - decimal_min_exp: -76
   - decimal_max_exp: 77
-  values: 
+  values:
   - Rational(1, 3): 3F 95 55 55 55 55 55 55
   - Rational(1, 10): 3F 26 66 66 66 66 66 66
   - Rational(2, 3): 3F D5 55 55 55 55 55 55
@@ -459,13 +459,13 @@ XS256_DOUBLE:
   - Rational(1, 1000): 3D 81 89 37 4B C6 A7 F0
   - Rational(1024, 1): 42 80 00 00 00 00 00 00
   - Rational(1024, 1): 42 80 00 00 00 00 00 00
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 00 01
   - min_normalized_value: 00 00 00 00 00 00 00 01
   - max_value: 7F FF FF FF FF FF FF FF
   - epsilon: 32 80 00 00 00 00 00 00
   - strict_epsilon: 32 40 00 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00
   - "+1": 40 00 00 00 00 00 00 00
@@ -489,8 +489,8 @@ XS256_DOUBLE:
   - "5.5511151231257827E-17": 32 80 00 00 00 00 00 00
   - "2.77555756156289135E-17": 32 40 00 00 00 00 00 00
   base: :bytes
-IEEE_DOUBLE: 
-  parameters: 
+IEEE_DOUBLE:
+  parameters:
   - total_bits: 64
   - radix: 2
   - significand_digits: 53
@@ -500,7 +500,7 @@ IEEE_DOUBLE:
   - decimal_digits_necessary: 17
   - decimal_min_exp: -307
   - decimal_max_exp: 308
-  values: 
+  values:
   - Rational(1, 3): 55 55 55 55 55 55 D5 3F
   - Rational(1, 10): 9A 99 99 99 99 99 B9 3F
   - Rational(2, 3): 55 55 55 55 55 55 E5 3F
@@ -508,13 +508,13 @@ IEEE_DOUBLE:
   - Rational(1, 1000): FC A9 F1 D2 4D 62 50 3F
   - Rational(1024, 1): 00 00 00 00 00 00 90 40
   - Rational(1024, 1): 00 00 00 00 00 00 90 40
-  special: 
+  special:
   - min_value: 01 00 00 00 00 00 00 00
   - min_normalized_value: 00 00 00 00 00 00 10 00
   - max_value: FF FF FF FF FF FF EF 7F
   - epsilon: 00 00 00 00 00 00 B0 3C
   - strict_epsilon: 01 00 00 00 00 00 A0 3C
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 00 00 00 00 00 00 00 80
   - "+1": 00 00 00 00 00 00 F0 3F
@@ -538,8 +538,8 @@ IEEE_DOUBLE:
   - "2.2204460492503131E-16": 00 00 00 00 00 00 B0 3C
   - "1.1102230246251568E-16": 01 00 00 00 00 00 A0 3C
   base: :bytes
-CDC_DOUBLE: 
-  parameters: 
+CDC_DOUBLE:
+  parameters:
   - total_bits: 120
   - radix: 2
   - significand_digits: 96
@@ -549,7 +549,7 @@ CDC_DOUBLE:
   - decimal_digits_necessary: 30
   - decimal_min_exp: -279
   - decimal_max_exp: 322
-  values: 
+  values:
   - Rational(1, 3): AB AA AA AA AA AA 9E A3 AA AA AA AA AA EA 3C
   - Rational(1, 10): CD CC CC CC CC CC 9C C3 CC CC CC CC CC CC 3C
   - Rational(2, 3): AB AA AA AA AA AA 9F A3 AA AA AA AA AA FA 3C
@@ -557,13 +557,13 @@ CDC_DOUBLE:
   - Rational(1, 1000): AC 1C 5A 64 3B DF 96 F3 D4 78 E9 26 31 68 3C
   - Rational(1024, 1): 00 00 00 00 00 00 AA 03 00 00 00 00 00 A8 3D
   - Rational(1024, 1): 00 00 00 00 00 00 AA 03 00 00 00 00 00 A8 3D
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 00 00 00 00 00 00 00 08 03
   - min_normalized_value: 00 00 00 00 00 00 00 00 00 00 00 00 00 08 03
   - max_value: FF FF FF FF FF FF FF F7 FF FF FF FF FF FF 7F
   - epsilon: 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
   - strict_epsilon: 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "-0": FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
   - "+1": 00 00 00 00 00 00 A0 03 00 00 00 00 00 08 3D
@@ -587,8 +587,8 @@ CDC_DOUBLE:
   - "2.5243548967072377773175314089E-29": 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
   - "2.5243548967072377773175314089E-29": 00 00 00 00 00 00 41 03 00 00 00 00 00 18 37
   base: :bytes
-PDP11_F: 
-  parameters: 
+PDP11_F:
+  parameters:
   - total_bits: 32
   - radix: 2
   - significand_digits: 24
@@ -598,7 +598,7 @@ PDP11_F:
   - decimal_digits_necessary: 9
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): AA 3F AB AA
   - Rational(1, 10): CC 3E CD CC
   - Rational(2, 3): 2A 40 AB AA
@@ -606,13 +606,13 @@ PDP11_F:
   - Rational(1, 1000): 83 3B 6F 12
   - Rational(1024, 1): 80 45 00 00
   - Rational(1024, 1): 80 45 00 00
-  special: 
+  special:
   - min_value: 00 00 01 00
   - min_normalized_value: 00 00 01 00
   - max_value: FF 7F FF FF
   - epsilon: 00 35 00 00
   - strict_epsilon: 00 35 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 00 80 00 00
   - "+1": 80 40 00 00
@@ -636,8 +636,8 @@ PDP11_F:
   - "1.1920929E-7": 00 35 00 00
   - "1.1920929E-7": 00 35 00 00
   base: :bytes
-VAX_G: 
-  parameters: 
+VAX_G:
+  parameters:
   - total_bits: 64
   - radix: 2
   - significand_digits: 53
@@ -647,7 +647,7 @@ VAX_G:
   - decimal_digits_necessary: 17
   - decimal_min_exp: -307
   - decimal_max_exp: 308
-  values: 
+  values:
   - Rational(1, 3): F5 3F 55 55 55 55 55 55
   - Rational(1, 10): D9 3F 99 99 99 99 9A 99
   - Rational(2, 3): 05 40 55 55 55 55 55 55
@@ -655,13 +655,13 @@ VAX_G:
   - Rational(1, 1000): 70 3F 4D 62 F1 D2 FC A9
   - Rational(1024, 1): B0 40 00 00 00 00 00 00
   - Rational(1024, 1): B0 40 00 00 00 00 00 00
-  special: 
+  special:
   - min_value: 10 00 00 00 00 00 00 00
   - min_normalized_value: 10 00 00 00 00 00 00 00
   - max_value: FF 7F FF FF FF FF FF FF
   - epsilon: D0 3C 00 00 00 00 00 00
   - strict_epsilon: D0 3C 00 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 00 80 00 00 00 00 00 00
   - "+1": 10 40 00 00 00 00 00 00
@@ -685,8 +685,8 @@ VAX_G:
   - "2.2204460492503131E-16": D0 3C 00 00 00 00 00 00
   - "2.2204460492503131E-16": D0 3C 00 00 00 00 00 00
   base: :bytes
-SATURN_X: 
-  parameters: 
+SATURN_X:
+  parameters:
   - total_bits: 104
   - radix: 10
   - significand_digits: 15
@@ -696,7 +696,7 @@ SATURN_X:
   - decimal_digits_necessary: 15
   - decimal_min_exp: -49999
   - decimal_max_exp: 49999
-  values: 
+  values:
   - Rational(1, 3): 03333333333333339999902955
   - Rational(1, 10): 01000000000000009999902955
   - Rational(2, 3): 06666666666666679999902955
@@ -704,13 +704,13 @@ SATURN_X:
   - Rational(1, 1000): 01000000000000009999702955
   - Rational(1024, 1): 01024000000000000000302955
   - Rational(1024, 1): 01024000000000000000302955
-  special: 
+  special:
   - min_value: 01000000000000005000102955
   - min_normalized_value: 01000000000000005000102955
   - max_value: 09999999999999994999902955
   - epsilon: 01000000000000009998602955
   - strict_epsilon: 05000000000000019998502955
-  numerals: 
+  numerals:
   - "+0": 00000000000000000000002955
   - "-0": "90000000000000000000002955"
   - "+1": 01000000000000000000002955
@@ -734,8 +734,8 @@ SATURN_X:
   - 1E-14: 01000000000000009998602955
   - "5.00000000000001E-15": 05000000000000019998502955
   base: 16
-SATURN: 
-  parameters: 
+SATURN:
+  parameters:
   - total_bits: 84
   - radix: 10
   - significand_digits: 12
@@ -745,7 +745,7 @@ SATURN:
   - decimal_digits_necessary: 12
   - decimal_min_exp: -499
   - decimal_max_exp: 499
-  values: 
+  values:
   - Rational(1, 3): 033333333333399902933
   - Rational(1, 10): 010000000000099902933
   - Rational(2, 3): 066666666666799902933
@@ -753,13 +753,13 @@ SATURN:
   - Rational(1, 1000): 010000000000099702933
   - Rational(1024, 1): 010240000000000302933
   - Rational(1024, 1): 010240000000000302933
-  special: 
+  special:
   - min_value: 010000000000050102933
   - min_normalized_value: 010000000000050102933
   - max_value: 099999999999949902933
   - epsilon: 010000000000098902933
   - strict_epsilon: 050000000000198802933
-  numerals: 
+  numerals:
   - "+0": 000000000000000002933
   - "-0": "900000000000000002933"
   - "+1": 010000000000000002933
@@ -783,8 +783,8 @@ SATURN:
   - 1E-11: 010000000000098902933
   - "5.00000000001E-12": 050000000000198802933
   base: 16
-VAX_H: 
-  parameters: 
+VAX_H:
+  parameters:
   - total_bits: 128
   - radix: 2
   - significand_digits: 113
@@ -794,7 +794,7 @@ VAX_H:
   - decimal_digits_necessary: 36
   - decimal_min_exp: -4931
   - decimal_max_exp: 4932
-  values: 
+  values:
   - Rational(1, 3): FF 3F 55 55 55 55 55 55 55 55 55 55 55 55 55 55
   - Rational(1, 10): FD 3F 99 99 99 99 99 99 99 99 99 99 99 99 9A 99
   - Rational(2, 3): 00 40 55 55 55 55 55 55 55 55 55 55 55 55 55 55
@@ -802,13 +802,13 @@ VAX_H:
   - Rational(1, 1000): F7 3F 24 06 2F DD 9F 1A 76 BE B4 C8 58 39 62 10
   - Rational(1024, 1): 0B 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - Rational(1024, 1): 0B 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  special: 
+  special:
   - min_value: 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - min_normalized_value: 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - max_value: FF 7F FF FF FF FF FF FF FF FF FF FF FF FF FF FF
   - epsilon: 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - strict_epsilon: 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "-0": 00 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "+1": 01 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -832,8 +832,8 @@ VAX_H:
   - "1.92592994438723585305597794258492732E-34": 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "1.92592994438723585305597794258492732E-34": 91 3F 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   base: :bytes
-MBF_SINGLE: 
-  parameters: 
+MBF_SINGLE:
+  parameters:
   - total_bits: 32
   - radix: 2
   - significand_digits: 24
@@ -843,7 +843,7 @@ MBF_SINGLE:
   - decimal_digits_necessary: 9
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): AB AA 2A 7F
   - Rational(1, 10): CD CC 4C 7D
   - Rational(2, 3): AB AA 2A 80
@@ -851,13 +851,13 @@ MBF_SINGLE:
   - Rational(1, 1000): 6F 12 03 77
   - Rational(1024, 1): 00 00 00 8B
   - Rational(1024, 1): 00 00 00 8B
-  special: 
+  special:
   - min_value: 00 00 00 01
   - min_normalized_value: 00 00 00 01
   - max_value: FF FF 7F FF
   - epsilon: 00 00 00 6A
   - strict_epsilon: 00 00 00 6A
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 00 00 80 00
   - "+1": 00 00 00 81
@@ -881,8 +881,8 @@ MBF_SINGLE:
   - "1.1920929E-7": 00 00 00 6A
   - "1.1920929E-7": 00 00 00 6A
   base: :bytes
-HP_CLASSIC: 
-  parameters: 
+HP_CLASSIC:
+  parameters:
   - total_bits: 56
   - radix: 10
   - significand_digits: 10
@@ -892,7 +892,7 @@ HP_CLASSIC:
   - decimal_digits_necessary: 10
   - decimal_min_exp: -99
   - decimal_max_exp: 99
-  values: 
+  values:
   - Rational(1, 3): 03 33 33 33 33 39 99
   - Rational(1, 10): 01 00 00 00 00 09 99
   - Rational(2, 3): 06 66 66 66 66 79 99
@@ -900,13 +900,13 @@ HP_CLASSIC:
   - Rational(1, 1000): 01 00 00 00 00 09 97
   - Rational(1024, 1): 01 02 40 00 00 00 03
   - Rational(1024, 1): 01 02 40 00 00 00 03
-  special: 
+  special:
   - min_value: 01 00 00 00 00 09 01
   - min_normalized_value: 01 00 00 00 00 09 01
   - max_value: 09 99 99 99 99 90 99
   - epsilon: 01 00 00 00 00 09 91
   - strict_epsilon: 05 00 00 00 00 09 90
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00
   - "-0": 90 00 00 00 00 00 00
   - "+1": 01 00 00 00 00 00 00
@@ -930,8 +930,8 @@ HP_CLASSIC:
   - 1E-9: 01 00 00 00 00 09 91
   - 5E-10: 05 00 00 00 00 09 90
   base: :bytes
-C51_BCD_LONG_DOUBLE: 
-  parameters: 
+C51_BCD_LONG_DOUBLE:
+  parameters:
   - total_bits: 56
   - radix: 10
   - significand_digits: 12
@@ -941,7 +941,7 @@ C51_BCD_LONG_DOUBLE:
   - decimal_digits_necessary: 12
   - decimal_min_exp: -65
   - decimal_max_exp: 62
-  values: 
+  values:
   - Rational(1, 3): 40 33 33 33 33 33 33
   - Rational(1, 10): 40 00 00 00 00 00 10
   - Rational(2, 3): 40 67 66 66 66 66 66
@@ -949,13 +949,13 @@ C51_BCD_LONG_DOUBLE:
   - Rational(1, 1000): 3E 00 00 00 00 00 10
   - Rational(1024, 1): 44 00 00 00 00 24 10
   - Rational(1024, 1): 44 00 00 00 00 24 10
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 10
   - min_normalized_value: 00 00 00 00 00 00 10
   - max_value: 7F 99 99 99 99 99 99
   - epsilon: 36 00 00 00 00 00 10
   - strict_epsilon: 36 00 00 00 00 00 10
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00
   - "+1": 41 00 00 00 00 00 10
@@ -979,8 +979,8 @@ C51_BCD_LONG_DOUBLE:
   - 1E-11: 36 00 00 00 00 00 10
   - 1E-11: 36 00 00 00 00 00 10
   base: :bytes
-IEEE_DEC128: 
-  parameters: 
+IEEE_DEC128:
+  parameters:
   - total_bits: 128
   - radix: 10
   - significand_digits: 34
@@ -990,7 +990,7 @@ IEEE_DEC128:
   - decimal_digits_necessary: 34
   - decimal_min_exp: -6143
   - decimal_max_exp: 6144
-  values: 
+  values:
   - Rational(1, 3): 2D FF 9B 36 CD B3 6C DB 36 CD B3 6C DB 36 CD B3
   - Rational(1, 10): 22 07 C0 00 00 00 00 00 00 00 00 00 00 00 00 01
   - Rational(2, 3): 39 FF B6 6D 9B 66 D9 B6 6D 9B 66 D9 B6 6D 9B 67
@@ -998,13 +998,13 @@ IEEE_DEC128:
   - Rational(1, 1000): 22 07 40 00 00 00 00 00 00 00 00 00 00 00 00 01
   - Rational(1024, 1): 22 08 00 00 00 00 00 00 00 00 00 00 00 00 04 24
   - Rational(1024, 1): 22 08 00 00 00 00 00 00 00 00 00 00 00 00 04 24
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01
   - min_normalized_value: 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - max_value: 77 FF CF F3 FC FF 3F CF F3 FC FF 3F CF F3 FC FF
   - epsilon: 25 F7 80 00 00 00 00 00 00 00 00 00 00 00 00 00
   - strict_epsilon: 35 F7 40 00 00 00 00 00 00 00 00 00 00 00 00 01
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "+1": 22 08 00 00 00 00 00 00 00 00 00 00 00 00 00 01
@@ -1028,8 +1028,8 @@ IEEE_DEC128:
   - 1E-33: 21 FF C0 00 00 00 00 00 00 00 00 00 00 00 00 01
   - 1E-33: 21 FF C0 00 00 00 00 00 00 00 00 00 00 00 00 01
   base: :bytes
-XS256: 
-  parameters: 
+XS256:
+  parameters:
   - total_bits: 32
   - radix: 2
   - significand_digits: 23
@@ -1039,7 +1039,7 @@ XS256:
   - decimal_digits_necessary: 8
   - decimal_min_exp: -76
   - decimal_max_exp: 77
-  values: 
+  values:
   - Rational(1, 3): 3F 95 55 55
   - Rational(1, 10): 3F 26 66 66
   - Rational(2, 3): 3F D5 55 55
@@ -1047,13 +1047,13 @@ XS256:
   - Rational(1, 1000): 3D 81 89 37
   - Rational(1024, 1): 42 80 00 00
   - Rational(1024, 1): 42 80 00 00
-  special: 
+  special:
   - min_value: 00 00 00 01
   - min_normalized_value: 00 00 00 01
   - max_value: 7F FF FF FF
   - epsilon: 3A 80 00 00
   - strict_epsilon: 3A 40 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 80 00 00 00
   - "+1": 40 00 00 00
@@ -1077,8 +1077,8 @@ XS256:
   - "2.3841858E-7": 3A 80 00 00
   - "1.1920929E-7": 3A 40 00 00
   base: :bytes
-IEEE_EXTENDED: 
-  parameters: 
+IEEE_EXTENDED:
+  parameters:
   - total_bits: 80
   - radix: 2
   - significand_digits: 64
@@ -1088,7 +1088,7 @@ IEEE_EXTENDED:
   - decimal_digits_necessary: 21
   - decimal_min_exp: -4931
   - decimal_max_exp: 4932
-  values: 
+  values:
   - Rational(1, 3): AB AA AA AA AA AA AA AA FD 3F
   - Rational(1, 10): CD CC CC CC CC CC CC CC FB 3F
   - Rational(2, 3): AB AA AA AA AA AA AA AA FE 3F
@@ -1096,13 +1096,13 @@ IEEE_EXTENDED:
   - Rational(1, 1000): 3B DF 4F 8D 97 6E 12 83 F5 3F
   - Rational(1024, 1): 00 00 00 00 00 00 00 80 09 40
   - Rational(1024, 1): 00 00 00 00 00 00 00 80 09 40
-  special: 
+  special:
   - min_value: 01 00 00 00 00 00 00 00 00 00
   - min_normalized_value: 00 00 00 00 00 00 00 80 01 00
   - max_value: FF FF FF FF FF FF FF FF FE 7F
   - epsilon: 00 00 00 00 00 00 00 80 C0 3F
   - strict_epsilon: 01 00 00 00 00 00 00 80 BF 3F
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00 00 00
   - "-0": 00 00 00 00 00 00 00 00 00 80
   - "+1": 00 00 00 00 00 00 00 80 FF 3F
@@ -1126,8 +1126,8 @@ IEEE_EXTENDED:
   - "1.08420217248550443401E-19": 00 00 00 00 00 00 00 80 C0 3F
   - "5.42101086242752217063E-20": 01 00 00 00 00 00 00 80 BF 3F
   base: :bytes
-WANG2200: 
-  parameters: 
+WANG2200:
+  parameters:
   - total_bits: 64
   - radix: 10
   - significand_digits: 13
@@ -1137,7 +1137,7 @@ WANG2200:
   - decimal_digits_necessary: 13
   - decimal_min_exp: -99
   - decimal_max_exp: 99
-  values: 
+  values:
   - Rational(1, 3): 33 33 33 33 33 33 03 81
   - Rational(1, 10): 00 00 00 00 00 00 01 81
   - Rational(2, 3): 67 66 66 66 66 66 06 81
@@ -1145,13 +1145,13 @@ WANG2200:
   - Rational(1, 1000): 00 00 00 00 00 00 01 83
   - Rational(1024, 1): 00 00 00 00 40 02 01 03
   - Rational(1024, 1): 00 00 00 00 40 02 01 03
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 91 89
   - min_normalized_value: 00 00 00 00 00 00 91 89
   - max_value: 99 99 99 99 99 99 99 09
   - epsilon: 00 00 00 00 00 00 11 82
   - strict_epsilon: 00 00 00 00 00 00 11 82
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 00 00 00 00 00 00 00 10
   - "+1": 00 00 00 00 00 00 01 00
@@ -1175,8 +1175,8 @@ WANG2200:
   - 1E-12: 00 00 00 00 00 00 11 82
   - 1E-12: 00 00 00 00 00 00 11 82
   base: :bytes
-CRAY: 
-  parameters: 
+CRAY:
+  parameters:
   - total_bits: 64
   - radix: 2
   - significand_digits: 48
@@ -1186,7 +1186,7 @@ CRAY:
   - decimal_digits_necessary: 16
   - decimal_min_exp: -2466
   - decimal_max_exp: 2466
-  values: 
+  values:
   - Rational(1, 3): 3F FF AA AA AA AA AA AB
   - Rational(1, 10): 3F FD CC CC CC CC CC CD
   - Rational(2, 3): 40 00 AA AA AA AA AA AB
@@ -1194,13 +1194,13 @@ CRAY:
   - Rational(1, 1000): 3F F7 83 12 6E 97 8D 50
   - Rational(1024, 1): 40 0B 80 00 00 00 00 00
   - Rational(1024, 1): 40 0B 80 00 00 00 00 00
-  special: 
+  special:
   - min_value: 20 00 80 00 00 00 00 00
   - min_normalized_value: 20 00 80 00 00 00 00 00
   - max_value: 5F FF FF FF FF FF FF FF
   - epsilon: 3F D2 80 00 00 00 00 00
   - strict_epsilon: 3F D2 80 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00
   - "+1": 40 01 80 00 00 00 00 00
@@ -1224,8 +1224,8 @@ CRAY:
   - "7.105427357601002E-15": 3F D2 80 00 00 00 00 00
   - "7.105427357601002E-15": 3F D2 80 00 00 00 00 00
   base: :bytes
-IBM128: 
-  parameters: 
+IBM128:
+  parameters:
   - total_bits: 128
   - radix: 16
   - significand_digits: 28
@@ -1235,7 +1235,7 @@ IBM128:
   - decimal_digits_necessary: 35
   - decimal_min_exp: -60
   - decimal_max_exp: 77
-  values: 
+  values:
   - Rational(1, 3): 40 55 55 55 55 55 55 55 32 55 55 55 55 55 55 55
   - Rational(1, 10): 40 19 99 99 99 99 99 99 32 99 99 99 99 99 99 9A
   - Rational(2, 3): 40 AA AA AA AA AA AA AA 32 AA AA AA AA AA AA AB
@@ -1243,13 +1243,13 @@ IBM128:
   - Rational(1, 1000): 3E 41 89 37 4B C6 A7 EF 30 9D B2 2D 0E 56 04 19
   - Rational(1024, 1): 43 40 00 00 00 00 00 00 35 00 00 00 00 00 00 00
   - Rational(1024, 1): 43 40 00 00 00 00 00 00 35 00 00 00 00 00 00 00
-  special: 
+  special:
   - min_value: 0E 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - min_normalized_value: 0E 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - max_value: 7F FF FF FF FF FF FF FF 7F FF FF FF FF FF FF FF
   - epsilon: 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
   - strict_epsilon: 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00
   - "+1": 41 10 00 00 00 00 00 00 33 00 00 00 00 00 00 00
@@ -1273,8 +1273,8 @@ IBM128:
   - "3.0814879110195773648895647081358837E-33": 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
   - "3.0814879110195773648895647081358837E-33": 26 10 00 00 00 00 00 00 18 00 00 00 00 00 00 00
   base: :bytes
-IEEE_DEC64: 
-  parameters: 
+IEEE_DEC64:
+  parameters:
   - total_bits: 64
   - radix: 10
   - significand_digits: 16
@@ -1284,7 +1284,7 @@ IEEE_DEC64:
   - decimal_digits_necessary: 16
   - decimal_min_exp: -383
   - decimal_max_exp: 384
-  values: 
+  values:
   - Rational(1, 3): 2D F9 B3 6C DB 36 CD B3
   - Rational(1, 10): 22 34 00 00 00 00 00 01
   - Rational(2, 3): 39 FB 66 D9 B6 6D 9B 67
@@ -1292,13 +1292,13 @@ IEEE_DEC64:
   - Rational(1, 1000): 22 2C 00 00 00 00 00 01
   - Rational(1024, 1): 22 38 00 00 00 00 04 24
   - Rational(1024, 1): 22 38 00 00 00 00 04 24
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 00 01
   - min_normalized_value: 04 00 00 00 00 00 00 00
   - max_value: 77 FC FF 3F CF F3 FC FF
   - epsilon: 25 C0 00 00 00 00 00 00
   - strict_epsilon: 35 BC 00 00 00 00 00 01
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 80 00 00 00 00 00 00 00
   - "+1": 22 38 00 00 00 00 00 01
@@ -1322,8 +1322,8 @@ IEEE_DEC64:
   - 1E-15: 21 FC 00 00 00 00 00 01
   - 1E-15: 21 FC 00 00 00 00 00 01
   base: :bytes
-APPLE: 
-  parameters: 
+APPLE:
+  parameters:
   - total_bits: 32
   - radix: 2
   - significand_digits: 23
@@ -1333,7 +1333,7 @@ APPLE:
   - decimal_digits_necessary: 8
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): 7E 55 55 55
   - Rational(1, 10): 7C 66 66 66
   - Rational(2, 3): 7F 55 55 55
@@ -1341,13 +1341,13 @@ APPLE:
   - Rational(1, 1000): 76 41 89 37
   - Rational(1024, 1): 8A 40 00 00
   - Rational(1024, 1): 8A 40 00 00
-  special: 
+  special:
   - min_value: 00 00 00 01
   - min_normalized_value: 00 40 00 00
   - max_value: FF 7F FF FF
   - epsilon: 6A 40 00 00
   - strict_epsilon: 6A 40 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 00 80 00 00
   - "+1": 80 40 00 00
@@ -1371,8 +1371,8 @@ APPLE:
   - "2.3841858E-7": 6A 40 00 00
   - "2.3841858E-7": 6A 40 00 00
   base: :bytes
-IEEE_DEC32: 
-  parameters: 
+IEEE_DEC32:
+  parameters:
   - total_bits: 32
   - radix: 10
   - significand_digits: 7
@@ -1382,7 +1382,7 @@ IEEE_DEC32:
   - decimal_digits_necessary: 7
   - decimal_min_exp: -95
   - decimal_max_exp: 96
-  values: 
+  values:
   - Rational(1, 3): 2D E6 CD B3
   - Rational(1, 10): 22 40 00 01
   - Rational(2, 3): 39 ED 9B 67
@@ -1390,13 +1390,13 @@ IEEE_DEC32:
   - Rational(1, 1000): 22 20 00 01
   - Rational(1024, 1): 22 50 04 24
   - Rational(1024, 1): 22 50 04 24
-  special: 
+  special:
   - min_value: 00 00 00 01
   - min_normalized_value: 04 00 00 00
   - max_value: 77 F3 FC FF
   - epsilon: 25 90 00 00
   - strict_epsilon: 35 80 00 01
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00
   - "-0": 80 00 00 00
   - "+1": 22 50 00 01
@@ -1420,8 +1420,8 @@ IEEE_DEC32:
   - 1E-6: 21 F0 00 01
   - 1E-6: 21 F0 00 01
   base: :bytes
-CDC_SINGLE: 
-  parameters: 
+CDC_SINGLE:
+  parameters:
   - total_bits: 60
   - radix: 2
   - significand_digits: 48
@@ -1431,7 +1431,7 @@ CDC_SINGLE:
   - decimal_digits_necessary: 16
   - decimal_min_exp: -293
   - decimal_max_exp: 322
-  values: 
+  values:
   - Rational(1, 3): 3CEAAAAAAAAAAAB
   - Rational(1, 10): 3CCCCCCCCCCCCCD
   - Rational(2, 3): 3CFAAAAAAAAAAAB
@@ -1439,13 +1439,13 @@ CDC_SINGLE:
   - Rational(1, 1000): 3C683126E978D50
   - Rational(1024, 1): 3DA800000000000
   - Rational(1024, 1): 3DA800000000000
-  special: 
+  special:
   - min_value: 000800000000000
   - min_normalized_value: 000800000000000
   - max_value: 7FFFFFFFFFFFFFF
   - epsilon: 3A1800000000000
   - strict_epsilon: 3A1800000000000
-  numerals: 
+  numerals:
   - "+0": "000000000000000"
   - "-0": FFFFFFFFFFFFFFF
   - "+1": 3D0800000000000
@@ -1469,8 +1469,8 @@ CDC_SINGLE:
   - "7.105427357601002E-15": 3A1800000000000
   - "7.105427357601002E-15": 3A1800000000000
   base: 16
-UNIVAC_SINGLE: 
-  parameters: 
+UNIVAC_SINGLE:
+  parameters:
   - total_bits: 36
   - radix: 2
   - significand_digits: 27
@@ -1480,7 +1480,7 @@ UNIVAC_SINGLE:
   - decimal_digits_necessary: 10
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): 3FD555555
   - Rational(1, 10): 3EE666666
   - Rational(2, 3): "405555555"
@@ -1488,13 +1488,13 @@ UNIVAC_SINGLE:
   - Rational(1, 1000): 3BC189375
   - Rational(1024, 1): 45C000000
   - Rational(1024, 1): 45C000000
-  special: 
+  special:
   - min_value: "004000000"
   - min_normalized_value: "004000000"
   - max_value: 7FFFFFFFF
   - epsilon: 33C000000
   - strict_epsilon: 33C000000
-  numerals: 
+  numerals:
   - "+0": "000000000"
   - "-0": FFFFFFFFF
   - "+1": 40C000000
@@ -1518,8 +1518,8 @@ UNIVAC_SINGLE:
   - "1.490116119E-8": 33C000000
   - "1.490116119E-8": 33C000000
   base: 16
-MBF_DOUBLE: 
-  parameters: 
+MBF_DOUBLE:
+  parameters:
   - total_bits: 64
   - radix: 2
   - significand_digits: 56
@@ -1529,7 +1529,7 @@ MBF_DOUBLE:
   - decimal_digits_necessary: 18
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): AB AA AA AA AA AA 2A 7F
   - Rational(1, 10): CD CC CC CC CC CC 4C 7D
   - Rational(2, 3): AB AA AA AA AA AA 2A 80
@@ -1537,13 +1537,13 @@ MBF_DOUBLE:
   - Rational(1, 1000): DF 4F 8D 97 6E 12 03 77
   - Rational(1024, 1): 00 00 00 00 00 00 00 8B
   - Rational(1024, 1): 00 00 00 00 00 00 00 8B
-  special: 
+  special:
   - min_value: 00 00 00 00 00 00 00 01
   - min_normalized_value: 00 00 00 00 00 00 00 01
   - max_value: FF FF FF FF FF FF 7F FF
   - epsilon: 00 00 00 00 00 00 00 4A
   - strict_epsilon: 00 00 00 00 00 00 00 4A
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00 00 00
   - "-0": 00 00 00 00 00 00 80 00
   - "+1": 00 00 00 00 00 00 00 81
@@ -1567,8 +1567,8 @@ MBF_DOUBLE:
   - "2.77555756156289135E-17": 00 00 00 00 00 00 00 4A
   - "2.77555756156289135E-17": 00 00 00 00 00 00 00 4A
   base: :bytes
-BORLAND48: 
-  parameters: 
+BORLAND48:
+  parameters:
   - total_bits: 48
   - radix: 2
   - significand_digits: 40
@@ -1578,7 +1578,7 @@ BORLAND48:
   - decimal_digits_necessary: 14
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): 7F AB AA AA AA 2A
   - Rational(1, 10): 7D CD CC CC CC 4C
   - Rational(2, 3): 80 AB AA AA AA 2A
@@ -1586,13 +1586,13 @@ BORLAND48:
   - Rational(1, 1000): 77 8D 97 6E 12 03
   - Rational(1024, 1): 8B 00 00 00 00 00
   - Rational(1024, 1): 8B 00 00 00 00 00
-  special: 
+  special:
   - min_value: 01 00 00 00 00 00
   - min_normalized_value: 01 00 00 00 00 00
   - max_value: FF FF FF FF FF 7F
   - epsilon: 5A 00 00 00 00 00
   - strict_epsilon: 5A 00 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00 00
   - "-0": 00 00 00 00 00 80
   - "+1": 81 00 00 00 00 00
@@ -1616,8 +1616,8 @@ BORLAND48:
   - "1.8189894035459E-12": 5A 00 00 00 00 00
   - "1.8189894035459E-12": 5A 00 00 00 00 00
   base: :bytes
-XS128: 
-  parameters: 
+XS128:
+  parameters:
   - total_bits: 40
   - radix: 2
   - significand_digits: 32
@@ -1627,7 +1627,7 @@ XS128:
   - decimal_digits_necessary: 11
   - decimal_min_exp: -38
   - decimal_max_exp: 38
-  values: 
+  values:
   - Rational(1, 3): 7F 2A AA AA AB
   - Rational(1, 10): 7D 4C CC CC CD
   - Rational(2, 3): 80 2A AA AA AB
@@ -1635,13 +1635,13 @@ XS128:
   - Rational(1, 1000): 77 03 12 6E 98
   - Rational(1024, 1): 8B 00 00 00 00
   - Rational(1024, 1): 8B 00 00 00 00
-  special: 
+  special:
   - min_value: 01 00 00 00 00
   - min_normalized_value: 01 00 00 00 00
   - max_value: FF 7F FF FF FF
   - epsilon: 62 00 00 00 00
   - strict_epsilon: 61 00 00 00 00
-  numerals: 
+  numerals:
   - "+0": 00 00 00 00 00
   - "-0": 00 80 00 00 00
   - "+1": 81 00 00 00 00

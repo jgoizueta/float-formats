@@ -1,7 +1,6 @@
 # Float-Formats
 # Support for binary data representations
-require 'nio'
-require 'nio/sugar'
+require 'numerals'
 
 require 'enumerator'
 require 'delegate'
@@ -10,8 +9,8 @@ module Flt
 
 class Bits
   # Define a bit string given the number of bits and
-  # optinally the initial value (as an integer).
-  def initialize(num_bits,v=0)
+  # optionally the initial value (as an integer).
+  def initialize(num_bits, v=0)
     @n = num_bits
     @v = v
   end
@@ -20,10 +19,9 @@ class Bits
   def to_s(base=2)
     n = Bits.power_of_two(base)
     if n
-      fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
       digits = (size+n-1)/n
-      fmt.pad0s!(digits)
-      @v.nio_write(fmt)
+      #{ }"%0#{digits}d" % @v.to_s(base)
+      Numerals::Format[:fix, base: base].set_leading_zeros(digits).write(@v)
     else
       @v.to_s(base)
     end
@@ -48,7 +46,7 @@ class Bits
   end
 
   # produce bit string from an integer
-  def self.from_i(v,len=nil)
+  def self.from_i(v, len=nil)
     len ||= (Math.log(v)/Math.log(2)).ceil # v.to_s(2).size
     Bits.new(len,v)
   end
@@ -112,9 +110,8 @@ class Bytes < DelegateClass(String)
         @bytes = bytes.pack("C*")
       else
         @bytes = bytes.to_str
-        @bytes.force_encoding("BINARY") if @bytes.respond_to?(:force_encoding)
     end
-    @bytes.force_encoding(Encoding::BINARY) if RUBY_VERSION>="1.9.0"
+    @bytes.force_encoding("BINARY") if @bytes.respond_to?(:force_encoding)
     super @bytes
   end
 

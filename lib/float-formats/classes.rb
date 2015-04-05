@@ -35,9 +35,8 @@
 # * minimum encoded exponent reserved for zero (nonzero significands are not used with it)
 # * special all zeros representation: minimun encoded exponent is a regular exponent except for 0
 
-require 'nio'
-require 'nio/sugar'
 require 'flt'
+require 'numerals'
 require 'enumerator'
 require 'float-formats/bytes.rb'
 
@@ -91,59 +90,46 @@ class FormatBase
       @sign,@significand,@exponent = v.to_a
     end
   end
+
   attr_reader :sign, :significand, :exponent
+
   def to_a
     split
   end
+
   def split
     return [@sign,@significand,@exponent]
   end
 
-
   def nan?
     @exponent == :nan
   end
+
   def zero?
     return @exponent==:zero || @significand==0
   end
+
   def infinite?
     return @exponent==:infinity
   end
+
   def subnormal?
     return @exponent==:denormal || (@significand.kind_of?(Integer) && @significand<self.class.minimum_normalized_integral_significand)
   end
+
   def normal?
     @exponend.kind_of?(Integer) && @significand>=self.class.minimum_normalized_integral_significand
   end
 
-  include Nio::Formattable
-
   # from/to integral_sign_significand_exponent
 
-  def nio_write_neutral(fmt)
-    # this always treats the floating-point values as exact quantities
-    case @exponent
-      when :zero
-        v = 0.0/@sign
-      when :infinity
-        v = @sign/0.0
-      when :nan
-        v = 0.0/0.0
-      else
-        case form_class.radix
-        when 10
-          v = Flt.DecNum(@sign, @significand, @exponent)
-        when 2
-          v = Flt.BinNum(@sign, @significand, @exponent)
-        else
-          v = @significand*form_class.radix_power(@exponent)*@sign
-        end
+  def to_text(fmt = Numerals::Format[])
+    if infinite?
+      fmt = fmt[symbols: [show_plus: true]]
     end
-    v.nio_write_neutral(fmt)
+    fmt.write(self)
   end
-  def to_text(fmt=Nio::Fmt.default)
-    nio_write(fmt)
-  end
+
   def to_bytes
     form_class.pack(@sign,@significand,@exponent)
   end
@@ -154,24 +140,29 @@ class FormatBase
       to_bits.to_hex
     end
   end
-  def to(number_class, mode=:approx)
-    if number_class==Bytes
+  def to(number_class, mode = :approx)
+    if number_class == Bytes
       to_bytes
-    elsif number_class==String
-      mode = Nio::Fmt.default if mode==:approx
+    elsif number_class == String
+      mode = Numerals::Format[] if mode == :approx
       to_text(mode)
-    elsif Nio::Fmt===number_class
+    elsif Numerals::Format === number_class
       to_text(number_class)
-    elsif number_class==Array
+    elsif number_class == Array
       split
-    elsif Symbol===number_class
+    elsif Symbol === number_class
       send "to_#{number_class}"
     elsif number_class.is_a?(Flt::Num)  && number_class.radix == form_class.radix
       self.to_num
+    elsif number_class.is_a?(FormatBase)
+      number_class.from_number(self, mode)
     else # assume number_class.ancestors.include?(Numeric) (number_class < Numeric)
-        fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
-        v = nio_write(fmt)
-        number_class.nio_read(v,fmt)
+      options = {
+        type: number_class,
+        exact_input: (mode != :approx),
+        output_mode: :fixed
+      }
+      Numerals::Conversions.convert(self, options)
     end
   end
   def to_bits
@@ -183,13 +174,13 @@ class FormatBase
   def to_bits_text(base)
     to_bits.to_s(base)
     #i = to_bits
-    #fmt = Nio::Fmt.default.base(base,true).mode(:fix,:exact)
+    #fmt = Numerals::Format[base: base]
     #if [2,4,8,16].include?(base)
     #  n = (Math.log(base)/Math.log(2)).round.to_i
     #  digits = (form_class.total_bits+n-1)/n
-    #  fmt.pad0s!(digits)
+    #  fmt.set_trailing_zeros!(digits)
     #end
-    #i.to_i.nio_write(fmt)
+    #fmt.writ(i.to_i)
   end
 
   # Computes the negation of a floating point value (unary minus)
@@ -198,10 +189,9 @@ class FormatBase
   end
 
   # Converts a floating point value to another format
-  def convert_to(fpclass)
-    fpclass.nio_read(nio_write)
+  def convert_to(fpclass, options = {})
+    Numerals::Conversions.convert(self, options.merge(type: fpclass))
   end
-
 
   # Computes the next adjacent floating point value.
   # Accepts either a Value or a byte String.
@@ -580,6 +570,10 @@ class FormatBase
     Num[self.radix]
   end
 
+  def self.numerals_conversion(options = {})
+    FltFmtConversion.new(self, options)
+  end
+
   def self.context
     num_class::Context.new(
       :precision=>significand_digits,
@@ -590,13 +584,46 @@ class FormatBase
   end
 
   def to_num
-    s,c,e = split
-    e = 0 if e == :zero
-    form_class.num_class.Num(s,c,e)
+    s, c, e = split
+    case e
+    when :zero
+      e = 0
+    when :infinity
+      e = :inf
+    when :nan
+      e = :nan
+    end
+    form_class.num_class.Num(s, c, e)
   end
 
+  # def to_num
+  #   # num_class = Flt::Num[form_class.radix]
+  #   num_class = self.class.num_class
+  #   case @exponent
+  #   when :zero
+  #     num_class.zero(@sign)
+  #   when :infinity
+  #     num_class.infinity(@sign)
+  #   when :nan
+  #     num_class.nan
+  #   else
+  #     num_class.new(@sign, @significand, @exponent)
+  #   end
+  # end
+
   def self.num(x)
-    new(*x.split)
+    s, c, e = x.split
+    if x.zero?
+      e = :zero
+    else
+      case e
+      when :inf
+        e = :infinity
+      when :nan
+        e = :nan
+      end
+    end
+    new([s, c, e])
   end
 
   # Endianness of the format (:little_endian, :big_endian or :little_big_endian)
@@ -792,41 +819,6 @@ class FormatBase
 
   # from methods
 
-
-  def self.nio_read_neutral(neutral)
-       if neutral.special?
-          case neutral.special
-            when :nan
-              return nan
-            when :inf
-              return infinity(neutral.sign=='-' ? -1 : +1)
-          end
-       end
-       if neutral.rep_pos<neutral.digits.length
-         nd = neutral.base==10 ? decimal_digits_necessary : (significand_digits*Math.log(radix)/Math.log(fmt.get_base)).ceil+1
-         neutral = neutral.round(nd,:sig)
-       end
-       f = neutral.digits.to_i(neutral.base)
-       e = neutral.dec_pos-neutral.digits.length
-       case neutral.rounding
-       when :even
-         rounding = :half_even
-       when :inf
-         rounding = :half_up
-       when :zero
-         rounding = :half_down
-       when :truncate
-         rounding = :down
-       end
-       s = (neutral.sign=='-') ? -1 : +1
-       if neutral.base!=radix
-         reader = Flt::Support::Reader.new(:mode=>:fixed)
-         s,f,e = reader.read(context, rounding, s, f, e, neutral.base).split
-       end
-       return_value s,f,e
-
-  end
-
   def self.from(*args)
     new(*args)
   end
@@ -839,17 +831,27 @@ class FormatBase
     from_bytes Bytes.from_hex(hex)
   end
 
-  def self.from_number(v, mode=:approx)
+  def self.from_number(v, mode = :approx)
     if v.is_a?(Flt::Num) && v.num_class.radix==self.radix
       self.num(v)
     else
-      fmt = mode==:approx ? Nio::Fmt::CONV_FMT : Nio::Fmt::CONV_FMT_STRICT
-      nio_read(v.nio_write(fmt),fmt)
+      options = {
+        type: self,
+        exact_input: (mode != :approx),
+        output_mode: @normalized ? :fixed : :short
+      }
+      Numerals::Conversions.convert(v, options)
     end
   end
 
-  def self.from_text(txt, fmt=Nio::Fmt.default) # ?
-    nio_read(txt,fmt)
+  def self.from_text(txt, *args)
+    if @normalized
+      fmt = Numerals::Format[exact_input: true]
+    else
+      fmt = Numerals::Format[:short, exact_input: false]
+    end
+    fmt = fmt[*args]
+    fmt.read(txt, type: self)
   end
 
   def self.join(sign,significand,exponent)
@@ -875,8 +877,8 @@ class FormatBase
   # Defines a floating-point number from a text representation of the
   # encoded integral value in a given base.
   # Returns a Value.
-  def self.from_bits_text(txt,base)
-    i = Integer.nio_read(txt,Nio::Fmt.base(base))
+  def self.from_bits_text(txt, base)
+    i = Numerals::Format[].read(txt, type: Integer, base: base)
     from_bits i
   end
 
@@ -932,6 +934,48 @@ class FormatBase
       end
       pack_fields flds
     end
+  end
+
+  class FltFmtConversion
+
+    def initialize(form_class, options={})
+      @form_class = form_class
+      @input_rounding = options[:input_rounding]
+    end
+
+    def type
+      @form_class
+    end
+
+    def order_of_magnitude(value, options={})
+      num_conversions.order_of_maginitude(value.to_num, options)
+    end
+
+    def number_of_digits(value, options={})
+      num_conversions.number_of_digits(value.to_num, options)
+    end
+
+    def exact?(value, options={})
+      options[:exact]
+    end
+
+    def write(number, exact_input, output_rounding)
+      # assert_equal @form_class, number.class
+      num_conversions.write(number.to_num, exact_input, output_rounding)
+    end
+
+    def read(numeral, exact_input, approximate_simplified)
+      num = num_conversions.read(numeral, exact_input, approximate_simplified)
+      num = num.normalize(@form_class.context) if exact_input
+      @form_class.num(num)
+    end
+
+    private
+
+    def num_conversions
+      Numerals::Conversions[@form_class.context, input_rounding: @input_rounding]
+    end
+
   end
 
   # :stopdoc:
