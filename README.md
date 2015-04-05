@@ -210,9 +210,9 @@ the first bit, which will be hidden:
 
     Flt.define(
       :MY_FP, BinaryFormat,
-      :fields=>[:significand,22,:exponent,9,:sign,1],
-      :bias=>127, :bias_mode=>:scientific_significand,
-      :hidden_bit=>true
+      fields: [:significand,22,:exponent,9,:sign,1],
+      bias: 127, bias_mode: :scientific_significand,
+      hidden_bit: true
     )
 
 Now we can encode values in this format, decode values, convet to other
