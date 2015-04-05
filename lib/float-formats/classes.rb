@@ -374,7 +374,7 @@ class FormatBase
         # originally, we incremented min_encoded_exp here unconditionally, but
         # now we don't if there's no hidden bit
         # (we assume the minimum exponent can be used for normalized and denormalized numbers)
-        # because of this, IEEE_EXTENDED & 128 formats now specify :min_encoded_exp=>1 in it's definitions
+        # because of this, IEEE_EXTENDED & 128 formats now specify min_encoded_exp: 1 in it's definitions
         @min_encoded_exp += 1 if @hidden_bit
       end
     end
@@ -576,10 +576,10 @@ class FormatBase
 
   def self.context
     num_class::Context.new(
-      :precision=>significand_digits,
-      :emin=>radix_min_exp(:scientific_significand),
-      :emax=>radix_max_exp(:scientific_significand),
-      :rounding=>@round || :half_even
+      precision: significand_digits,
+      emin: radix_min_exp(:scientific_significand),
+      emax: radix_max_exp(:scientific_significand),
+      rounding:@round || :half_even
     )
   end
 
@@ -1275,7 +1275,7 @@ class BCDFormat < DecimalFormatBase
     end
     s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1
-    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e
+    pack_fields_hash sign: s, significand: m, exponent: e
   end
   # :startdoc:
 end
@@ -1403,7 +1403,7 @@ class DPDFormat < DecimalFormatBase
         i_combination = sig_msd|(1<<4)|(exp_msb<<1)
       end
     end
-    h = {:sign=>i_sign, :combination=>i_combination, :exponent_continuation=>i_exponent_continuation, :significand_continuation=>i_significand_continuation}
+    h = {sign: i_sign, combination: i_combination, exponent_continuation: i_exponent_continuation, significand_continuation: i_significand_continuation}
     fields =  @internal_field_meaning.collect{|f| h[f]}
     Bytes.from_bitfields(@internal_field_lengths,fields,@endianness)
   end
@@ -1471,7 +1471,7 @@ class DPDFormat < DecimalFormatBase
     end
     s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1
-    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e, :type=>t
+    pack_fields_hash sign: s, significand: m, exponent: e, type: t
   end
 
   # :startdoc:
@@ -1597,7 +1597,7 @@ class BinaryFormat < FieldsInBitsFormatBase
     end
     s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1
-    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e
+    pack_fields_hash sign: s, significand: m, exponent: e
   end
   # :startdoc:
 
@@ -1690,7 +1690,7 @@ class HexadecimalFormat < FieldsInBitsFormatBase
     end
     s = sign_from_unit(s)
     m,e = neg_significand_exponent(0,m,e) if s%2==1
-    pack_fields_hash :sign=>s, :significand=>m, :exponent=>e
+    pack_fields_hash sign: s, significand: m, exponent: e
   end
 
 
@@ -1785,7 +1785,7 @@ end
 # by adjusting the sign of the second number. This is enabled by the
 # :extra_prec option.
 # For example, the "double double" format used in PowerPC is this
-#   Flt.define :DoubleDouble, DoubleFormat, :half=>IEEE_binary64, :extra_prec=>true
+#   Flt.define :DoubleDouble, DoubleFormat, half: IEEE_binary64, extra_prec: true
 # Although this has a fixed 107 bits precision, the format as used in
 # the PowerPC can have greater precision for specific values (by having
 # greater separation between the exponents of both halves)
