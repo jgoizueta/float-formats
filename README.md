@@ -1,3 +1,6 @@
+[![Gem Version](https://badge.fury.io/rb/float-formats.svg)](http://badge.fury.io/rb/float-formats)
+[![Build Status](https://travis-ci.org/jgoizueta/float-formats.svg)](https://travis-ci.org/jgoizueta/float-formats)
+
 #Introduction
 
 Float-Formats is a Ruby package with methods to handle diverse floating-point formats.
