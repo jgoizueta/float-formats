@@ -2,19 +2,17 @@ PATH
   remote: .
   specs:
     float-formats (0.3.0)
-      flt (>= 1.4.7)
-      numerals (>= 0.3.0)
+      flt (~> 1.5)
+      numerals (~> 0.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    flt (1.4.7)
+    flt (1.5.0)
     modalsupport (0.9.2)
-    nio (0.2.5)
-      flt (>= 1.0.0)
     numerals (0.3.0)
-      flt (~> 1.4.6)
-      modalsupport (~> 0.9.2)
+      flt (~> 1.4)
+      modalsupport (~> 0.9)
     rake (10.4.2)
 
 PLATFORMS
@@ -23,5 +21,4 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.6)
   float-formats!
-  nio (>= 0.2.4)
   rake

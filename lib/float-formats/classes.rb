@@ -477,6 +477,10 @@ class FormatBase
     # attr_accessor
   end
 
+  def self.normalized?
+    @normalized
+  end
+
   # compute a power of the radix (base)
   def self.radix_power(n)
     radix**n
@@ -579,7 +583,8 @@ class FormatBase
       precision: significand_digits,
       emin: radix_min_exp(:scientific_significand),
       emax: radix_max_exp(:scientific_significand),
-      rounding:@round || :half_even
+      rounding: @round || :half_even,
+      normalized: @normalized
     )
   end
 
@@ -966,7 +971,7 @@ class FormatBase
 
     def read(numeral, exact_input, approximate_simplified)
       num = num_conversions.read(numeral, exact_input, approximate_simplified)
-      num = num.normalize(@form_class.context) if exact_input
+      num = num.normalize(@form_class.context) if exact_input && @form_class.normalized?
       @form_class.num(num)
     end
 

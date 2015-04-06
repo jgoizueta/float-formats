@@ -18,12 +18,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'flt', ">= 1.4.7"
-  spec.add_dependency 'numerals', ">= 0.3.0"
+  spec.add_dependency 'flt', "~> 1.5"
+  spec.add_dependency 'numerals', "~> 0.3"
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency 'nio', ">= 0.2.4"
 
   spec.required_ruby_version = '>= 1.9.3'
 end
