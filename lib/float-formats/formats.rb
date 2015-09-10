@@ -137,7 +137,6 @@ Flt.define BinaryFormat, :XS128,
   bias: 128, bias_mode: :fractional_significand,
   hidden_bit: true,
   endianness: :big_endian, round: :half_up,
-  endianness: :big_endian,
   gradual_underflow: false, infinity: false, nan: false
 
 # HP-3000 excess 256 format, HP-Tandem...
