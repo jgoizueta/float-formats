@@ -1,18 +1,18 @@
 [![Gem Version](https://badge.fury.io/rb/float-formats.svg)](http://badge.fury.io/rb/float-formats)
 [![Build Status](https://travis-ci.org/jgoizueta/float-formats.svg)](https://travis-ci.org/jgoizueta/float-formats)
 
-#Introduction
+# Introduction
 
 Float-Formats is a Ruby package with methods to handle diverse floating-point formats.
 These are some of the things that can be done with it:
 
-* Enconding and decoding numerical values in specific floating point representations.
+* Encoding and decoding numerical values in specific floating point representations.
 * Conversion of floating-point data between different formats.
 * Obtaining properties of floating-point formats (ranges, precision, etc.)
 * Exploring and learning about floating point representations.
 * Definition and testing of new floating-point formats.
 
-#Installation
+# Installation
 
 To install the gem manually:
 
@@ -22,11 +22,11 @@ You can find the code in GitHub:
 
 * http://github.com/jgoizueta/float-formats/
 
-#Predefined formats
+# Predefined formats
 
 A number of common formats are defined as constants in the Flt module:
 
-##IEEE 754-2008
+## IEEE 754-2008
 
 **Binary** floating point representations in little endian order:
 
@@ -47,7 +47,7 @@ A number of common formats are defined as constants in the Flt module:
 Others can be defined with IEEE.interchange_binary and IEEE.interchange_decimal
 (see the IEEE module).
 
-##Legacy
+## Legacy
 
 Formats of historical interest, some of which are found
 in file formats still in use.
@@ -72,13 +72,13 @@ Borland Pascal: (BORLAND48).
 Formats used in the Intel 8051 by the C51 compiler:
 (C51_BCD_FLOAT, C51_BCD_DOUBLE and C51_BCD_LONG_DOUBLE).
 
-##Calculators
+## Calculators
 
 Formats used in HP RPL calculators: (RPL, RPL_X),
 HP-71B formats (HP71B, HP71B_X)
 and classic HP 10 digit calculators: (HP_CLASSIC).
 
-#Using the pre-defined formats
+# Using the pre-defined formats
 
     require 'rubygems'
     require 'float-formats'
@@ -114,7 +114,7 @@ Minimum and maximum decimal exponents:
     puts IEEE_binary32.decimal_min_exp                   # -> -37
     puts IEEE_binary32.decimal_max_exp                   # -> 38
 
-##Encode and decode numbers
+## Encode and decode numbers
 
 For each floating-point format class there is a constructor method with the same
 name which can build a floating-point value from a variety of parameters:
@@ -151,7 +151,7 @@ Examples:
     puts v.to_bits                                   # -> 00111111111110111100110011001100110011001100110011001100110011001100110011001101
     puts v.to_bits_text(16)                          # -> 3ffbcccccccccccccccd
 
-##Special values:  
+## Special values:  
 
 Let's show the decimal expression of some interesting values using
 3 significative digits:
@@ -162,13 +162,13 @@ Let's show the decimal expression of some interesting values using
     puts IEEE_SINGLE.max_value.to_text(fmt)             # -> 3.4E38
     puts IEEE_SINGLE.epsilon.to_text(fmt)               # -> 1.19E-7
 
-##Convert between formats
+## Convert between formats
 
     v = IEEE_EXTENDED.from_text('1.1')
     v = v.convert_to(IEEE_SINGLE)
     v = v.convert_to(IEEE_DEC64)
 
-#Tools for the native floating point format
+# Tools for the native floating point format
 
 This is an optional module to perform conversions and manipulate the native Float format.
 
@@ -199,7 +199,7 @@ Together with flt/sugar (from Flt) can be use to explore or work with Floats:
     puts float_significant_dec(Float::MIN_D.next_plus)  # -> 1.0E-323
     puts float_significant_dec(Float::MAX_D.next_minus) # -> 2.2250738585072004E-308
 
-#Defining new formats
+# Defining new formats
 
 New formats are defined using one of the classes defined in float-formats/classes.rb
 and passing the necessary parameters in a hash to the constructor.
@@ -227,11 +227,11 @@ formats, query it's range, etc:
 You can look at float-formats/formats.rb to see how the built-in formats
 are defined.
 
-#License
+# License
 
 This code is free to use under the terms of the MIT license.
 
-#References
+# References
 
 [*Floating Point Representations.* C.B. Silio.](http://www.ece.umd.edu/class/enpm607.S2000/fltngpt.pdf)
   Description of formats used in UNIVAC 1100, CDC 6600/7600, PDP-11, IEEE754, IBM360/370
@@ -239,13 +239,13 @@ This code is free to use under the terms of the MIT license.
 [*Floating-Point Formats.* John Savard.](http://www.quadibloc.com/comp/cp0201.htm)
   Description of formats used in VAX and PDF-11
 
-###IEEE754 binary formats
+### IEEE754 binary formats
 
 [*IEEE-754 References.* Christopher Vickery.](http://babbage.cs.qc.edu/courses/cs341/IEEE-754references.html)
 
 [*What Every Computer Scientist Should Know About Floating-Point Arithmetic.* David Goldberg.](http://docs.sun.com/source/806-3568/ncg_goldberg.html)
 
-###DPD/IEEE754r decimal formats
+### DPD/IEEE754r decimal formats
 
 [*Decimal Arithmetic Encoding. Strawman 4d.* Mike Cowlishaw.](http://www2.hursley.ibm.com/decimal/decbits.pdf)
 
@@ -255,7 +255,7 @@ This code is free to use under the terms of the MIT license.
 
 [*DRAFT Standard for Floating-Point Arithmetic P754.* IEEE.](http://www.validlab.com/754R/drafts/archive/2007-10-05.pdf)
 
-###HP 10 digits calculators
+### HP 10 digits calculators
 
 [*HP CPU and Programming*. David G.Hicks.](http://www.hpmuseum.org/techcpu.htm)  
   Description of calculator CPUs from the Museum of HP Calculators.
@@ -266,7 +266,7 @@ This code is free to use under the terms of the MIT license.
 *Scientific Pocket Calculator Extends Range of Built-In Functions.* Eric A. Evett, Paul J. McClellan, Joseph P. Tanzini.
   Hewlett Packard Journal 1983-05 pgs 27-28. Describes format used in HP-15C.
 
-###HP 12 digits calculators
+### HP 12 digits calculators
 
 *Software Internal Design Specification Volume I For the HP-71*. Hewlett Packard.
   Available from http://www.hpmuseum.org/cd/cddesc.htm
@@ -275,30 +275,30 @@ This code is free to use under the terms of the MIT license.
   Excerpted from *RPL: A Mathematical Control Language*. by W. C. Wickes.
   Available at http://www.hpcalc.org/details.php?id=1743
 
-###HP-3000
+### HP-3000
 
 *A Pocket Calculator for Computer Science Professionals.* Eric A. Evett.
   Hewlett Packard Journal 1983-05 pg 37. Describes format used in HP-3000
 
-###IBM
+### IBM
 
 [*IBM Floating Point Architecture.* Wikipedia.](http://en.wikipedia.org/wiki/IBM_Floating_Point_Architecture)
 
 [*The IBM eServer z990 floating-point unit*. G. Gerwig, H. Wetter, E. M. Schwarz, J. Haess, C. A. Krygowski, B. M. Fleischer and M. Kroener.](http://www.research.ibm.com/journal/rd/483/gerwig.html)
 
-###MBF  
+### MBF  
 
 [*Microsoft Knowledbase Article 35826*](http://support.microsoft.com/?scid=kb%3Ben-us%3B35826&x=17&y=12)
 
 [*Microsoft MBF2IEEE library*](http://download.microsoft.com/download/vb30/install/1/win98/en-us/mbf2ieee.exe)
 
-###Borland
+### Borland
 
 *An Overview of Floating Point Numbers.* Borland Developer Support Staff
 
 [*Pascal Floating-Point Page.* J R Stockton.](http://www.merlyn.demon.co.uk/pas-real.htm)
 
-###8-bit micros
+### 8-bit micros
 
 This is the MS Basic format (BASIC09 for TRS-80 Color Computer, Dragon),
 also used in the Sinclair Spectrum.
@@ -309,26 +309,26 @@ also used in the Sinclair Spectrum.
 *Sinclair ZX Spectrum / Basic Programming.*. Steven Vickers.
   Chapter 24. http://www.worldofspectrum.org/ZXBasicManual/zxmanchap24.html
 
-###Apple II
+### Apple II
 
 *Floating Point Routines for the 6502* Roy Rankin and Steve Wozniak.
   Dr. Dobb's Journal, August 1976, pages 17-19.
 
-###C51
+### C51
 
 [*Advanced Development System* Franklin Software, Inc.](http://www.fsinc.com/reference/html/com9anm.htm)
 
-###CDC6600
+### CDC6600
 
 *CONTROL DATA 6400/6500/6600 COMPUTER SYSTEMS Reference Manual*
   Manuals available at http://bitsavers.org/
 
-###Cray
+### Cray
 
 *CRAY-1 COMPUTER SYSTEM Hardware Reference Manual*
   See pg 3-20 from 2240004 or pg 4-30 from HR-0808 or pg 4-21 from HP-0032.
   Manuals available at http://bitsavers.org/
 
-###Wang 2200
+### Wang 2200
 
 [*Internal Floating Point Representation*](http://www.wang2200.org/fp_format.html)
