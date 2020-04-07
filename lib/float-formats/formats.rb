@@ -95,7 +95,6 @@ IEEE.interchange_binary :IEEE_binary256_BE, 256, endianness: :big_endian
 IEEE.interchange_binary :IEEE_binary512_BE, 512, endianness: :big_endian
 IEEE.interchange_binary :IEEE_binary1024_BE, 1024, endianness: :big_endian
 
-
 # old names
 IEEE_binaryx = IEEE_binary80
 IEEE_HALF = IEEE_binary16
@@ -129,6 +128,47 @@ IEEE.interchange_decimal :IEEE_decimal256, 256
 IEEE_DEC32 = IEEE_decimal32
 IEEE_DEC64 = IEEE_decimal64
 IEEE_DEC128 = IEEE_decimal128
+
+# Brain Floating Point (bfloat16) - Google Brain 16-bit truncated version of IEEE_binary32
+# Google Cloud TPUs, TensorFlow
+# Intel AI processors: Nervana NNP-L1000, Xeon processors (AVX-512 BF16 extensions)
+# Intel FPGAs
+# ARMv8.6-A
+# AMD ROCm libraries
+
+IEEE.binary :BFLOAT16, significand: 7, exponent: 8, endianness: :little_endian
+IEEE.binary :BFLOAT16_BE, significand: 7, exponent: 8, endianness: :big_endian
+
+# MSFP8-11 Microsoft Floating Point (Project Brainwave)
+
+IEEE.binary :MSFP8, significand: 2, exponent: 5, endianness: :little_endian
+IEEE.binary :MSFP9, significand: 3, exponent: 5, endianness: :little_endian
+IEEE.binary :MSFP10, significand: 4, exponent: 5, endianness: :little_endian
+IEEE.binary :MSFP11, significand: 5, exponent: 5, endianness: :little_endian
+IEEE.binary :MSFP8_BE, significand: 2, exponent: 5, endianness: :big_endian
+IEEE.binary :MSFP9_BE, significand: 3, exponent: 5, endianness: :big_endian
+IEEE.binary :MSFP10_BE, significand: 4, exponent: 5, endianness: :big_endian
+IEEE.binary :MSFP11_BE, significand: 5, exponent: 5, endianness: :big_endian
+
+# Khronos Vulkan unsigned minifloat formats
+
+Flt.define BinaryFormat, :KHRONOS_VULKAN_UNSIGNED11,
+  fields:[:significand, 6, :exponent, 5], # :sign 1
+  bias: 2**(5-1)-1, bias_mode: :scientific_significand,
+  hidden_bit: true,
+  endianness: :little_endian,
+  round: :half_even,
+  gradual_underflow: true,
+  infinity: true, nan: true
+
+Flt.define BinaryFormat, :KHRONOS_VULKAN_UNSIGNED10,
+  fields:[:significand, 5, :exponent, 5], # :sign 1
+  bias: 2**(5-1)-1, bias_mode: :scientific_significand,
+  hidden_bit: true,
+  endianness: :little_endian,
+  round: :half_even,
+  gradual_underflow: true,
+  infinity: true, nan: true
 
 # Excess 128 used by Microsoft Basic in 8-bit micros, Spectrum, ...
 
@@ -179,6 +219,8 @@ Flt.define :MBF_DOUBLE, BinaryFormat,
   hidden_bit: true,
   endianness: :little_endian,
   gradual_underflow: false, infinity: false, nan: false
+
+MBF_EXTENDEND = XS128
 
 # DEC formats (VAX)
 
@@ -311,6 +353,10 @@ Flt.define :IBMX, HexadecimalFormat,
   fields_handler: lambda{|fields| fields[2]=0},
   bias: 8192, bias_mode: :fractional_significand,
   endianness: :big_endian
+
+HFP_SINGLE = IBM32
+HFP_DOUBLE = IBM64
+HFP_EXTENDED = IBM128
 
 # Cray-1
 Flt.define :CRAY, BinaryFormat,

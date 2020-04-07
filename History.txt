@@ -1,3 +1,9 @@
+== 0.4.0 2020-04-07
+
+* New formats: BFLOAT16, MSFP8, MSFP9, MSFP10, MSFP11, KHRONOS_VULKAN_UNSIGNED10, KHRONOS_VULKAN_UNSIGNED11
+* New aliases: MBF_EXTENDEND, HFP_SINGLE, HFP_DOUBLE, HFP_EXTENDED
+# Development dependencies updated
+
 == 0.3.0 2015-04-05
 
 * Nio dependency replaced by Numerals
@@ -10,7 +16,7 @@
 == 0.2.0 2009-08-06
 
 *  New redefined interface
-*  The sign in splitted form (sign, significand, exponent) now
+*  The sign in split form (sign, significand, exponent) now
    have the sign as an integer +1,-1 rather than using the
    internal representation (0, 1, etc.)
 *  Arithmetic is possible on FP values
@@ -26,7 +32,7 @@
 *  Allow non-bcd values in fields of BCD formats by passing
    hex values as Strings; allow such values to be used for
    nan/infinity exponents.
-*  Nio 0.2.1 is now reqiured
+*  Nio 0.2.1 is now required
 *  Handle special values (Infinities and NaN) in #from_fmt, #from_number
 *  Add ulp methods to Value and FP classes and to Float
 *  Bug fixes

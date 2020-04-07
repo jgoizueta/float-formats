@@ -72,6 +72,10 @@ Borland Pascal: (BORLAND48).
 Formats used in the Intel 8051 by the C51 compiler:
 (C51_BCD_FLOAT, C51_BCD_DOUBLE and C51_BCD_LONG_DOUBLE).
 
+**Minifloats**:
+AI Formats: (BFLOAT16, MSFP8, MSFP9, MSFP10, MSFP11)
+Khronos Vulkan unsigned formats: (KHRONOS_VULKAN_UNSIGNED10, KHRONOS_VULKAN_UNSIGNED11)
+
 ## Calculators
 
 Formats used in HP RPL calculators: (RPL, RPL_X),
@@ -122,7 +126,7 @@ name which can build a floating-point value from a variety of parameters:
 * Using three integers:
   the sign (+1 for +, -1 for -), the significand (coefficient or mantissa)
   and the exponent.
-* From a text numeral (with an optional Nio format specifier)
+* From a text numeral (with an optional `Numerals` format specifier)
 * From a number : converts a numerical value
   to a floating point representation.
 
@@ -151,16 +155,16 @@ Examples:
     puts v.to_bits                                   # -> 00111111111110111100110011001100110011001100110011001100110011001100110011001101
     puts v.to_bits_text(16)                          # -> 3ffbcccccccccccccccd
 
-## Special values:  
+## Special values:
 
 Let's show the decimal expression of some interesting values using
 3 significative digits:
 
-    fmt = Nio::Fmt.mode(:gen,3)  
-    puts IEEE_SINGLE.min_value.to_text(fmt)             # -> 2E-45
-    puts IEEE_SINGLE.min_normalized_value.to_text(fmt)  # -> 1.18E-38
-    puts IEEE_SINGLE.max_value.to_text(fmt)             # -> 3.4E38
-    puts IEEE_SINGLE.epsilon.to_text(fmt)               # -> 1.19E-7
+    fmt = Numerals::Format[mode: :general, rounding: [precision: 3]]
+    puts IEEE_SINGLE.min_value.to_text(fmt)             # -> 1e-45
+    puts IEEE_SINGLE.min_normalized_value.to_text(fmt)  # -> 1.18e-38
+    puts IEEE_SINGLE.max_value.to_text(fmt)             # -> 3.40e38
+    puts IEEE_SINGLE.epsilon.to_text(fmt)               # -> 1.19e-7
 
 ## Convert between formats
 
@@ -185,7 +189,7 @@ This is an optional module to perform conversions and manipulate the native Floa
     puts float_significant_dec(Float::MAX_D)           # -> 2.2250738585072009E-308
     puts float_significant_dec(Float::MIN_N)           # -> 2.2250738585072014E-308
 
-Together with flt/sugar (from Flt) can be use to explore or work with Floats:  
+Together with flt/sugar (from Flt) can be use to explore or work with Floats:
 
     require 'flt/sugar'
 
@@ -221,8 +225,9 @@ the first bit, which will be hidden:
 Now we can encode values in this format, decode values, convet to other
 formats, query it's range, etc:
 
-     puts MY_FP('0.1').to_bits_text(16)              # -> 1ee66666
-     puts MY_FP.max_value.to_text(Nio::Fmt.prec(3))  # -> 7.88E115
+Numerals::Format[mode: :general, rounding: [precision: 3]]
+     puts MY_FP('0.1').to_bits_text(16)              # -> 1EE66666
+     puts MY_FP.max_value.to_text                    # -> 7.8804e115
 
 You can look at float-formats/formats.rb to see how the built-in formats
 are defined.
@@ -257,7 +262,7 @@ This code is free to use under the terms of the MIT license.
 
 ### HP 10 digits calculators
 
-[*HP CPU and Programming*. David G.Hicks.](http://www.hpmuseum.org/techcpu.htm)  
+[*HP CPU and Programming*. David G.Hicks.](http://www.hpmuseum.org/techcpu.htm)
   Description of calculator CPUs from the Museum of HP Calculators.
 
 [*HP 35 ROM step by step.* Jacques Laporte](http://www.jacques-laporte.org/HP35%20ROM.htm)
@@ -286,7 +291,7 @@ This code is free to use under the terms of the MIT license.
 
 [*The IBM eServer z990 floating-point unit*. G. Gerwig, H. Wetter, E. M. Schwarz, J. Haess, C. A. Krygowski, B. M. Fleischer and M. Kroener.](http://www.research.ibm.com/journal/rd/483/gerwig.html)
 
-### MBF  
+### MBF
 
 [*Microsoft Knowledbase Article 35826*](http://support.microsoft.com/?scid=kb%3Ben-us%3B35826&x=17&y=12)
 
