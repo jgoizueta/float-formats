@@ -1,8 +1,12 @@
+== 0.4.1 2020-04-07
+
+* Development dependencies updated
+
 == 0.4.0 2020-04-07
 
 * New formats: BFLOAT16, MSFP8, MSFP9, MSFP10, MSFP11, KHRONOS_VULKAN_UNSIGNED10, KHRONOS_VULKAN_UNSIGNED11
 * New aliases: MBF_EXTENDEND, HFP_SINGLE, HFP_DOUBLE, HFP_EXTENDED
-# Development dependencies updated
+* Development dependencies updated
 
 == 0.3.0 2015-04-05
 
