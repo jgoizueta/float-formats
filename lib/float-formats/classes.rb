@@ -267,7 +267,7 @@ class FormatBase
 
     mnexp = form_class.radix_min_exp(:integral_significand)
     mxexp = form_class.radix_max_exp(:integral_significand)
-    prec = form_class.significand_digits
+    #prec = form_class.significand_digits
 
     if exp==:nan
     elsif exp==:infinity
@@ -305,7 +305,7 @@ class FormatBase
         return this_exponent <=> other_exponent
       else
         min_exp = form_class.radix_min_exp(:integral_significand)
-        max_exp = form_class.radix_max_exp(:integral_significand)
+        #max_exp = form_class.radix_max_exp(:integral_significand)
 
         while this_significand<mns && this_exponent>min_exp
           this_exponent -= 1
@@ -783,7 +783,7 @@ class FormatBase
     when :ceiling, :up, :up05
       return min_value
     end
-    return_value sign,m,e
+    return_value s,m,e
 
   end
 
@@ -1384,9 +1384,9 @@ class DPDFormat < DecimalFormatBase
     type,sign,exponent,significand = fields
 
     sig_hex = "%0#{@significand_digits-1}d"%significand
-    sig_cont_bits = 4*(@significand_digits-1)
+    #sig_cont_bits = 4*(@significand_digits-1)
     sig_msd = sig_hex[0,1].to_i
-    i_significand_continuation,bits = hexbcd_to_dpd(sig_hex[1..-1])
+    i_significand_continuation,_bits = hexbcd_to_dpd(sig_hex[1..-1])
 
 
 

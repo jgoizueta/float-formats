@@ -345,7 +345,7 @@ def bcd2dpd(arg)
   q=c | (a & k) | (a & g & i)
   r=d
   s=(f & (bitnot(a) | bitnot(i))) | (bitnot(a) & e & j) | (e & i)
-  t=g  | (bitnot(a) & e &k) | (a & i)
+  t=g  | (bitnot(a) & e & k) | (a & i)
   u=h
   v=a | e | i
   w=a | (e & i) | (bitnot(e) & j)

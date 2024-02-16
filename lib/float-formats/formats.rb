@@ -614,7 +614,7 @@ class C51BCDFormat < BCDFormat # :nodoc:
   def self.pack(s,m,e)
     s = sign_from_unit(s)
     msb = radix_power(@significand_digits-1)
-    es = 0
+    e_s = 0
     if e==:zero
       e = @zero_encoded_exp
       m = 0
